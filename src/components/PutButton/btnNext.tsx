@@ -11,9 +11,9 @@ export function BtnNext(props: BtnNextProps) {
   const { handleEvent } = props;
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div  className="flex flex-wrap justify-center">
       <button className={styles.btnNext} onClick={handleEvent}>
-        <FontAwesomeIcon icon={faArrowRight} />
+        <FontAwesomeIcon icon={faArrowRight} className="w-8 h-8"/>
       </button>
     </div>
   );

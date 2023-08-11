@@ -1,15 +1,17 @@
 @charset "UTF-8";
 .btn,
-.btnNum,
+.btnCheck,
 .btnNext,
+.btnNum,
 .btnQuest,
+.btnShuffle,
 .btnUndo {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: max(5vw, 40px);
-  height: max(4vw, 40px);
-  font-size: max(2vw, 20px);
+  min-width: max(4vw, 40px);
+  height: max(3vw, 30px);
+  font-size: max(1.2vw, 16px);
   text-align: center;
   margin: 10px;
   background-color: white;
@@ -18,12 +20,16 @@
   box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
 }
 .btn:active, .btn:active,
-.btnNum:active,
-.btnNum:active,
+.btnCheck:active,
+.btnCheck:active,
 .btnNext:active,
 .btnNext:active,
+.btnNum:active,
+.btnNum:active,
 .btnQuest:active,
 .btnQuest:active,
+.btnShuffle:active,
+.btnShuffle:active,
 .btnUndo:active,
 .btnUndo:active {
   /*ボタンを押したとき*/
@@ -36,6 +42,7 @@
 .btn,
 .btnNum {
   color: blue;
+  font-size: max(2vw, 24px);
   border: blue 2px solid;
 }
 .btn:hover,
@@ -53,12 +60,19 @@
   background-color: orangered;
 }
 
-.btnQuest {
-  width: auto;
+.btnCheck,
+.btnQuest,
+.btnShuffle,
+.btnUndo {
+  width: max(8vw, 80px);
+  padding: 2px;
   color: red;
   border: red 2px solid;
 }
-.btnQuest:hover {
+.btnCheck:hover,
+.btnQuest:hover,
+.btnShuffle:hover,
+.btnUndo:hover {
   color: white;
   background-color: red;
 }

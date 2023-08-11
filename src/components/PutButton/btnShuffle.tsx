@@ -12,9 +12,9 @@ export function BtnShuffle(props: BtnShuffleProps) {
   const { handleEvent, btnText = "しゃっふる" } = props;
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <button onClick={handleEvent} className={styles.btnQuest}>
-        <FontAwesomeIcon icon={faRandom} style={{width:"12px"}}/>
+    <div  className="flex flex-wrap justify-center">
+      <button onClick={handleEvent} className={styles.btnShuffle}>
+        <FontAwesomeIcon icon={faRandom} className="w-8 h-8"/>
         {btnText}
       </button>
     </div>
