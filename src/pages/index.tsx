@@ -1,14 +1,14 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import React from "react";
+// import MainTitle from "@/components/MainTitle";
+import Layout from "@/components/Layout";
+// import Links from "@/components/Links";
 
 export default function Home() {
   return (
-    <>
-      <div className="text-red-500">test</div>
-    </>
+    <Layout title="">
+      {/* <MainTitle /> */}
+      <br />
+      {/* <Links /> */}
+    </Layout>
   );
 }

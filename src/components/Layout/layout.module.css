@@ -1,0 +1,12 @@
+.mainTitle {
+  font-size: 3vw;
+}
+
+.main {
+  height: calc(100vh - 80px);
+  border-top: 1px solid;
+}
+
+.select-s {
+  @apply text-base mx-1 md:text-xl text-black rounded-md text-center border border-blue-500 cursor-pointer;
+}
