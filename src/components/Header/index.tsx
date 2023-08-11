@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import Link from "next/link";
 import { faUndo, faHome, faPalette, faLongArrowAltLeft } from "@fortawesome/free-solid-svg-icons";
@@ -6,6 +7,7 @@ import styles from "src/components/Header/header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import router from "next/router";
 import * as se from "src/components/se";
+import MainTitle from "../MainTitle";
 
 const index = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -43,10 +45,9 @@ const index = () => {
 
   return (
     <header className="flex w-screen h-16 border-b items-center select-none">
-      <Link href="./" className="h-16 flex items-center">
-        {/* ジミタスのロゴをつけるといい感じkamo
-         */}
-        <FontAwesomeIcon icon={faHome} className="w-12 h-12 mx-5 text-red-300 font-bold cursor-pointer" />
+      <Link href="./" className="h-16 flex items-center cursor-pointer">
+        <img className="rounded h-14 mx-5 hover:opacity-80 hover:transition duration-300" src="../../images/jimitas_logo.png" alt="" />
+        {/* <FontAwesomeIcon icon={faHome} className="w-12 h-12 mr-5 text-green-600 font-bold cursor-pointer" /> */}
       </Link>
 
       <form action="#">
@@ -59,12 +60,12 @@ const index = () => {
       <div onClick={back}>
         <FontAwesomeIcon
           icon={faLongArrowAltLeft}
-          className="w-12 h-12 mx-5 text-yellow-400 font-bold cursor-pointer"
+          className="w-12 h-12 mx-5 text-yellow-400 font-bold cursor-pointer hover:opacity-80 hover:transition duration-300"
         />
       </div>
 
       <div onClick={reload}>
-        <FontAwesomeIcon icon={faUndo} className="w-12 h-12 mr-5 text-blue-500 font-bold cursor-pointer" />
+        <FontAwesomeIcon icon={faUndo} className="w-12 h-12 mr-5 text-blue-500 font-bold cursor-pointer hover:opacity-80 hover:transition duration-300" />
       </div>
       {/* 後ほどホップアップメニューを実装する。 */}
       {/* <PopupMenu /> */}

@@ -1,5 +1,5 @@
 import React from "react";
-// import MainTitle from "@/components/MainTitle";
+import MainTitle from "@/components/MainTitle";
 import Layout from "@/components/Layout";
 import { BtnNum } from "@/components/PutButton/btnNum";
 import { BtnCheck } from "@/components/PutButton/btnCheck";
@@ -24,9 +24,8 @@ const shuffleElements = () => {};
 
 export default function Home() {
   return (
-    <Layout title="">
+    <Layout title="ボタンテスト">
       <div>page1</div>
-      {/* <MainTitle /> */}
       <br />
       {/* <Links /> */}
       <BtnCheck handleEvent={checkAnswer} />
