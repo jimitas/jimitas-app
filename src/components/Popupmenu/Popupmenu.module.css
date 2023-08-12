@@ -10,26 +10,46 @@
 
 .popupMenu {
   position: absolute;
+  top:64px;
+  left:100px;
   z-index: 2;
   transform: scale(0);
+  transition: transform 0.2s; 
   transform-origin: top left;
-  width: 80%;
   margin-top: 0.5rem;
   padding: 1rem;
   background: #fff;
   border-radius: 0.5rem;
-  transition: transform 0.2s;
+ 
+  overflow: auto; /* スクロール可能にする */
 }
 
 .popupMenuShown {
   position: absolute;
+  top:64px;
+  left:100px;
   z-index: 1000;
-  transform: scale(0.75);
+  transform: scale(0.6);
   transform-origin: top left;
-  width: 80%;
+  width: 150vw;
   margin-top: 0.5rem;
   padding: 1rem;
   background: #333;
   border-radius: 0.5rem;
   transition: transform 0.2s;
+  overflow: auto; /* スクロール可能にする */
+}
+
+
+@media screen and (max-width: 959px) {
+  .popupMenuShown {
+    transform: scale(0.5);
+    width: 150vw;
+  }
+}
+@media screen and (max-width: 480px) {
+  .popupMenuShown {
+    transform: scale(0.3);
+    width: 200vw;
+  }
 }
