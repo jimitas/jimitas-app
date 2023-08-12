@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import router from "next/router";
 import * as se from "src/components/se";
 import MainTitle from "../MainTitle";
+import { PopupMenu } from "../Popupmenu";
 
 const index = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -67,8 +68,7 @@ const index = () => {
       <div onClick={reload}>
         <FontAwesomeIcon icon={faUndo} className="w-12 h-12 mr-5 text-blue-500 font-bold cursor-pointer hover:opacity-80 hover:transition duration-300" />
       </div>
-      {/* 後ほどホップアップメニューを実装する。 */}
-      {/* <PopupMenu /> */}
+      <PopupMenu />
     </header>
   );
 };
