@@ -9,9 +9,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: max(4vw, 40px);
-  height: max(3vw, 30px);
-  font-size: max(1.2vw, 16px);
   text-align: center;
   margin: 10px;
   background-color: white;
@@ -42,7 +39,8 @@
 .btn,
 .btnNum {
   color: blue;
-  font-size: max(2vw, 24px);
+  font-size: 24px;
+  width: 50px;
   border: blue 2px solid;
 }
 .btn:hover,
@@ -64,8 +62,7 @@
 .btnQuest,
 .btnShuffle,
 .btnUndo {
-  width: max(8vw, 80px);
-  padding: 2px;
+  padding: 5px;
   color: red;
   border: red 2px solid;
 }
