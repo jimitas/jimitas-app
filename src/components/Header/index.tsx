@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import router from "next/router";
 import * as se from "src/components/se";
 import MainTitle from "../MainTitle";
+import { PopupMenu } from "../Popupmenu";
 
 const index = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -15,6 +16,7 @@ const index = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
+ 
     if (isDarkMode) {
       document.body.style.color = "white";
       document.body.style.backgroundColor = "black";
@@ -44,7 +46,7 @@ const index = () => {
   };
 
   return (
-    <header className="flex w-screen h-16 border-b items-center select-none">
+    <header className="flex w-screen h-16 border-b items-center select-none fixed z-50 bg-green-600">
       <Link href="./" className="h-16 flex items-center cursor-pointer">
         <img className="rounded h-14 mx-5 hover:opacity-80 hover:transition duration-300" src="../../images/jimitas_logo.png" alt="" />
         {/* <FontAwesomeIcon icon={faHome} className="w-12 h-12 mr-5 text-green-600 font-bold cursor-pointer" /> */}
@@ -67,8 +69,7 @@ const index = () => {
       <div onClick={reload}>
         <FontAwesomeIcon icon={faUndo} className="w-12 h-12 mr-5 text-blue-500 font-bold cursor-pointer hover:opacity-80 hover:transition duration-300" />
       </div>
-      {/* 後ほどホップアップメニューを実装する。 */}
-      {/* <PopupMenu /> */}
+      <PopupMenu />
     </header>
   );
 };

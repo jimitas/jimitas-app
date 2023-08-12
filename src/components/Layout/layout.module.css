@@ -1,9 +1,11 @@
 .mainTitle {
   font-size: 3vw;
+  text-align: center;
 }
 
 .main {
-  height: calc(100vh - 80px);
+  padding-top: 64px;
+  height: calc(100vh - 64px);
   border-top: 1px solid;
 }
 
