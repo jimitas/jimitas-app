@@ -1,0 +1,41 @@
+.table {
+  display: flex;
+  justify-content: center;
+  width: max(44vw, 440px);
+  flex-wrap: wrap;
+}
+
+.table table {
+  margin-bottom: 5px;
+}
+
+.table td {
+  width: max(4vw, 40px);
+  max-width: max(4vw, 40px);
+  min-width: max(4vw, 40px);
+  height: max(4vw, 40px);
+  min-height: max(4vw, 40px);
+  max-height: max(4vw, 40px);
+  border: 1px solid;
+  border-collapse: collapse;
+}
+
+.table div {
+  width: max(3.2vw, 32px);
+  min-width: max(3.2vw, 32px);
+  max-width: max(3.2vw, 32px);
+  height: max(3.2vw, 32px);
+  min-height: max(3.2vw, 32px);
+  max-height: max(3.2vw, 32px);
+  margin: auto;
+  box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+  border: 1px solid;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s; /* Add a transition for the transform property */
+  transform-style: preserve-3d; /* This is required for the flip effect */
+}
+
+.container {
+  padding: 0 2vw;
+}
