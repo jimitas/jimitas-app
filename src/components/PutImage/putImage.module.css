@@ -1,0 +1,15 @@
+/* "place space-x-2" */
+
+.imgPlace {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+
+.imgPlace img {
+  width: max(4vw,40px);
+  height: max(4vw,40px);
+  margin: 2px;
+}

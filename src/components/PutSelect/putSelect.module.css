@@ -1,0 +1,19 @@
+.place{
+  display: flex;
+  justify-content: center;
+}
+
+.select {
+  height: max(3vw, 30px);
+  font-size: max(2vw, 20px);
+  text-align: center;
+  margin: 5px;
+  padding: 0 5px;
+  color: green;
+  border: green 2px solid;
+  background-color: white;
+  border-radius: min(10%,10px);
+  cursor: pointer;
+  -webkit-box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+  box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+}
