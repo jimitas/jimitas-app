@@ -14,11 +14,19 @@ interface BlockProps {
 }
 
 export function Block(props: BlockProps) {
+  // 自前の Drag アンド Drop の hooks
+  // react-draggableだとやはり、パフォーマンスが落ちるのと、カラーチェンジやCSSの当て方がうまくいかないため、やはり却下します。
+  const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } = useDragDrop();
+
+  // ４つの数図ブロックの親要素
   const el_table = useRef<HTMLDivElement>(null);
+
+  // ４つの数図ブロックに格納する数の算出
   const left_up = props.a > 10 ? 10 : 0 || 0;
   const right_up = props.b > 10 ? 10 : 0 || 0;
   const left_down = props.a > 10 ? props.a - 10 : props.a === 0 ? 0 : props.a || 10;
   const right_down = props.b > 10 ? props.b - 10 : props.b === 0 ? 0 : props.b || 10;
+
   const [count, setCount] = useState(0);
 
   const resetTable = () => {
@@ -26,31 +34,9 @@ export function Block(props: BlockProps) {
     se.seikai1.play();
   };
 
-  const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } = useDragDrop();
+  // 動的に数図ブロックを作ったほうがuseDrag&Dropの動きが良かった。
 
   useEffect(() => {
-    const handleDragStart = (e: DragEvent) => {
-      dragStart(e as unknown as React.DragEvent<HTMLDivElement>);
-    };
-    const handleDragOver = (e: DragEvent) => {
-      dragOver(e as unknown as React.DragEvent<HTMLDivElement>);
-    };
-    const handleDropEnd = (e: DragEvent) => {
-      dropEnd(e as unknown as React.DragEvent<HTMLDivElement>);
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStart(e as unknown as React.TouchEvent<HTMLDivElement>);
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      touchMove(e as unknown as React.TouchEvent<HTMLDivElement>);
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      touchEnd(e as unknown as React.TouchEvent<HTMLDivElement>);
-    };
-
     const ele = el_table.current;
     while (ele?.firstChild) {
       ele.removeChild(ele.firstChild);
@@ -81,10 +67,12 @@ export function Block(props: BlockProps) {
             td.appendChild(div);
             div.style.backgroundColor = divColor[colorIndex];
 
-            const colorChange = (e:any) => {
+            // 裏返すと色が変わる関数
+            const colorChange = (e: any) => {
               se.pi.play();
               colorIndex++;
-              e.target.style.transform = e.target.style.transform == "rotateY(180deg)" ? "rotateY(0deg)" : "rotateY(180deg)";
+              e.target.style.transform =
+                e.target.style.transform == "rotateY(180deg)" ? "rotateY(0deg)" : "rotateY(180deg)";
               div.style.backgroundColor = divColor[colorIndex % 2];
             };
 
@@ -95,58 +83,32 @@ export function Block(props: BlockProps) {
                 touchStartFlag = false;
               }, 150);
             };
-
-            const touchEndEvent = (e:any) => {
+            const touchEndEvent = (e: any) => {
               touchStartFlag === true ? colorChange(e) : null;
             };
 
             div.addEventListener("click", colorChange, false);
+            div.addEventListener("dragstart", dragStart, false);
+            div.addEventListener("dragover", dragOver, false);
+            div.addEventListener("drop", dropEnd, false);
+            div.addEventListener("touchstart", touchStart, false);
             div.addEventListener("touchstart", touchStartEvent, false);
+            div.addEventListener("touchmove", touchMove, false);
+            div.addEventListener("touchend", touchEnd, false);
             div.addEventListener("touchend", touchEndEvent, false);
-            div.addEventListener("dragstart", handleDragStart, false);
-            div.addEventListener("dragover", handleDragOver, false);
-            div.addEventListener("drop", handleDropEnd, false);
-            div.addEventListener("touchstart", handleTouchStart, false);
-            div.addEventListener("touchmove", handleTouchMove, false);
-            div.addEventListener("touchend", handleTouchEnd, false);
           }
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, left_down, left_up, right_down, right_up]);
 
   return (
     <div className="flex justify-center flex-wrap items-end">
       <BtnSpace></BtnSpace>
-      <div
-        ref={el_table}
-        className={styles.table}
-        // onTouchStart={touchStart}
-        // onTouchMove={touchMove}
-        // onTouchEnd={touchEnd}
-        onDragStart={dragStart}
-        onDragOver={dragOver}
-        onDrop={dropEnd}
-      ></div>
+      {/* ドラッグイベントは、親要素に反映させる必要あり */}
+      <div ref={el_table} className={styles.table} onDragStart={dragStart} onDragOver={dragOver} onDrop={dropEnd}></div>
       <BtnUndo handleEvent={resetTable}></BtnUndo>
     </div>
   );
 }
-
-// 現在el_tableにイベントを設置し、その子要素に伝搬する形で実現をしているが、本来の形ではない。
-// 本来は、divの子要素に直接イベントを設置するべきだが、それでもまだうまく配置できていない。
-// ブロック自体はマップ関数で配置すれば良いものだが、そこもうまく言っていない。
-// もしマップ関数を利用するならば、それぞれのどろっぱぶるに配列を用意し、そこに格納したり、
-// 配列の要素削除、追加を設定することで、ドラッグアンドドロップを実現すると考えられる。
-// ただ、数図ブロックのように、それぞれのTDに直接ドロップする形をとるならば、配列の形は
-// あまり効率的ともいえない。
-
-// まずは、カラーチェンジの要素を取り除き、ドラッグドロップができるかどうかを試したい。
-
-// ブロックを画像で表示し、回転のアニメーションをつけたい
-// タッチイベントについては直接divに配置できるようになった。
-// ドラッグイベントについては、子要素に直接イベントを付与できないが、とりあえず放置
-// 現在のスタイリングでは、例えばテーブルごとドラッグされるということはないが、ドラッグできる余白があると、勝手に動いてしまう恐れがある。
-// よく考えたら、react-draggableしか勝たん？
-
-// react-draggableだとやはり、パフォーマンスが落ちるのと、カラーチェンジやCSSの当て方がうまくいかないため、やはり却下します。
