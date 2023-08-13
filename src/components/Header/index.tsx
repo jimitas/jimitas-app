@@ -48,7 +48,7 @@ const index = () => {
   return (
     <header className="flex w-screen h-16 border-b items-center select-none fixed z-50 bg-green-600">
       <Link href="./" className="h-16 flex items-center cursor-pointer">
-        <img className="rounded h-14 mx-5 hover:opacity-80 hover:transition duration-300" src="../../images/jimitas_logo.png" alt="" />
+        <img className="rounded h-8 w-24 sm:h-14 sm:w-48  mx-5 hover:opacity-80 hover:transition duration-300" src="../../images/jimitas_logo.png" alt="" />
         {/* <FontAwesomeIcon icon={faHome} className="w-12 h-12 mr-5 text-green-600 font-bold cursor-pointer" /> */}
       </Link>
 
