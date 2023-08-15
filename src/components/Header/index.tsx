@@ -10,10 +10,10 @@ import * as se from "src/components/se";
 import MainTitle from "../MainTitle";
 import { PopupMenu } from "../Popupmenu";
 
+// To Be isDarkModeの状態を外部でも活用したい！R5.8.15
 const index = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isDarkMode, setIsDarkMode] = useState(false);
-
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
  
@@ -30,21 +30,21 @@ const index = () => {
     setIsDarkMode(!isDarkMode);
     se.set.play();
   };
-
+  
   const reload = () => {
     se.set.play();
     const result = window.confirm("もういちど　ページを　よみこみますか？");
     if (result === false) return;
     location.reload();
   };
-
+  
   const back = () => {
     se.set.play();
     const result = window.confirm("まえの　ページに　もどりますか？");
     if (result === false) return;
     router.back();
   };
-
+  
   return (
     <header className="flex w-screen h-16 border-b items-center select-none fixed z-50 bg-green-600">
       <Link href="./" className="h-16 flex items-center cursor-pointer">
