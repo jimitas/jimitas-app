@@ -16,7 +16,7 @@ const ANIMALS: string[] = ["dog", "cat", "monkey", "frog", "usagi", "niwatori", 
 const NUM: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const DIR: string[] = ["ひだり", "みぎ"];
 var answer: string;
-var flag = true;
+// var flag = true;
 var imgClickflag = false;
 var order: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 export default function Nanbanme() {
@@ -26,7 +26,7 @@ export default function Nanbanme() {
   const el_text = useRef<HTMLDivElement>(null);
   const el_img = useRef<HTMLImageElement>(null);
   const el_input = useRef<HTMLInputElement>(null);
-
+  const [flag, setFlag] = useState<boolean>(true);
   const [count_1, setCount_1] = useState<number>(0);
   const [count_2, setCount_2] = useState<number>(0);
   const [selectIndex_1, setSelectIndex_1] = useState<string>("ひだり");
@@ -37,7 +37,6 @@ export default function Nanbanme() {
   }, []);
 
   useEffect(() => {
-    flag = true;
     const dir = Math.floor(Math.random() * 2 + 1);
     const num = Math.floor(Math.random() * 9 + 1);
     answer = ANIMALS[order[num - 1]];
@@ -49,7 +48,6 @@ export default function Nanbanme() {
   }, [count_1]);
 
   useEffect(() => {
-    flag = true;
     const num = Math.floor(Math.random() * 9 + 1);
     el_input.current!.hidden = false;
     const img = document.createElement("img");
@@ -64,42 +62,44 @@ export default function Nanbanme() {
     se.set.play();
     imgClickflag = true;
     setCount_1((count_1) => count_1 + 1);
+    setFlag(true);
   };
-  
+
   const giveQuestion_2 = () => {
     se.set.play();
     imgClickflag = false;
     setCount_2((count_2) => count_2 + 1);
+    setFlag(true);
   };
 
   // とりあえずイベントをanyで受け取り、ターゲットIDはストリングで型をつける。
   const checkAnswer_1 = (e: any) => {
     if (!flag) return;
     if (!imgClickflag) return;
-    flag = false;
+    setFlag(false);
     const myAnswer: string = e.target.id;
     answer == myAnswer ? sendRight(el_text) : sendWrong(el_text);
     if (answer != myAnswer)
       setTimeout(() => {
-        flag = true;
+        setFlag(true);
       }, 1000);
   };
 
   const checkAnswer_2 = () => {
     if (!flag) return;
-    flag = false;
+    setFlag(false);
     const myAnswer = selectIndex_1 == "ひだり" ? ANIMALS[order[selectIndex_2 - 1]] : ANIMALS[order[10 - selectIndex_2]];
     answer == myAnswer ? sendRight(el_text) : sendWrong(el_text);
     if (answer != myAnswer)
       setTimeout(() => {
-        flag = true;
+        setFlag(true);
       }, 1000);
   };
 
   const shuffle = () => {
     se.seikai1.play();
     shuffleOrder();
-    flag = false;
+    setFlag(false);
     el_text.current!.innerHTML = "もんだいを　おしてね。";
   };
 
