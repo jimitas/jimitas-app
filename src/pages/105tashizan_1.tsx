@@ -198,7 +198,7 @@ export default function Tashizan1() {
       </div>
 
       <div className={styles.place}>
-        <Block a={leftCountValue} b={rightCountValue} />
+        <Block leftCount={leftCountValue} rightCount={rightCountValue} />
       </div>
 
       <BtnNum ITEM={NUM_1} handleEvent={checkAnswer}></BtnNum>
