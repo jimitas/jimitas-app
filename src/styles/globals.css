@@ -9,4 +9,10 @@
     font-weight: 600;
     user-select: none;
   }
+
+  img {
+    width: max(4vw,40px);
+    height: max(4vw,40px);
+    margin: 2px;
+  }
 }
