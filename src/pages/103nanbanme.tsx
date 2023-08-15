@@ -1,5 +1,4 @@
 import * as se from "src/components/se";
-import styles from "../styles/Home.module.css";
 import { useEffect, useState, useRef } from "react";
 import { BtnQuestion } from "src/components/PutButton/btnQuestion";
 import { useCheckAnswer } from "src/hooks/useCheckAnswer";
@@ -47,7 +46,6 @@ export default function Nanbanme() {
     el_text.current!.innerHTML = `${dir === 1 ? "ひだり" : "みぎ"}から　${
       dir == 1 ? num : 11 - num
     } ばんめのどうぶつは?`;
-    se.set.play();
   }, [count_1]);
 
   useEffect(() => {
@@ -60,16 +58,17 @@ export default function Nanbanme() {
     el_text.current!.innerHTML = "";
     el_text.current!.appendChild(img);
     el_text.current!.innerHTML = el_text.current!.innerHTML + "　は　なんばんめ?";
-    se.set.play();
   }, [count_2]);
 
   const giveQuestion_1 = () => {
-    imgClickflag=true;
+    se.set.play();
+    imgClickflag = true;
     setCount_1((count_1) => count_1 + 1);
   };
   
   const giveQuestion_2 = () => {
-    imgClickflag=false;
+    se.set.play();
+    imgClickflag = false;
     setCount_2((count_2) => count_2 + 1);
   };
 

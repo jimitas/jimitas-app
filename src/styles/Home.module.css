@@ -1,0 +1,28 @@
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 10px;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 10%;
+  box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+}
+.btn:active {
+  /*ボタンを押したとき*/
+  transform: translateY(4px);
+  /*下に動く*/
+  border-bottom: none;
+  /*線を消す*/
+}
+
+.btn {
+  color: orangered;
+  font-size: 24px;
+  border: orangered 2px solid;
+}
+.btn:hover {
+  color: white;
+  background-color: orangered;
+}
