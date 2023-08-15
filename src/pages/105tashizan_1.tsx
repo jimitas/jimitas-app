@@ -161,7 +161,7 @@ export default function Tashizan1() {
 
   return (
     <Layout title="たしざん１">
-      <div className="flex justify-center items-center">
+      <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
 
         <button className={styles.btn} style={{ display: "flex" }} onClick={giveQuestion}>

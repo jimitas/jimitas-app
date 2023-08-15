@@ -15,7 +15,7 @@ export function PutShiki(props) {
       
       <span className={styles.kigo}>＝</span>
       
-      <input ref={el_answer} className={styles.input} type="number" name="number" max="20" min="0" step="1" />
+      <input ref={el_answer} className={styles.input} type="number" name="number" max="40" min="0" step="1" />
     </div>
   );
 }
