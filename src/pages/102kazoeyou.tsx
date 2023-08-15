@@ -19,10 +19,10 @@ export default function Home() {
 
   const el_text = useRef<HTMLDivElement>(null);
   const el_img = useRef<HTMLImageElement>(null);
-  const [flag, setFlag] = useState(true);
-  const [count, setCount] = useState(0);
-  const [maxValue, setMaxValue] = useState(5);
-  const [answer, setAnswer] = useState(Math.floor(Math.random() * maxValue + 1));
+  const [flag, setFlag] = useState<boolean>(true);
+  const [count, setCount] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(5);
+  const [answer, setAnswer] = useState<number>(Math.floor(Math.random() * maxValue + 1));
 
   useEffect(() => {
     setFlag(true);
