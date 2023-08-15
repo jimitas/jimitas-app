@@ -16,7 +16,6 @@ const ANIMALS: string[] = ["dog", "cat", "monkey", "frog", "usagi", "niwatori", 
 const NUM: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const DIR: string[] = ["ひだり", "みぎ"];
 var answer: string;
-// var flag = true;
 var imgClickflag = false;
 var order: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 export default function Nanbanme() {
