@@ -10,7 +10,6 @@ import Layout from "@/components/Layout";
 
 const NUM = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ITEM = [5, 6, 7, 8, 9, 10];
-var flag: boolean = false;
 var answer: number;
 var left_value: string | number;
 var right_value: string | number;
@@ -18,6 +17,7 @@ var right_value: string | number;
 export default function Ikutu() {
   const { sendRight, sendWrong } = useCheckAnswer();
   const el_text = useRef<HTMLDivElement>(null);
+  const [flag, setFlag] = useState<boolean>(true);
   const [selectValue, setSelectValue] = useState<number>(5);
 
   const changeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,12 +25,12 @@ export default function Ikutu() {
     setSelectValue(selectValue);
     se.reset.play();
     el_text.current!.innerHTML = "";
-    flag = false;
+    setFlag(false);
   };
 
   const giveQuestion = () => {
     se.pi.play();
-    flag = true;
+    setFlag(true);
     const n = selectValue;
     const dir = Math.floor(Math.random() * 2 + 1);
 
@@ -47,12 +47,12 @@ export default function Ikutu() {
 
   const checkAnswer = (myAnswer: number) => {
     if (!flag) return;
-    flag = false;
+    setFlag(false);
     answer == myAnswer ? sendRight(el_text) : sendWrong(el_text);
     //間違えたら、1秒後に再入力可能に。
     if (answer != myAnswer)
       setTimeout(() => {
-        flag = true;
+        setFlag(true);
       }, 1000);
   };
 
@@ -66,8 +66,7 @@ export default function Ikutu() {
         <PutText el_text={el_text}></PutText>
       </div>
 
-      <Block a={selectValue} b={0} />
-
+      <Block leftCount={selectValue} rightCount={0} />
       <BtnNum ITEM={NUM} handleEvent={checkAnswer}></BtnNum>
 
       <BtnQuestion handleEvent={giveQuestion}></BtnQuestion>

@@ -6,7 +6,7 @@ import { Block } from "@/components/Block";
 const Home: React.FC = () => {
   return (
     <Layout title="ぶろっく">
-      <Block a={10} b={10} />
+      <Block leftCount={10} rightCount={10} />
       <Hide />
     </Layout>
   );

@@ -15,9 +15,8 @@ import Layout from "@/components/Layout";
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 const ITEM = ["10までの　かず", "10+□,□+10", "1□+□,□+1□", "20までの　かず"];
-var allowAnswerFlag = false;
-var leftCountValue: number = 0;
-var rightCountValue: number = 0;
+var left_value: number = 0;
+var right_value: number = 0;
 var answer: number;
 
 export default function Tashizan1() {
@@ -26,20 +25,21 @@ export default function Tashizan1() {
   const el_left_input = useRef<HTMLInputElement>(null);
   const el_right_input = useRef<HTMLInputElement>(null);
   const el_answer = useRef<HTMLInputElement>(null);
+  const [flag, setFlag] = useState<boolean>(true);
   const [count, setCount] = useState<number>(0);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   // 初期化
   useEffect(() => {
-    allowAnswerFlag = false;
-    leftCountValue = 0;
-    rightCountValue = 0;
+    setFlag(false);
+    left_value = 0;
+    right_value = 0;
     el_left_input.current!.value = "";
     el_right_input.current!.value = "";
     el_text.current!.innerHTML = "";
     el_answer.current!.value = "";
     el_text.current!.innerHTML = "もんだい　または　セット";
-  }, [count, selectIndex]);
+  }, [selectIndex]);
 
   // 問題の難易度をセレクト
   const changeSelect = (e: any) => {
@@ -51,7 +51,7 @@ export default function Tashizan1() {
   // 問題を出す
   const giveQuestion = () => {
     se.pi.play();
-    allowAnswerFlag = true;
+    setFlag(true);
     el_text.current!.innerHTML = "";
     el_answer.current!.value = "";
 
@@ -59,97 +59,96 @@ export default function Tashizan1() {
     switch (selectIndex) {
       case 0:
         answer = Math.floor(Math.random() * 10 + 1);
-        leftCountValue = Math.floor(Math.random() * (answer + 1));
-        rightCountValue = answer - leftCountValue;
+        left_value = Math.floor(Math.random() * (answer + 1));
+        right_value = answer - left_value;
         break;
       case 1:
         answer = Math.floor(Math.random() * 10 + 11);
         if (mode === 1) {
-          leftCountValue = 10;
-          rightCountValue = answer - leftCountValue;
+          left_value = 10;
+          right_value = answer - left_value;
         } else if (mode === 2) {
-          rightCountValue = 10;
-          leftCountValue = answer - rightCountValue;
+          right_value = 10;
+          left_value = answer - right_value;
         }
         break;
       case 2:
         answer = Math.floor(Math.random() * 9 + 12);
         if (mode === 1) {
-          leftCountValue = Math.floor(Math.random() * (answer - 11) + 1);
-          rightCountValue = answer - leftCountValue;
+          left_value = Math.floor(Math.random() * (answer - 11) + 1);
+          right_value = answer - left_value;
         } else if (mode === 2) {
-          rightCountValue = Math.floor(Math.random() * (answer - 11) + 1);
-          leftCountValue = answer - rightCountValue;
+          right_value = Math.floor(Math.random() * (answer - 11) + 1);
+          left_value = answer - right_value;
         }
         break;
       case 3:
-        leftCountValue = Math.floor(Math.random() * 9 + 2);
-        rightCountValue = Math.floor(Math.random() * leftCountValue + (10 - leftCountValue) + 1);
-        answer = leftCountValue + rightCountValue;
+        left_value = Math.floor(Math.random() * 9 + 2);
+        right_value = Math.floor(Math.random() * left_value + (10 - left_value) + 1);
+        answer = left_value + right_value;
         break;
     }
 
-    el_left_input.current!.value = leftCountValue.toString();
-    el_right_input.current!.value = rightCountValue.toString();
+    el_left_input.current!.value = left_value.toString();
+    el_right_input.current!.value = right_value.toString();
     setCount((count) => count + 1);
   };
 
   // 問題を自分で入力する
   const setQuest = () => {
-    leftCountValue = Number(el_left_input.current!.value);
-    rightCountValue = Number(el_right_input.current!.value);
-    if (leftCountValue > 20 || rightCountValue > 20 || leftCountValue < 0 || rightCountValue < 0) {
+    left_value = Number(el_left_input.current!.value);
+    right_value = Number(el_right_input.current!.value);
+    if (!(left_value && right_value)) {
+      se.alertSound.play();
+      el_text.current!.innerHTML = "しきを　セット　して　ください。";
+      setTimeout(() => {
+        setFlag(true);
+        el_text.current!.innerHTML = "もんだい　または　セット";
+      }, 1000);
+      return;
+    }
+    if (left_value > 20 || right_value > 20 || left_value < 0 || right_value < 0) {
       se.alertSound.play();
       alert("すうじは　0～20");
       el_left_input.current!.value = "";
       el_right_input.current!.value = "";
       return;
     } else {
-      allowAnswerFlag = true;
+      setFlag(true);
       se.pi.play();
       el_text.current!.innerHTML = "";
       el_answer.current!.value = "";
-      answer = Math.floor(leftCountValue + rightCountValue);
+      answer = Math.floor(left_value + right_value);
     }
     setCount((count) => count + 1);
   };
 
+  //正解をみる
   const showAnswer = () => {
-    if (!allowAnswerFlag) {
-      se.pi.play();
-      el_text.current!.innerHTML = "もんだい　または　セット";
-      return;
-    }
+    if (!flag) return;
     se.seikai1.play();
     el_answer.current!.value = parseInt(el_answer.current!.value) == answer ? "" : answer.toString();
   };
 
+  // 回答チェック
   const checkAnswer = (myAnswer: number) => {
-    // 回答チェック
-    if (!allowAnswerFlag) {
-      se.pi.play();
-      el_text.current!.innerHTML = "もんだい　または　セット";
-      return;
-    }
-    allowAnswerFlag = false;
+    if (!flag) return;
+    setFlag(false);
     el_answer.current!.value = myAnswer.toString();
     answer == myAnswer ? sendRight(el_text) : sendWrong(el_text);
     //間違えたら、1秒後に再入力可能に。
     if (answer != myAnswer)
       setTimeout(() => {
-        allowAnswerFlag = true;
+        setFlag(true);
         el_answer.current!.value = "";
       }, 1000);
   };
 
+  // 答えの欄に値を直接入力したときの処理。
   const checkAnswerEvent = () => {
-    if (!allowAnswerFlag) {
-      se.pi.play();
-      el_text.current!.innerHTML = "もんだい　または　セット";
-      return;
-    }
+    if (!flag) return;
     const myAnswer = parseInt(el_answer.current!.value);
-    if (myAnswer) checkAnswer(myAnswer);
+    if (myAnswer) checkAnswer(myAnswer); //値があればcheckAnswer()を実行
     else {
       se.alertSound.play();
       el_text.current!.innerHTML = "すうじを　おすか、こたえを　いれてから「こたえあわせ」";
@@ -198,7 +197,7 @@ export default function Tashizan1() {
       </div>
 
       <div className={styles.place}>
-        <Block a={leftCountValue} b={rightCountValue} />
+        <Block leftCount={left_value} rightCount={right_value} />
       </div>
 
       <BtnNum ITEM={NUM_1} handleEvent={checkAnswer}></BtnNum>

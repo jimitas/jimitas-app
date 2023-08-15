@@ -9,8 +9,8 @@ import { BtnUndo } from "src/components/PutButton/btnUndo";
 const divColor = ["#ff8082", "#005aff", "#ff8082", "#005aff"];
 
 interface BlockProps {
-  a: number;
-  b: number;
+  leftCount: number;
+  rightCount: number;
 }
 
 export function Block(props: BlockProps) {
@@ -22,10 +22,10 @@ export function Block(props: BlockProps) {
   const el_table = useRef<HTMLDivElement>(null);
 
   // ４つの数図ブロックに格納する数の算出
-  const left_up = props.a > 10 ? 10 : 0 || 0;
-  const right_up = props.b > 10 ? 10 : 0 || 0;
-  const left_down = props.a > 10 ? props.a - 10 : props.a === 0 ? 0 : props.a || 10;
-  const right_down = props.b > 10 ? props.b - 10 : props.b === 0 ? 0 : props.b || 10;
+  const left_up = props.leftCount > 10 ? 10 : 0 || 0;
+  const right_up = props.rightCount > 10 ? 10 : 0 || 0;
+  const left_down = props.leftCount > 10 ? props.leftCount - 10 : props.leftCount === 0 ? 0 : props.leftCount || 10;
+  const right_down = props.rightCount > 10 ? props.rightCount - 10 : props.rightCount === 0 ? 0 : props.rightCount || 10;
 
   const [count, setCount] = useState(0);
 
