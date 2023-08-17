@@ -1,5 +1,4 @@
 import React from "react";
-import MainTitle from "src/components/MainTitle";
 import Layout from "src/components/Layout";
 import { BtnNum } from "src/components/PutButton/btnNum";
 import { BtnCheck } from "src/components/PutButton/btnCheck";
