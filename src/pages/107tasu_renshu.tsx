@@ -14,16 +14,14 @@ var left_value: number = 0;
 var right_value: number = 0;
 var answer: number;
 var inGame: boolean = false;
-var remainingTime: number = 60;
-// var score: number = 0;
 var timer: any = null;
 
 export default function Tashizan1() {
   const { sendRight, sendWrong } = useCheckAnswer();
   const el_text = useRef<HTMLDivElement>(null);
-  const el_time = useRef<HTMLDivElement>(null);
   const [flag, setFlag] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
+  const [time, setTime] = useState<number>(60);
   const [score, setScore] = useState<number>(0);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
@@ -31,13 +29,14 @@ export default function Tashizan1() {
   useEffect(() => {
     el_text.current!.innerHTML = "スタートをおしてね";
     el_text.current!.style.backgroundColor = "lightgray";
+    setTime(60);
+    setScore(0);
   }, [selectIndex]);
 
   // 問題の難易度をセレクト
   const changeSelect = (e: any) => {
     gameStopEvent();
-    const selectedIndex: number = e.target.selectedIndex;
-    setSelectIndex(selectedIndex);
+    setSelectIndex(e.target.selectedIndex);
   };
 
   // ゲームを開始する
@@ -45,11 +44,10 @@ export default function Tashizan1() {
     if (inGame) return;
     inGame = true;
     setFlag(false);
-    remainingTime = 60;
-    setScore((score) => 0);
+    setTime(60);
+    setScore(0);
     se.pi.play();
 
-    el_time.current!.innerHTML = remainingTime.toString();
     el_text.current!.innerHTML = "よーい";
     el_text.current!.style.backgroundColor = "antiquewhite";
 
@@ -60,9 +58,8 @@ export default function Tashizan1() {
       giveQuestion();
       // タイマーの設置
       timer = setInterval(() => {
-        remainingTime--;
-        el_time.current!.innerHTML = remainingTime.toString();
-        if (remainingTime <= 0) {
+        setTime((time) => time - 1);
+        if (time <= 0) {
           clearInterval(timer);
           timer = null;
           gameStopEvent();
@@ -123,7 +120,7 @@ export default function Tashizan1() {
         break;
     }
     el_text.current!.innerHTML = `${left_value}　+　${right_value}　=`;
-    setCount((count) => count + 1);
+    // setCount((count) => count + 1);
   };
 
   // 回答チェック
@@ -163,9 +160,7 @@ export default function Tashizan1() {
       <div className="flex flex-wrap justify-center items-center m-5">
         <div className="flex flex-wrap justify-center items-center mr-5">
           {"のこり"}
-          <div ref={el_time} className="w-16 text-center text-3xl mx-1 border border-yellow-500">
-            {60}
-          </div>
+          <div className="w-16 text-center text-3xl mx-1 border border-yellow-500">{time}</div>
           {"秒"}
         </div>
         <div className="flex flex-wrap justify-center items-center">
