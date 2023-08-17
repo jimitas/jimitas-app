@@ -14,29 +14,38 @@ var left_value: number;
 var right_value: number;
 var answer: number;
 var inGame: boolean = false;
-var remainingTime: number = 60;
-var getPoint: number = 0;
 var timer: any = null;
 
 export default function Hikizan1() {
   const { sendRight, sendWrong } = useCheckAnswer();
   const el_text = useRef<HTMLDivElement>(null);
-  const el_time = useRef<HTMLDivElement>(null);
   const [flag, setFlag] = useState<boolean>(true);
   const [count, setCount] = useState<number>(0);
+  const [time, setTime] = useState<number>(60);
+  const [score, setScore] = useState<number>(0);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   // 初期化
   useEffect(() => {
     el_text.current!.innerHTML = "スタートをおしてね";
     el_text.current!.style.backgroundColor = "lightgray";
+    setTime(60);
+    setScore(0);
   }, [selectIndex]);
+
+  useEffect(() => {
+    if (time <= 0) {
+      clearInterval(timer);
+      timer = null;
+      gameStopEvent();
+      return;
+    }
+  }, [time]);
 
   // 問題の難易度をセレクト
   const changeSelect = (e: any) => {
     gameStopEvent();
-    const selectedIndex: number = e.target.selectedIndex;
-    setSelectIndex(selectedIndex);
+    setSelectIndex(e.target.selectedIndex);
   };
 
   // ゲームを開始する
@@ -44,14 +53,12 @@ export default function Hikizan1() {
     if (inGame) return;
     inGame = true;
     setFlag(false);
-    remainingTime = 60;
-    getPoint = 0;
+    setTime(60);
+    setScore(0);
     se.pi.play();
 
-    el_time.current!.innerHTML = remainingTime.toString();
     el_text.current!.innerHTML = "よーい";
     el_text.current!.style.backgroundColor = "antiquewhite";
-
     //１秒後にスタートの合図
     setTimeout(() => {
       el_text.current!.innerHTML = "スタート";
@@ -59,14 +66,7 @@ export default function Hikizan1() {
       giveQuestion();
       // タイマーの設置
       timer = setInterval(() => {
-        remainingTime--;
-        el_time.current!.innerHTML = remainingTime.toString();
-        if (remainingTime <= 0) {
-          clearInterval(timer);
-          timer = null;
-          gameStopEvent();
-          return;
-        }
+        setTime((time) => time - 1);
       }, 1000);
     }, 1000);
   };
@@ -111,7 +111,6 @@ export default function Hikizan1() {
 
     answer = left_value - right_value;
     el_text.current!.innerHTML = `${left_value}　-　${right_value}　=`;
-    setCount((count) => count + 1);
   };
 
   // 回答チェック
@@ -121,7 +120,7 @@ export default function Hikizan1() {
 
     if (answer == myAnswer) {
       sendRight(el_text);
-      getPoint++;
+      setScore((score) => score + 1);
       setTimeout(() => {
         giveQuestion();
       }, 200);
@@ -137,7 +136,7 @@ export default function Hikizan1() {
 
   return (
     <Layout title="ひきざんのれんしゅう">
-      <div className="flex flex-wrap justify-center items-center m-5">
+      <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
 
         <button className={styles.btn} onClick={gameStartEvent}>
@@ -148,17 +147,17 @@ export default function Hikizan1() {
         </button>
       </div>
 
-      <div className="flex flex-wrap justify-center items-center">
+      <div className="flex flex-wrap justify-center items-center m-5">
         <div className="flex flex-wrap justify-center items-center mr-5">
           {"のこり"}
-          <div ref={el_time} className="w-16 text-center text-3xl mx-1 border border-yellow-500">
+          <div className="w-16 text-center text-3xl mx-1 border border-yellow-500">
             {60}
           </div>
           {"秒"}
         </div>
         <div className="flex flex-wrap justify-center items-center">
           {"とくてん"}
-          <div className="w-16 text-center text-4xl mx-1 border border-yellow-500">{getPoint}</div>
+          <div className="w-16 text-center text-4xl mx-1 border border-yellow-500">{score}</div>
           {"もん　せいかい"}
         </div>
       </div>
