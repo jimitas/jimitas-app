@@ -7,7 +7,7 @@ import { useCheckAnswer } from "src/hooks/useCheckAnswer";
 import { useClearImage } from "src/hooks/useClearImage";
 import { PutImage } from "src/components/PutImage";
 import { PutText } from "src/components/PutText";
-import Layout from "@/components/Layout";
+import Layout from "src/components/Layout";
 
 const ITEM: number[] = [5, 6, 7, 8, 9, 10];
 const NUM: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

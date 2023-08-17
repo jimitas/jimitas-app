@@ -1,5 +1,5 @@
 import * as se from "src/components/se";
-import styles from "../styles/Home.module.css";
+import styles from "src/styles/Home.module.css";
 import { Block } from "src/components/Block";
 import { useState, useRef, useEffect } from "react";
 import { BtnNum } from "src/components/PutButton/btnNum";
@@ -9,8 +9,8 @@ import { PutShiki } from "src/components/PutShiki";
 import { PutText } from "src/components/PutText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faQuestion, faUserEdit, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { BtnCheck } from "@/components/PutButton/btnCheck";
-import Layout from "@/components/Layout";
+import { BtnCheck } from "src/components/PutButton/btnCheck";
+import Layout from "src/components/Layout";
 
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
@@ -164,7 +164,7 @@ export default function Tashizan1() {
       <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
 
-        <button className={styles.btn}  onClick={giveQuestion}>
+        <button className={styles.btn} onClick={giveQuestion}>
           <div style={{ display: "flex" }}>
             <FontAwesomeIcon icon={faQuestion} className="w-8 h-8" />
             {"もんだい"}

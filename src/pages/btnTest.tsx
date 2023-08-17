@@ -1,14 +1,14 @@
 import React from "react";
-import MainTitle from "@/components/MainTitle";
-import Layout from "@/components/Layout";
-import { BtnNum } from "@/components/PutButton/btnNum";
-import { BtnCheck } from "@/components/PutButton/btnCheck";
-import { BtnNext } from "@/components/PutButton/btnNext";
-import { BtnSpace } from "@/components/PutButton/btnSpace";
-import { BtnShuffle } from "@/components/PutButton/btnShuffle";
-import { BtnQuestion } from "@/components/PutButton/btnQuestion";
-import { BtnUndo } from "@/components/PutButton/btnUndo";
-// import Links from "@/components/Links";
+import MainTitle from "src/components/MainTitle";
+import Layout from "src/components/Layout";
+import { BtnNum } from "src/components/PutButton/btnNum";
+import { BtnCheck } from "src/components/PutButton/btnCheck";
+import { BtnNext } from "src/components/PutButton/btnNext";
+import { BtnSpace } from "src/components/PutButton/btnSpace";
+import { BtnShuffle } from "src/components/PutButton/btnShuffle";
+import { BtnQuestion } from "src/components/PutButton/btnQuestion";
+import { BtnUndo } from "src/components/PutButton/btnUndo";
+// import Links from "src/components/Links";
 const NUM: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const checkNumber = (num: number) => {

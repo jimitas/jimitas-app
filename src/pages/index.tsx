@@ -1,7 +1,7 @@
 import React from "react";
-import MainTitle from "@/components/MainTitle";
-import Layout from "@/components/Layout";
-import Links from "@/components/Links";
+import MainTitle from "src/components/MainTitle";
+import Layout from "src/components/Layout";
+import Links from "src/components/Links";
 
 export default function Home() {
   return (

@@ -6,7 +6,7 @@ import { BtnNum } from "src/components/PutButton/btnNum";
 import { BtnQuestion } from "src/components/PutButton/btnQuestion";
 import { useCheckAnswer } from "src/hooks/useCheckAnswer";
 import { PutText } from "src/components/PutText";
-import Layout from "@/components/Layout";
+import Layout from "src/components/Layout";
 
 const NUM = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ITEM = [5, 6, 7, 8, 9, 10];

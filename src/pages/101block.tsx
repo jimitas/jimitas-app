@@ -1,7 +1,7 @@
 import React from "react";
-import Layout from "@/components/Layout";
+import Layout from "src/components/Layout";
 import { Hide } from "src/components/Hide";
-import { Block } from "@/components/Block";
+import { Block } from "src/components/Block";
 
 const Home: React.FC = () => {
   return (

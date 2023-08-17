@@ -1,17 +1,11 @@
 import * as se from "src/components/se";
-import styles from "../styles/Home.module.css";
-import { Block } from "src/components/Block";
-import { Hide } from "src/components/Hide";
+import styles from "src/styles/Home.module.css";
 import { useState, useRef, useEffect } from "react";
 import { BtnNum } from "src/components/PutButton/btnNum";
 import { useCheckAnswer } from "src/hooks/useCheckAnswer";
 import { PutSelect } from "src/components/PutSelect";
-import { PutShiki } from "src/components/PutShiki";
 import { PutText } from "src/components/PutText";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faQuestion, faUserEdit, faCheck } from "@fortawesome/free-solid-svg-icons";
-import Layout from "@/components/Layout";
-import { BtnCheck } from "@/components/PutButton/btnCheck";
+import Layout from "src/components/Layout";
 
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];

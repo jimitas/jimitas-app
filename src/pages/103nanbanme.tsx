@@ -9,7 +9,7 @@ import { PutText } from "src/components/PutText";
 
 import { BtnShuffle } from "src/components/PutButton/btnShuffle";
 import { BtnCheck } from "src/components/PutButton/btnCheck";
-import Layout from "@/components/Layout";
+import Layout from "src/components/Layout";
 
 // hideを使わずにisshowでできないか
 const ANIMALS: string[] = ["dog", "cat", "monkey", "frog", "usagi", "niwatori", "ika", "tako", "iruka", "butterfly"];
