@@ -143,7 +143,7 @@ export default function Hikizan1() {
 
   return (
     <Layout title="ひきざんのれんしゅう">
-      <div className="flex flex-wrap justify-center items-center">
+      <div className="flex flex-wrap justify-center items-center m-5">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
 
         <button className={styles.btn} onClick={gameStartEvent}>

@@ -159,7 +159,7 @@ export default function Tashizan1() {
         </button>
       </div>
 
-      <div className="flex flex-wrap justify-center items-center">
+      <div className="flex flex-wrap justify-center items-center m-5">
         <div className="flex flex-wrap justify-center items-center mr-5">
           {"のこり"}
           <div ref={el_time} className="w-16 text-center text-3xl mx-1 border border-yellow-500">
