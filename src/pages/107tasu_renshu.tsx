@@ -33,6 +33,15 @@ export default function Tashizan1() {
     setScore(0);
   }, [selectIndex]);
 
+  useEffect(() => {
+    if (time <= 0) {
+      clearInterval(timer);
+      timer = null;
+      gameStopEvent();
+      return;
+    }
+  }, [time]);
+
   // 問題の難易度をセレクト
   const changeSelect = (e: any) => {
     gameStopEvent();
@@ -50,7 +59,6 @@ export default function Tashizan1() {
 
     el_text.current!.innerHTML = "よーい";
     el_text.current!.style.backgroundColor = "antiquewhite";
-
     //１秒後にスタートの合図
     setTimeout(() => {
       el_text.current!.innerHTML = "スタート";
@@ -59,12 +67,6 @@ export default function Tashizan1() {
       // タイマーの設置
       timer = setInterval(() => {
         setTime((time) => time - 1);
-        if (time <= 0) {
-          clearInterval(timer);
-          timer = null;
-          gameStopEvent();
-          return;
-        }
       }, 1000);
     }, 1000);
   };
@@ -120,7 +122,6 @@ export default function Tashizan1() {
         break;
     }
     el_text.current!.innerHTML = `${left_value}　+　${right_value}　=`;
-    // setCount((count) => count + 1);
   };
 
   // 回答チェック
