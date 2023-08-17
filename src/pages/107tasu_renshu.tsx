@@ -18,8 +18,6 @@ var remainingTime: number = 60;
 var getPoint: number = 0;
 var timer: any = null;
 
-// ８/１５タイマーの実装を何とかすること8/16へ
-
 export default function Tashizan1() {
   const { sendRight, sendWrong } = useCheckAnswer();
   const el_text = useRef<HTMLDivElement>(null);
