@@ -1,6 +1,6 @@
 import * as se from "src/components/se";
 import styles from "src/styles/Home.module.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { BtnNum } from "src/components/PutButton/btnNum";
 import { useCheckAnswer } from "src/hooks/useCheckAnswer";
 import { PutSelect } from "src/components/PutSelect";
@@ -25,7 +25,13 @@ export default function Tashizan1() {
   const [score, setScore] = useState<number>(0);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  // 初期化
+  // 問題の難易度をセレクト
+  const changeSelect = useCallback((e: any) => {
+    gameStopEvent();
+    console.log("hoge");
+    setSelectIndex(e.target.selectedIndex);
+  }, []);
+
   useEffect(() => {
     el_text.current!.innerHTML = "スタートをおしてね";
     el_text.current!.style.backgroundColor = "lightgray";
@@ -42,14 +48,8 @@ export default function Tashizan1() {
     }
   }, [time]);
 
-  // 問題の難易度をセレクト
-  const changeSelect = (e: any) => {
-    gameStopEvent();
-    setSelectIndex(e.target.selectedIndex);
-  };
-
   // ゲームを開始する
-  const gameStartEvent = () => {
+  const gameStartEvent = useCallback(() => {
     if (inGame) return;
     inGame = true;
     setFlag(false);
@@ -69,10 +69,19 @@ export default function Tashizan1() {
         setTime((time) => time - 1);
       }, 1000);
     }, 1000);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (time <= 0) {
+      clearInterval(timer);
+      timer = null;
+      gameStopEvent();
+      return;
+    }
+  }, [time]);
 
   // ゲームを終了する
-  const gameStopEvent = () => {
+  const gameStopEvent = useCallback(() => {
     if (!inGame) return;
     setFlag(false);
     inGame = false;
@@ -82,7 +91,7 @@ export default function Tashizan1() {
 
     clearInterval(timer);
     timer = null;
-  };
+  }, []);
 
   // 問題を出す
   const giveQuestion = () => {
