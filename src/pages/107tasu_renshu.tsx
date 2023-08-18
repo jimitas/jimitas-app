@@ -28,7 +28,6 @@ export default function Tashizan1() {
   // 問題の難易度をセレクト
   const changeSelect = useCallback((e: any) => {
     gameStopEvent();
-    console.log("hoge");
     setSelectIndex(e.target.selectedIndex);
   }, []);
 
@@ -38,15 +37,6 @@ export default function Tashizan1() {
     setTime(60);
     setScore(0);
   }, [selectIndex]);
-
-  useEffect(() => {
-    if (time <= 0) {
-      clearInterval(timer);
-      timer = null;
-      gameStopEvent();
-      return;
-    }
-  }, [time]);
 
   // ゲームを開始する
   const gameStartEvent = useCallback(() => {
@@ -88,7 +78,6 @@ export default function Tashizan1() {
     se.seikai1.play();
     el_text.current!.style.backgroundColor = "lightgray";
     el_text.current!.innerHTML = "おわり(スタートで　もういちどチャレンジ)";
-
     clearInterval(timer);
     timer = null;
   }, []);
@@ -98,6 +87,7 @@ export default function Tashizan1() {
     if (!inGame) return;
     setFlag(true);
     const mode = Math.floor(Math.random() * 2 + 1);
+    
     switch (selectIndex) {
       case 0:
         answer = Math.floor(Math.random() * 10 + 1);
