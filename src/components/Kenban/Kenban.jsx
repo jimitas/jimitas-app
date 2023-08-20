@@ -1,4 +1,5 @@
 import { Howl } from "howler";
+import * as sound from "src/components/se";
 import styles from "src/components/Kenban/kenban.module.css";
 
 const ITEMS_WH_INDEX = [1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19, 20, 22, 24, 25, 27, 29, 31, 32, 34];
@@ -184,7 +185,7 @@ export function Kenban(props) {
     });
     Key_flag[i] = false;
   }
-  
+
   //何のキーが押されたかを判定してコードを返す
   const check_code = (e) => {
     return (keyDownResult = KEY_CODE.indexOf(e.code));
@@ -239,7 +240,7 @@ export function Kenban(props) {
 
   return (
     <div>
-      <button type="text" className={styles.btn} onKeyDown={KeyDown} onKeyUp={KeyUp}>
+      <button type="text" className={styles.btn} onClick={()=>{sound.set.play()}} onKeyDown={KeyDown} onKeyUp={KeyUp}>
         キーボード入力ON
       </button>
 
