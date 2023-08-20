@@ -1,5 +1,5 @@
 import * as se from "src/components/se";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { BtnQuestion } from "src/components/PutButton/btnQuestion";
 import { useCheckAnswer } from "src/hooks/useCheckAnswer";
 import { useClearImage } from "src/hooks/useClearImage";
@@ -26,6 +26,7 @@ export default function Nanbanme() {
   const el_img = useRef<HTMLImageElement>(null);
   const el_input = useRef<HTMLInputElement>(null);
   const [flag, setFlag] = useState<boolean>(true);
+  const [imgClickable, setImgClickable] = useState(false);
   const [count_1, setCount_1] = useState<number>(0);
   const [count_2, setCount_2] = useState<number>(0);
   const [selectIndex_1, setSelectIndex_1] = useState<string>("ひだり");
@@ -35,6 +36,8 @@ export default function Nanbanme() {
     shuffleOrder();
   }, []);
 
+  // useEffectの順番によって、問題１、問題２のはじめにどちらが表示されるかが決まる。
+  // useEffectで扱わないで、ボタンを押すまで表示させないようにしてもよい。
   useEffect(() => {
     const dir = Math.floor(Math.random() * 2 + 1);
     const num = Math.floor(Math.random() * 9 + 1);
@@ -57,22 +60,22 @@ export default function Nanbanme() {
     el_text.current!.innerHTML = el_text.current!.innerHTML + "　は　なんばんめ?";
   }, [count_2]);
 
-  const giveQuestion_1 = () => {
+  const giveQuestion_1 = useCallback(() => {
     se.set.play();
     imgClickflag = true;
     setCount_1((count_1) => count_1 + 1);
     setFlag(true);
-  };
+  }, []);
 
-  const giveQuestion_2 = () => {
+  const giveQuestion_2 = useCallback(() => {
     se.set.play();
     imgClickflag = false;
     setCount_2((count_2) => count_2 + 1);
     setFlag(true);
-  };
+  }, []);
 
   // とりあえずイベントをanyで受け取り、ターゲットIDはストリングで型をつける。
-  const checkAnswer_1 = (e: any) => {
+  const checkAnswer_1 = useCallback((e: any) => {
     if (!flag) return;
     if (!imgClickflag) return;
     setFlag(false);
@@ -82,7 +85,7 @@ export default function Nanbanme() {
       setTimeout(() => {
         setFlag(true);
       }, 1000);
-  };
+  }, []);
 
   const checkAnswer_2 = () => {
     if (!flag) return;
@@ -95,14 +98,14 @@ export default function Nanbanme() {
       }, 1000);
   };
 
-  const shuffle = () => {
+  const shuffle = useCallback(() => {
     se.seikai1.play();
     shuffleOrder();
     setFlag(false);
     el_text.current!.innerHTML = "もんだいを　おしてね。";
-  };
+  }, []);
 
-  const shuffleOrder = () => {
+  const shuffleOrder = useCallback(() => {
     order = [];
     let num = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     for (let i = 0; i < 10; i++) {
@@ -110,9 +113,9 @@ export default function Nanbanme() {
     }
     clearImage(el_img); // 画像のクリア
     putImage();
-  };
+  }, []);
 
-  const putImage = () => {
+  const putImage = useCallback(() => {
     for (let i = 0; i < 10; i++) {
       const img = document.createElement("img");
       img.setAttribute("src", `images/${ANIMALS[order[i]]}.png`);
@@ -121,17 +124,17 @@ export default function Nanbanme() {
       img.addEventListener("click", checkAnswer_1, false);
       el_img.current!.appendChild(img);
     }
-  };
+  }, []);
 
-  const changeSelect_1 = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const changeSelect_1 = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectIndex_1(e.target.value);
     se.set.play();
-  };
+  }, []);
 
-  const changeSelect_2 = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const changeSelect_2 = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectIndex_2(Number(e.target.value));
     se.set.play();
-  };
+  }, []);
 
   return (
     <Layout title="なんばんめ">
