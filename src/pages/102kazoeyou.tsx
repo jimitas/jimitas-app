@@ -1,5 +1,5 @@
 import * as se from "src/components/se";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { PutSelect } from "src/components/PutSelect";
 import { BtnNum } from "src/components/PutButton/btnNum";
 import { BtnQuestion } from "src/components/PutButton/btnQuestion";
@@ -24,6 +24,12 @@ export default function Home() {
   const [maxValue, setMaxValue] = useState<number>(5);
   const [answer, setAnswer] = useState<number>(Math.floor(Math.random() * maxValue + 1));
 
+  // 〇〇までの数のセレクトを変える。
+  const changeSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setMaxValue(parseInt(e.target.value));
+    giveQuestion();
+  },[]);
+
   useEffect(() => {
     setFlag(true);
     clearImage(el_img); // 画像のクリア
@@ -35,12 +41,6 @@ export default function Home() {
     setCount((count) => count + 1);
     setAnswer(Math.floor(Math.random() * maxValue + 1)); // 答えの決定
     se.set.play();
-  };
-
-  // 〇〇までの数のセレクトを変える。
-  const changeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMaxValue(parseInt(e.target.value));
-    giveQuestion();
   };
 
   // 解答チェック

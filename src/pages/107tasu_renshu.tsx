@@ -1,11 +1,12 @@
 import * as se from "src/components/se";
 import styles from "src/styles/Home.module.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { BtnNum } from "src/components/PutButton/btnNum";
 import { useCheckAnswer } from "src/hooks/useCheckAnswer";
 import { PutSelect } from "src/components/PutSelect";
 import { PutText } from "src/components/PutText";
 import Layout from "src/components/Layout";
+
 
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
@@ -25,7 +26,12 @@ export default function Tashizan1() {
   const [score, setScore] = useState<number>(0);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  // 初期化
+  // 問題の難易度をセレクト
+  const changeSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    gameStopEvent();
+    setSelectIndex(e.target.selectedIndex);
+  }, []);
+
   useEffect(() => {
     el_text.current!.innerHTML = "スタートをおしてね";
     el_text.current!.style.backgroundColor = "lightgray";
@@ -33,23 +39,8 @@ export default function Tashizan1() {
     setScore(0);
   }, [selectIndex]);
 
-  useEffect(() => {
-    if (time <= 0) {
-      clearInterval(timer);
-      timer = null;
-      gameStopEvent();
-      return;
-    }
-  }, [time]);
-
-  // 問題の難易度をセレクト
-  const changeSelect = (e: any) => {
-    gameStopEvent();
-    setSelectIndex(e.target.selectedIndex);
-  };
-
   // ゲームを開始する
-  const gameStartEvent = () => {
+  const gameStartEvent = useCallback(() => {
     if (inGame) return;
     inGame = true;
     setFlag(false);
@@ -69,26 +60,35 @@ export default function Tashizan1() {
         setTime((time) => time - 1);
       }, 1000);
     }, 1000);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (time <= 0) {
+      clearInterval(timer);
+      timer = null;
+      gameStopEvent();
+      return;
+    }
+  }, [time]);
 
   // ゲームを終了する
-  const gameStopEvent = () => {
+  const gameStopEvent = useCallback(() => {
     if (!inGame) return;
     setFlag(false);
     inGame = false;
     se.seikai1.play();
     el_text.current!.style.backgroundColor = "lightgray";
     el_text.current!.innerHTML = "おわり(スタートで　もういちどチャレンジ)";
-
     clearInterval(timer);
     timer = null;
-  };
+  }, []);
 
   // 問題を出す
   const giveQuestion = () => {
     if (!inGame) return;
     setFlag(true);
     const mode = Math.floor(Math.random() * 2 + 1);
+    
     switch (selectIndex) {
       case 0:
         answer = Math.floor(Math.random() * 10 + 1);
