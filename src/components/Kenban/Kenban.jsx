@@ -184,7 +184,7 @@ export function Kenban(props) {
     });
     Key_flag[i] = false;
   }
-
+  
   //何のキーが押されたかを判定してコードを返す
   const check_code = (e) => {
     return (keyDownResult = KEY_CODE.indexOf(e.code));
