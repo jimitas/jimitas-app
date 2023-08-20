@@ -1,4 +1,5 @@
 import { Howl } from "howler";
+import styles from "src/components/Kenban/kenban.module.css";
 
 const ITEMS_WH_INDEX = [1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19, 20, 22, 24, 25, 27, 29, 31, 32, 34];
 const ITEMS_BK_NOTE = [
@@ -237,48 +238,50 @@ export function Kenban(props) {
   };
 
   return (
-    <div className="relative key_place">
-      <button type="text" className="relative -top-6 btn" onKeyDown={KeyDown} onKeyUp={KeyUp} value="test">
+    <div>
+      <button type="text" className={styles.btn} onKeyDown={KeyDown} onKeyUp={KeyUp}>
         キーボード入力ON
       </button>
-      <div className="absolute top-8 left-2.5 md:left-5 flex justify-center">
-        
-        {B_KEY.map((B_KEY) => {
-          return (
-            <div
-              key={B_KEY.index}
-              id={B_KEY.index}
-              className={B_KEY.class}
-              onMouseDown={Play_BK}
-              onTouchStart={Play_BK}
-              onMouseUp={Pause_BK}
-              onTouchEnd={Pause_BK}
-            >
-              {B_KEY.note}
-              <br />
-              {B_KEY.label}
-            </div>
-          );
-        })}
-      </div>
-      <div className="absolute top-8 flex justify-center">
-        {W_KEY.map((W_KEY) => {
-          return (
-            <div
-              key={W_KEY.index}
-              id={W_KEY.index}
-              className="WH"
-              onMouseDown={Play_WH}
-              onTouchStart={Play_WH}
-              onMouseUp={Pause_WH}
-              onTouchEnd={Pause_WH}
-            >
-              {W_KEY.note}
-              <br />
-              {W_KEY.label}
-            </div>
-          );
-        })}
+
+      <div className="relative key_place">
+        <div className="absolute top-8 left-2.5 md:left-5 flex justify-center">
+          {B_KEY.map((B_KEY) => {
+            return (
+              <div
+                key={B_KEY.index}
+                id={B_KEY.index}
+                className={B_KEY.class}
+                onMouseDown={Play_BK}
+                onTouchStart={Play_BK}
+                onMouseUp={Pause_BK}
+                onTouchEnd={Pause_BK}
+              >
+                {B_KEY.note}
+                <br />
+                {B_KEY.label}
+              </div>
+            );
+          })}
+        </div>
+        <div className="absolute top-8 flex justify-center">
+          {W_KEY.map((W_KEY) => {
+            return (
+              <div
+                key={W_KEY.index}
+                id={W_KEY.index}
+                className="WH"
+                onMouseDown={Play_WH}
+                onTouchStart={Play_WH}
+                onMouseUp={Pause_WH}
+                onTouchEnd={Pause_WH}
+              >
+                {W_KEY.note}
+                <br />
+                {W_KEY.label}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
