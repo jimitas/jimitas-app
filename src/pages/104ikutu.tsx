@@ -10,14 +10,12 @@ import Layout from "src/components/Layout";
 
 const NUM = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ITEM = [5, 6, 7, 8, 9, 10];
-var answer: number;
-var left_value: string | number;
-var right_value: string | number;
 
 export default function Ikutu() {
   const { sendRight, sendWrong } = useCheckAnswer();
   const el_text = useRef<HTMLDivElement>(null);
   const [flag, setFlag] = useState<boolean>(true);
+  const [answer, setAnswer] = useState<number>(0);
   const [selectValue, setSelectValue] = useState<number>(5);
 
   const changeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,17 +30,19 @@ export default function Ikutu() {
     se.pi.play();
     setFlag(true);
     const n = selectValue;
-    const dir = Math.floor(Math.random() * 2 + 1);
-
-    answer = Math.floor(Math.random() * n);
+    const dir: number = Math.floor(Math.random() * 2 + 1);
+    const ans: number = Math.floor(Math.random() * n);
+    let left: number | string;
+    let right: number | string;
     if (dir === 1) {
-      left_value = "□";
-      right_value = n - answer;
+      left = "□";
+      right = n - ans;
     } else {
-      left_value = n - answer;
-      right_value = "□";
+      left = n - ans;
+      right = "□";
     }
-    el_text.current!.innerHTML = `${n} は　${left_value} と ${right_value}`;
+    el_text.current!.innerHTML = `${n} は　${left} と ${right}`;
+    setAnswer(ans);
   };
 
   const checkAnswer = (myAnswer: number) => {
