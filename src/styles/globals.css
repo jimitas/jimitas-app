@@ -15,4 +15,18 @@
     height: max(4vw,40px);
     margin: 2px;
   }
+
+  .WH {
+    @apply select-none text-xs md:text-base hover:bg-red-300 w-6 sm:w-10 h-40 sm:h-80 text-black bg-white flex items-end px-2 pb-8 border border-gray-600 rounded cursor-pointer z-10;
+  }
+  .BK {
+    @apply select-none text-xs hover:bg-red-300 w-5 sm:w-9 h-24 sm:h-48 text-white bg-black flex items-center px-1 mx-0.5 pb-8 border border-gray-600 rounded cursor-pointer z-20;
+  }
+  .None {
+    @apply select-none w-5 sm:w-9 sm:h-48 text-white bg-none flex items-center px-1 mx-0.5 pb-8 z-0;
+  }
+  .key_place {
+    margin-left: calc(max(5px, (100vw - 50rem) / 2));
+    margin-bottom: 10px;
+  }
 }
