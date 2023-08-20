@@ -192,6 +192,9 @@ export default function Tashizan1() {
           el_right_input={el_right_input}
           el_left_input={el_left_input}
           el_answer={el_answer}
+          leftValue={left_value}
+          rightValue={right_value}
+          // answerValue={answer}
         ></PutShiki>
         <BtnCheck handleEvent={checkAnswerEvent} />
       </div>
