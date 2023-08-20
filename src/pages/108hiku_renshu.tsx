@@ -26,7 +26,7 @@ export default function Hikizan1() {
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   // 問題の難易度をセレクト
-  const changeSelect = useCallback((e: any) => {
+  const changeSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     gameStopEvent();
     setSelectIndex(e.target.selectedIndex);
   }, []);

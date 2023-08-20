@@ -7,6 +7,7 @@ import { PutSelect } from "src/components/PutSelect";
 import { PutText } from "src/components/PutText";
 import Layout from "src/components/Layout";
 
+
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 const ITEM = ["10までの　かず", "10+□,□+10", "1□+□,□+1□", "20までの　かず"];
@@ -26,7 +27,7 @@ export default function Tashizan1() {
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   // 問題の難易度をセレクト
-  const changeSelect = useCallback((e: any) => {
+  const changeSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     gameStopEvent();
     setSelectIndex(e.target.selectedIndex);
   }, []);
