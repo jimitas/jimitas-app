@@ -87,7 +87,9 @@ export default function Tashizan1() {
         answer = left_value + right_value;
         break;
     }
-
+    el_left_input.current!.value = left_value.toString();
+    el_right_input.current!.value = right_value.toString();
+    el_answer.current!.value = "";
     setCount((count) => count + 1);
   };
 
@@ -95,12 +97,15 @@ export default function Tashizan1() {
   const setQuest = () => {
     left_value = Number(el_left_input.current!.value);
     right_value = Number(el_right_input.current!.value);
-    if (!(left_value && right_value)) {
+    el_answer.current!.value = "";
+    if (!(el_left_input.current!.value && el_right_input.current!.value)) {
       se.alertSound.play();
       el_text.current!.innerHTML = "しきを　セット　して　ください。";
       setTimeout(() => {
         setFlag(true);
         el_text.current!.innerHTML = "もんだい　または　セット";
+        el_left_input.current!.value = "";
+        el_right_input.current!.value = "";
       }, 1000);
       return;
     }
@@ -115,7 +120,6 @@ export default function Tashizan1() {
       se.pi.play();
       el_text.current!.innerHTML = "";
       answer = Math.floor(left_value + right_value);
-      el_answer.current!.value = "";
     }
     setCount((count) => count + 1);
   };
@@ -189,9 +193,6 @@ export default function Tashizan1() {
           el_right_input={el_right_input}
           el_left_input={el_left_input}
           el_answer={el_answer}
-          leftValue={left_value}
-          rightValue={right_value}
-          answerValue={answer}
         ></PutShiki>
         <BtnCheck handleEvent={checkAnswerEvent} />
       </div>
