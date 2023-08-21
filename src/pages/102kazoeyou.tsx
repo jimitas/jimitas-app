@@ -28,7 +28,7 @@ export default function Home() {
   const changeSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setMaxValue(parseInt(e.target.value));
     giveQuestion();
-  },[]);
+  }, []);
 
   useEffect(() => {
     setFlag(true);

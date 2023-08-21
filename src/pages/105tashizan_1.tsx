@@ -12,12 +12,14 @@ import { faEye, faQuestion, faUserEdit, faCheck } from "@fortawesome/free-solid-
 import { BtnCheck } from "src/components/PutButton/btnCheck";
 import Layout from "src/components/Layout";
 
+// 8/20できるだけrefを使わなくてもできるのではないか？
+
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 const ITEM = ["10までの　かず", "10+□,□+10", "1□+□,□+1□", "20までの　かず"];
 var left_value: number = 0;
 var right_value: number = 0;
-var answer: number;
+var answer: number | string;
 
 export default function Tashizan1() {
   const { sendRight, sendWrong } = useCheckAnswer();
@@ -34,10 +36,7 @@ export default function Tashizan1() {
     setFlag(false);
     left_value = 0;
     right_value = 0;
-    el_left_input.current!.value = "";
-    el_right_input.current!.value = "";
     el_text.current!.innerHTML = "";
-    el_answer.current!.value = "";
     el_text.current!.innerHTML = "もんだい　または　セット";
   }, [selectIndex]);
 
@@ -53,7 +52,7 @@ export default function Tashizan1() {
     se.pi.play();
     setFlag(true);
     el_text.current!.innerHTML = "";
-    el_answer.current!.value = "";
+    answer = "";
 
     const mode = Math.floor(Math.random() * 2 + 1);
     switch (selectIndex) {
@@ -89,8 +88,6 @@ export default function Tashizan1() {
         break;
     }
 
-    el_left_input.current!.value = left_value.toString();
-    el_right_input.current!.value = right_value.toString();
     setCount((count) => count + 1);
   };
 
@@ -117,8 +114,8 @@ export default function Tashizan1() {
       setFlag(true);
       se.pi.play();
       el_text.current!.innerHTML = "";
-      el_answer.current!.value = "";
       answer = Math.floor(left_value + right_value);
+      el_answer.current!.value = "";
     }
     setCount((count) => count + 1);
   };
@@ -140,7 +137,7 @@ export default function Tashizan1() {
     if (answer != myAnswer)
       setTimeout(() => {
         setFlag(true);
-        el_answer.current!.value = "";
+        answer = "";
       }, 1000);
   };
 
@@ -154,7 +151,7 @@ export default function Tashizan1() {
       el_text.current!.innerHTML = "すうじを　おすか、こたえを　いれてから「こたえあわせ」";
       setTimeout(() => {
         el_text.current!.innerHTML = "";
-        el_answer.current!.value = "";
+        answer = "";
       }, 1000);
     }
   };
@@ -192,6 +189,9 @@ export default function Tashizan1() {
           el_right_input={el_right_input}
           el_left_input={el_left_input}
           el_answer={el_answer}
+          leftValue={left_value}
+          rightValue={right_value}
+          answerValue={answer}
         ></PutShiki>
         <BtnCheck handleEvent={checkAnswerEvent} />
       </div>
