@@ -18,7 +18,7 @@ const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 const ITEM = ["～10", "10-□", "1□-□", "1□-□=□"];
 var left_value: number;
 var right_value: number;
-var answer: number;
+var answer: number | string;
 
 export default function Hikizan1() {
   const { sendRight, sendWrong } = useCheckAnswer();
@@ -86,12 +86,15 @@ export default function Hikizan1() {
   const setQuest = () => {
     left_value = Number(el_left_input.current!.value);
     right_value = Number(el_right_input.current!.value);
-    if (!(left_value && right_value)) {
+    el_answer.current!.value = "";
+    if (!(el_left_input.current!.value && el_right_input.current!.value)) {
       se.alertSound.play();
       el_text.current!.innerHTML = "しきを　セット　して　ください。";
       setTimeout(() => {
         setFlag(true);
         el_text.current!.innerHTML = "もんだい　または　セット";
+        el_left_input.current!.value = "";
+        el_right_input.current!.value = "";
       }, 1000);
       return;
     }
@@ -105,12 +108,12 @@ export default function Hikizan1() {
       setFlag(true);
       se.pi.play();
       el_text.current!.innerHTML = "";
-      el_answer.current!.value = "";
       answer = Math.floor(left_value - right_value);
     }
     setCount((count) => count + 1);
   };
 
+    //正解をみる
   const showAnswer = () => {
     if (!flag) return;
     se.seikai1.play();

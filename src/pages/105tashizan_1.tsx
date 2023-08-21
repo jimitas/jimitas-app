@@ -36,6 +36,9 @@ export default function Tashizan1() {
     setFlag(false);
     left_value = 0;
     right_value = 0;
+    el_left_input.current!.value = "";
+    el_right_input.current!.value = "";
+    el_text.current!.innerHTML = "";
     el_text.current!.innerHTML = "";
     el_text.current!.innerHTML = "もんだい　または　セット";
   }, [selectIndex]);
@@ -52,7 +55,7 @@ export default function Tashizan1() {
     se.pi.play();
     setFlag(true);
     el_text.current!.innerHTML = "";
-    answer = "";
+    el_answer.current!.value = "";
 
     const mode = Math.floor(Math.random() * 2 + 1);
     switch (selectIndex) {
@@ -89,7 +92,6 @@ export default function Tashizan1() {
     }
     el_left_input.current!.value = left_value.toString();
     el_right_input.current!.value = right_value.toString();
-    el_answer.current!.value = "";
     setCount((count) => count + 1);
   };
 
