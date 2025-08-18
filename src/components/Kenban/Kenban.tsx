@@ -1,6 +1,8 @@
+
 import { Howl } from "howler";
 import * as sound from "src/components/se";
 import styles from "src/components/Kenban/kenban.module.css";
+import React from "react";
 
 const ITEMS_WH_INDEX = [1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19, 20, 22, 24, 25, 27, 29, 31, 32, 34];
 const ITEMS_BK_NOTE = [
@@ -129,8 +131,19 @@ const KEY_CODE = [
   "Equal",
 ];
 
-const W_KEY = [];
-//後で分割代入が使えるかどうか
+
+interface KenbanProps {
+  gakki: string;
+}
+
+interface KeyInfo {
+  index: number;
+  note: string;
+  label: string;
+  class: string;
+}
+
+const W_KEY: KeyInfo[] = [];
 for (let i = 0; i < ITEMS_WH_INDEX.length; i++) {
   W_KEY[i] = {
     index: ITEMS_WH_INDEX[i],
@@ -140,22 +153,18 @@ for (let i = 0; i < ITEMS_WH_INDEX.length; i++) {
   };
 }
 
-const B_KEY = [];
+const B_KEY: KeyInfo[] = [];
 for (let i = 0; i < ITEMS_BK_INDEX.length; i++) {
   B_KEY[i] = {
     index: ITEMS_BK_INDEX[i],
     note: ITEMS_BK_NOTE[i],
-    label: ITEMS_BK_LABEL[i],
+    label: ITEMS_BK_LABEL[i] ?? "",
     class: ITEMS_BK_CLASS[i],
   };
 }
 
-var se = [""];
-var keyDownResult;
-var Key_flag = [];
-
-export function Kenban(props) {
-  var gakki = "ke-";
+export function Kenban(props: KenbanProps) {
+  let gakki = "ke-";
 
   switch (props.gakki) {
     case "けんばんハーモニカ":
@@ -173,115 +182,119 @@ export function Kenban(props) {
   }
 
   // インスタンスを生成
+
+  const se: Howl[] = ["" as unknown as Howl];
+  let keyDownResult = 0;
+  const Key_flag: boolean[] = [];
+
   for (let i = 1; i <= 34; i++) {
     se[i] = new Howl({
       src: [`Sounds/${gakki}${i}.mp3`],
-      //読み込む音声ファイル
-      // 設定 (以下はデフォルト値です)
-      preload: true, // 事前ロード
-      volume: 1.0, // 音量(0.0〜1.0の範囲で指定)
-      loop: false, // ループ再生するか
-      autoplay: false, // 自動再生するか
+      preload: true,
+      volume: 1.0,
+      loop: false,
+      autoplay: false,
     });
     Key_flag[i] = false;
   }
 
   //何のキーが押されたかを判定してコードを返す
-  const check_code = (e) => {
-    return (keyDownResult = KEY_CODE.indexOf(e.code));
+  const check_code = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    keyDownResult = KEY_CODE.indexOf(e.code);
+    return keyDownResult;
   };
 
-  const Play_BK = (e) => {
-    const index = ITEMS_BK_INDEX.indexOf(Number(e.target.id));
+  const Play_BK = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    const index = ITEMS_BK_INDEX.indexOf(Number((e.target as HTMLElement).id));
     se[ITEMS_BK_INDEX[index]].play();
   };
 
-  const Pause_BK = (e) => {
-    const index = ITEMS_BK_INDEX.indexOf(Number(e.target.id));
+  const Pause_BK = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    const index = ITEMS_BK_INDEX.indexOf(Number((e.target as HTMLElement).id));
     se[ITEMS_BK_INDEX[index]].pause();
     se[ITEMS_BK_INDEX[index]].seek(0);
   };
 
-  const Play_WH = (e) => {
-    const index = ITEMS_WH_INDEX.indexOf(Number(e.target.id));
+  const Play_WH = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    const index = ITEMS_WH_INDEX.indexOf(Number((e.target as HTMLElement).id));
     se[ITEMS_WH_INDEX[index]].play();
   };
 
-  const Pause_WH = (e) => {
-    const index = ITEMS_WH_INDEX.indexOf(Number(e.target.id));
+  const Pause_WH = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    const index = ITEMS_WH_INDEX.indexOf(Number((e.target as HTMLElement).id));
     se[ITEMS_WH_INDEX[index]].pause();
     se[ITEMS_WH_INDEX[index]].seek(0);
   };
 
-  const KeyDown = (e) => {
+  const KeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     check_code(e);
-    if (Key_flag[keyDownResult] === false) {
+    if (!Key_flag[keyDownResult]) {
       Key_flag[keyDownResult] = true;
       se[keyDownResult].play();
-      document.getElementById(keyDownResult).style.backgroundColor = "rgba(252, 165, 165)";
+      const elem = document.getElementById(String(keyDownResult));
+      if (elem) elem.style.backgroundColor = "rgba(252, 165, 165)";
     }
   };
 
-  const KeyUp = (e) => {
+  const KeyUp = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     check_code(e);
-    if (Key_flag[keyDownResult] === true) {
+    if (Key_flag[keyDownResult]) {
       Key_flag[keyDownResult] = false;
       se[keyDownResult].pause();
       se[keyDownResult].seek(0);
-      //直接DOMを触らずにできる方法があれば尚いいのだが。
-      // エレメントrefを配列化できるといいのかも…
-      if (document.getElementById(keyDownResult).className == "WH") {
-        document.getElementById(keyDownResult).style.backgroundColor = "";
-      } else {
-        document.getElementById(keyDownResult).style.backgroundColor = "";
-      }
+      const elem = document.getElementById(String(keyDownResult));
+      if (elem) elem.style.backgroundColor = "";
     }
   };
 
   return (
     <div>
-      <button type="text" className={styles.btn} onClick={()=>{sound.set.play()}} onKeyDown={KeyDown} onKeyUp={KeyUp}>
+      <button
+        type="button"
+        className={styles.btn}
+        onClick={() => {
+          sound.set.play();
+        }}
+        onKeyDown={KeyDown}
+        onKeyUp={KeyUp}
+      >
         キーボード入力ON
       </button>
 
       <div className="relative key_place">
         <div className="absolute top-8 left-2.5 md:left-5 flex justify-center">
-          {B_KEY.map((B_KEY) => {
-            return (
-              <div
-                key={B_KEY.index}
-                id={B_KEY.index}
-                className={B_KEY.class}
-                onMouseDown={Play_BK}
-                onTouchStart={Play_BK}
-                onMouseUp={Pause_BK}
-                onTouchEnd={Pause_BK}
-              >
-                {B_KEY.note}
-                <br />
-                {B_KEY.label}
-              </div>
-            );
-          })}
+          {B_KEY.map((B_KEY) => (
+            <div
+              key={B_KEY.index}
+              id={String(B_KEY.index)}
+              className={B_KEY.class}
+              onMouseDown={Play_BK}
+              onTouchStart={Play_BK}
+              onMouseUp={Pause_BK}
+              onTouchEnd={Pause_BK}
+            >
+              {B_KEY.note}
+              <br />
+              {B_KEY.label}
+            </div>
+          ))}
         </div>
         <div className="absolute top-8 flex justify-center">
-          {W_KEY.map((W_KEY) => {
-            return (
-              <div
-                key={W_KEY.index}
-                id={W_KEY.index}
-                className="WH"
-                onMouseDown={Play_WH}
-                onTouchStart={Play_WH}
-                onMouseUp={Pause_WH}
-                onTouchEnd={Pause_WH}
-              >
-                {W_KEY.note}
-                <br />
-                {W_KEY.label}
-              </div>
-            );
-          })}
+          {W_KEY.map((W_KEY) => (
+            <div
+              key={W_KEY.index}
+              id={String(W_KEY.index)}
+              className="WH"
+              onMouseDown={Play_WH}
+              onTouchStart={Play_WH}
+              onMouseUp={Pause_WH}
+              onTouchEnd={Pause_WH}
+            >
+              {W_KEY.note}
+              <br />
+              {W_KEY.label}
+            </div>
+          ))}
         </div>
       </div>
     </div>

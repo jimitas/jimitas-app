@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import * as se from "src/components/se";
+import * as SFX from "src/components/se";
 import { PutSelect } from "@/components/PutSelect";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { Kenban } from "src/components/Kenban/Kenban";
@@ -11,7 +11,7 @@ export default function Home() {
   const [gakkiName, setGakkiName] = useState<string>("けんばんハーモニカ");
 
   const changeGakki = (e: any) => {
-    se.reset.play();
+    SFX.reset.play();
     setGakkiName(e.target.value);
   };
 

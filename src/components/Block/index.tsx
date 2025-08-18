@@ -16,7 +16,8 @@ interface BlockProps {
 export function Block(props: BlockProps) {
   // 自前の Drag アンド Drop の hooks
   // react-draggableだとやはり、パフォーマンスが落ちるのと、カラーチェンジやCSSの当て方がうまくいかないため、やはり却下します。
-  const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } = useDragDrop();
+  const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } =
+    useDragDrop();
 
   // ４つの数図ブロックの親要素
   const el_table = useRef<HTMLDivElement>(null);
@@ -24,8 +25,18 @@ export function Block(props: BlockProps) {
   // ４つの数図ブロックに格納する数の算出
   const left_up = props.leftCount > 10 ? 10 : 0 || 0;
   const right_up = props.rightCount > 10 ? 10 : 0 || 0;
-  const left_down = props.leftCount > 10 ? props.leftCount - 10 : props.leftCount === 0 ? 0 : props.leftCount || 10;
-  const right_down = props.rightCount > 10 ? props.rightCount - 10 : props.rightCount === 0 ? 0 : props.rightCount || 10;
+  const left_down =
+    props.leftCount > 10
+      ? props.leftCount - 10
+      : props.leftCount === 0
+      ? 0
+      : props.leftCount || 10;
+  const right_down =
+    props.rightCount > 10
+      ? props.rightCount - 10
+      : props.rightCount === 0
+      ? 0
+      : props.rightCount || 10;
 
   const [count, setCount] = useState(0);
 
@@ -68,22 +79,30 @@ export function Block(props: BlockProps) {
             div.style.backgroundColor = divColor[colorIndex];
 
             // 裏返すと色が変わる関数
-            const colorChange = (e: any) => {
+            const colorChange = (e: MouseEvent | TouchEvent) => {
               se.pi.play();
               colorIndex++;
-              e.target.style.transform =
-                e.target.style.transform == "rotateY(180deg)" ? "rotateY(0deg)" : "rotateY(180deg)";
+              // e.target.style.transform =
+              //   e.target.style.transform == "rotateY(180deg)" ? "rotateY(0deg)" : "rotateY(180deg)";
+              // div.style.backgroundColor = divColor[colorIndex % 2];
+              const target = e.target as HTMLElement;
+              target.style.transform =
+                target.style.transform == "rotateY(180deg)"
+                  ? "rotateY(0deg)"
+                  : "rotateY(180deg)";
               div.style.backgroundColor = divColor[colorIndex % 2];
             };
 
             // 150ミリ秒以内にタッチして指を離すとき，クリックイベントと同じ挙動とみなす。
             const touchStartEvent = () => {
-              touchStartFlag === false ? (touchStartFlag = true) : (touchStartFlag = false);
+              touchStartFlag === false
+                ? (touchStartFlag = true)
+                : (touchStartFlag = false);
               setTimeout(() => {
                 touchStartFlag = false;
               }, 150);
             };
-            const touchEndEvent = (e: any) => {
+            const touchEndEvent = (e: TouchEvent) => {
               touchStartFlag === true ? colorChange(e) : null;
             };
 
@@ -107,7 +126,14 @@ export function Block(props: BlockProps) {
     <div className="flex justify-center flex-wrap items-end">
       <BtnSpace></BtnSpace>
       {/* ドラッグイベントは、親要素に反映させる必要あり */}
-      <div ref={el_table} className={styles.table} onDragStart={dragStart} onDragOver={dragOver} onDrop={dropEnd}></div>
+
+      <div
+        ref={el_table}
+        className={styles.table}
+        onDragStart={(e) => dragStart(e.nativeEvent)}
+        onDragOver={(e) => dragOver(e.nativeEvent)}
+        onDrop={(e) => dropEnd(e.nativeEvent)}
+      ></div>
       <BtnUndo handleEvent={resetTable}></BtnUndo>
     </div>
   );
