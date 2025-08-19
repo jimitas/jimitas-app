@@ -86,7 +86,7 @@ export default function Nanbanme() {
       setTimeout(() => {
         setFlag(true);
       }, 1000);
-  }, [flag, sendRight, sendWrong]);
+  }, []);
 
   const checkAnswer_2 = () => {
     if (!flag) return;
@@ -130,7 +130,7 @@ export default function Nanbanme() {
       img.addEventListener("click", checkAnswer_1, false);
       el_img.current!.appendChild(img);
     }
-  }, [checkAnswer_1]);
+  }, []);
 
   const changeSelect_1 = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectIndex_1(e.target.value);
