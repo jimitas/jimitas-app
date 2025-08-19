@@ -15,9 +15,9 @@ import Layout from "src/components/Layout";
 const ANIMALS: string[] = ["dog", "cat", "monkey", "frog", "usagi", "niwatori", "ika", "tako", "iruka", "butterfly"];
 const NUM: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const DIR: string[] = ["ひだり", "みぎ"];
-var answer: string;
-var imgClickflag = false;
-var order: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+let answer: string;
+let imgClickflag = false;
+let order: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 export default function Nanbanme() {
   const { sendRight, sendWrong } = useCheckAnswer();
   const { clearImage } = useClearImage();

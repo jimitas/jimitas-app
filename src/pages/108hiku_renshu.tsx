@@ -10,11 +10,11 @@ import Layout from "src/components/Layout";
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 const ITEM = ["～10", "10-□", "1□-□", "1□-□=□"];
-var left_value: number;
-var right_value: number;
-var answer: number;
-var inGame: boolean = false;
-var timer: NodeJS.Timeout | null = null;
+let left_value: number;
+let right_value: number;
+let answer: number;
+let inGame: boolean = false;
+let timer: NodeJS.Timeout | null = null;
 
 export default function Hikizan1() {
   const { sendRight, sendWrong } = useCheckAnswer();

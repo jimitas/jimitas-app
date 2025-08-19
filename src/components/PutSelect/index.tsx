@@ -1,10 +1,14 @@
+import React from "react";
 import styles from "src/components/PutSelect/putSelect.module.css";
 
-export function PutSelect(props) {
-  const ITEM = props.ITEM;
-  const handleEvent = props.handleEvent;
+interface PutSelectProps {
+  ITEM: (string | number)[];
+  handleEvent: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+export function PutSelect({ ITEM, handleEvent }: PutSelectProps) {
   return (
-    <div style={styles.plece}>
+    <div className={styles.place}> {/* 修正: plece → place */}
       <select onChange={handleEvent} className={styles.select} style={{ margin: "0 5px" }}>
         {ITEM.map((item) => {
           return (
