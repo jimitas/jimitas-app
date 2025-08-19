@@ -1,6 +1,5 @@
 import React from "react";
 import Header from "../Header";
-// import { Footer } from "../Footer";
 import styles from "src/components/Layout/layout.module.css";
 
 interface LayoutProps {
@@ -16,7 +15,6 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
         <div className={styles.mainTitle}>{title}</div>
         <div>{children}</div>
       </main>
-      {/* <Footer /> */}
     </div>
   );
 };

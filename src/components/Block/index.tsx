@@ -119,8 +119,7 @@ export function Block(props: BlockProps) {
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count, left_down, left_up, right_down, right_up]);
+  }, [count, left_down, left_up, right_down, right_up, dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd]);
 
   return (
     <div className="flex justify-center flex-wrap items-end">

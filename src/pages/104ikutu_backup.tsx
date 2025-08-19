@@ -18,7 +18,7 @@ export default function Ikutu() {
   const [answer, setAnswer] = useState<number>(0);
   const [selectValue, setSelectValue] = useState<number>(5);
 
-  const changeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const changeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectValue = parseInt(e.target.value, 10); // セレクト要素のvalueをnumberに変換
     setSelectValue(selectValue);
     se.reset.play();

@@ -15,7 +15,7 @@ var left_value: number = 0;
 var right_value: number = 0;
 var answer: number;
 var inGame: boolean = false;
-var timer: any = null;
+var timer: NodeJS.Timeout | null = null;
 
 export default function Tashizan1() {
   const { sendRight, sendWrong } = useCheckAnswer();
@@ -64,8 +64,10 @@ export default function Tashizan1() {
 
   useEffect(() => {
     if (time <= 0) {
-      clearInterval(timer);
-      timer = null;
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
       gameStopEvent();
       return;
     }
@@ -79,8 +81,10 @@ export default function Tashizan1() {
     se.seikai1.play();
     el_text.current!.style.backgroundColor = "lightgray";
     el_text.current!.innerHTML = "おわり(スタートで　もういちどチャレンジ)";
-    clearInterval(timer);
-    timer = null;
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
   }, []);
 
   // 問題を出す

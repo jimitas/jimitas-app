@@ -10,7 +10,7 @@ export default function Home() {
   const el_select = useRef<HTMLSelectElement>(null);
   const [gakkiName, setGakkiName] = useState<string>("けんばんハーモニカ");
 
-  const changeGakki = (e: any) => {
+  const changeGakki = (e: React.ChangeEvent<HTMLSelectElement>) => {
     SFX.reset.play();
     setGakkiName(e.target.value);
   };

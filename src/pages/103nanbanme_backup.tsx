@@ -50,7 +50,7 @@ export default function Nanbanme() {
   }, [count_1]);
 
   useEffect(() => {
-    const num = Math.floor(Math.random() * 10);
+    const num = Math.floor(Math.random() * 9 + 1);
     el_input.current!.hidden = false;
     const img = document.createElement("img");
     answer = ANIMALS[order[num]];
@@ -91,12 +91,7 @@ export default function Nanbanme() {
   const checkAnswer_2 = () => {
     if (!flag) return;
     setFlag(false);
-    // selectIndex_2は1-10の値、orderは0-9のインデックス
-    // 左から: selectIndex_2番目 = order[selectIndex_2 - 1]
-    // 右から: selectIndex_2番目 = order[10 - selectIndex_2]
-    const myAnswer = selectIndex_1 == "ひだり" ? 
-      ANIMALS[order[selectIndex_2 - 1]] : 
-      ANIMALS[order[10 - selectIndex_2]];
+    const myAnswer = selectIndex_1 == "ひだり" ? ANIMALS[order[selectIndex_2 - 1]] : ANIMALS[order[10 - selectIndex_2]];
     answer == myAnswer ? sendRight(el_text) : sendWrong(el_text);
     if (answer != myAnswer)
       setTimeout(() => {
@@ -115,7 +110,7 @@ export default function Nanbanme() {
     order = [];
     let num = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     for (let i = 0; i < 10; i++) {
-      order.push(...num.splice(Math.floor(Math.random() * num.length), 1));
+      order.push(...num.splice(Math.floor(Math.random() * num.length - 1), 1));
     }
     clearImage(el_img); // 画像のクリア
     putImage();

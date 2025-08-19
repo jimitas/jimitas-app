@@ -43,7 +43,7 @@ export default function Hikizan1() {
   }, [selectIndex]);
 
   // 問題の難易度をセレクト
-  const changeSelect = (e: any) => {
+  const changeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     se.reset.play();
     const selectedIndex: number = e.target.selectedIndex;
     setSelectIndex(selectedIndex);
