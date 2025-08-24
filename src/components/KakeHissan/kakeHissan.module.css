@@ -166,12 +166,16 @@
   border-right: dotted gray 1px;
 }
 
+/* 中間行（2, 4, 6行）の高さ調整 */
 .row2 .tableCell,
 .row4 .tableCell,
 .row6 .tableCell {
   height: 20px;
   font-size: 8px;
+  padding: 0;
+  line-height: 20px;
 }
+
 
 /* 特定列の幅調整（小数点用） */
 .tableCell:nth-child(2),
@@ -195,18 +199,31 @@
 
 /* テーブル内の数字 */
 .tableCell .num {
-  width: auto;
-  height: auto;
+  width: max(50px, 2.8vw);
+  height: max(50px, 2.8vw);
   min-width: 20px;
   min-height: 20px;
-  line-height: 20px;
   border: solid 1px #6b7280;
   border-radius: 4px;
   margin: auto;
   padding: 2px 4px;
-  font-size: 0.9rem;
+  font-size: 1.6rem;
   background-color: #ffffff;
+  display: flex;
+  align-items: center;   /* 縦中央 */
+  justify-content: center; /* 横中央 */
 }
+
+.row2 .tableCell .num,
+.row4 .tableCell .num,
+.row6 .tableCell .num {
+  height: 20px;
+  font-size: 8px;
+  padding: 0;
+  line-height: 20px;
+}
+
+
 
 /* 小数点クリック可能 */
 .decimalClickable {
@@ -223,7 +240,7 @@
   align-items: center;
   justify-content: center;
   margin: 20px 0;
-  gap: 16px;
+  gap: 2px;
 }
 
 .spacer {
@@ -239,10 +256,11 @@
   flex: 2;
 }
 
+/* 数字パレットの基本スタイル（通常の行と同じ高さ） */
 .num {
-  width: max(50px, 2.8vw);
-  height: max(50px, 2.8vw);
-  line-height: max(50px, 2.8vw);
+  width: max(50px, 3vw);
+  height: max(50px, 3vw);
+  line-height: max(50px, 3vw);
   font-size: max(20px, 1.1vw);
   border: solid 2px #374151;
   border-radius: 10%;
@@ -253,6 +271,16 @@
   font-weight: 600;
   transition: all 0.2s ease;
   user-select: none;
+}
+
+/* 中間行（2, 4, 6行）と同じ高さの数字パレット用 */
+.num.small {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 10px;
+  min-width: 20px;
+  min-height: 20px;
 }
 
 .num:hover {
@@ -388,10 +416,19 @@
   }
 
   .num {
-    width: max(40px, 8vw);
-    height: max(40px, 8vw);
-    line-height: max(40px, 8vw);
+    width: max(40px, 6vw);
+    height: max(40px, 6vw);
+    line-height: max(40px, 6vw);
     font-size: max(16px, 3.2vw);
+  }
+  
+  .num.small {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 8px;
+    min-width: 16px;
+    min-height: 16px;
   }
 
   .tableCell {

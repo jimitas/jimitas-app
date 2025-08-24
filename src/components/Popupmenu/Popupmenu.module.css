@@ -4,7 +4,7 @@
   position: absolute;
   top: 32px;
   left: 50px;
-  z-index: 2;
+  z-index: 1000;
   transform: scale(0);
   transition: transform 0.2s;
   transform-origin: top left;

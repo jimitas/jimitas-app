@@ -4,7 +4,7 @@
   margin: auto;
   background-color: #333;
   opacity: 0.9;
-  z-index: 100;
+  z-index: 10;
   border: yellowgreen 1px solid;
   pointer-events: none;
   position: absolute;

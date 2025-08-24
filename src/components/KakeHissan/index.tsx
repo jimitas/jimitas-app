@@ -63,37 +63,6 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
   // カスタムフックからドラッグ&ドロップ機能を取得
   const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } = useDragDrop(handleDropCallback);
 
-  // 元のコードと同じドラッグ&ドロップ処理（デバッグ用）
-  let localDragged: HTMLElement | null = null;
-
-  const localDragStart = (e: DragEvent) => {
-    console.log("Local drag start:", e.target);
-    localDragged = e.target as HTMLElement;
-  };
-
-  const localDragOver = (e: DragEvent) => {
-    e.preventDefault();
-  };
-
-  const localDropEnd = (e: DragEvent) => {
-    e.preventDefault();
-    const target = e.target as HTMLElement;
-    console.log("Local drop:", {
-      target: target,
-      targetClass: target.className,
-      hasDroppableClass: target.className.match(/droppable-elem/),
-      dragged: localDragged
-    });
-    
-    if (target.className.match(/droppable-elem/) && localDragged && localDragged.parentNode) {
-      console.log("Local drop executing");
-      localDragged.parentNode.removeChild(localDragged);
-      target.appendChild(localDragged);
-      se.pi.play();
-      handleDropCallback();
-    }
-  };
-
   // 答え更新
   const myAnswerUpdate = () => {
     const table = tableRef.current;
@@ -241,27 +210,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         div.className = `${styles.num} draggable-elem`;
         div.setAttribute("draggable", "true");
         
-        // 高さを確実に設定（CSSが失われた場合のフォールバック）
-        const size = Math.max(50, window.innerWidth * 0.028);
-        const fontSize = Math.max(20, window.innerWidth * 0.011); // max(20px, 1.1vw)と同等
-        
-        div.style.width = `${size}px`;
-        div.style.height = `${size}px`;
-        div.style.lineHeight = `${size}px`;
-        div.style.fontSize = `${fontSize}px`;
-        div.style.border = "solid 2px #374151";
-        div.style.borderRadius = "10%";
-        div.style.textAlign = "center";
-        div.style.verticalAlign = "middle";
-        div.style.cursor = "pointer";
-        div.style.backgroundColor = "white";
-        div.style.fontWeight = "600";
-        div.style.transition = "all 0.2s ease";
-        div.style.userSelect = "none";
-        div.style.display = "inline-block";
-        
-        // イベントリスナーを追加
-        div.addEventListener("dragstart", dragStart, false);
+        // タッチイベントのみdiv要素に追加（マウスイベントはdocumentレベルで処理）
         div.addEventListener("touchstart", touchStart, false);
         div.addEventListener("touchmove", touchMove, false);
         div.addEventListener("touchend", touchEnd, false);
@@ -279,7 +228,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         numPalletElement.appendChild(div);
       }
     }
-  }, [dragStart, touchStart, touchMove, touchEnd]);
+  }, [touchStart, touchMove, touchEnd]);
 
   // 初期化
   useEffect(() => {
@@ -301,6 +250,16 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
 
     return () => clearTimeout(timer);
   }, [selectIndex, adjustTableLayout]);
+
+  // ウィンドウサイズ変更時の数字パレットサイズ調整
+  useEffect(() => {
+    const handleResize = () => {
+      numberSet();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [numberSet]);
 
   // DOM操作とイベントリスナーの設定
   useEffect(() => {
@@ -325,18 +284,18 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
     setupTableEvents();
     numberSet();
 
-    // デバッグ用にローカル関数を使用
-    document.addEventListener("dragstart", localDragStart, false);
-    document.addEventListener("dragover", localDragOver, false);
-    document.addEventListener("drop", localDropEnd, false);
+    // 他のコンポーネントと同様にdocumentレベルでマウスドラッグイベントを追加
+    document.addEventListener("dragstart", dragStart as EventListener, false);
+    document.addEventListener("dragover", dragOver as EventListener, false);
+    document.addEventListener("drop", dropEnd as EventListener, false);
 
     return () => {
       // documentレベルのイベントリスナーをクリーンアップ
-      document.removeEventListener("dragstart", localDragStart, false);
-      document.removeEventListener("dragover", localDragOver, false);
-      document.removeEventListener("drop", localDropEnd, false);
+      document.removeEventListener("dragstart", dragStart as EventListener, false);
+      document.removeEventListener("dragover", dragOver as EventListener, false);
+      document.removeEventListener("drop", dropEnd as EventListener, false);
     };
-  }, [count, selectIndex, numberSet, handleDropCallback]);
+  }, [count, selectIndex, dragStart, dragOver, dropEnd, numberSet]);
 
   // セレクトボックス変更時
   const handleSelectChange = (value: number) => {

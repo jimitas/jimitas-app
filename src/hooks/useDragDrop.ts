@@ -1,19 +1,16 @@
 import * as se from "src/components/se";
 
-export const useDragDrop = (onDropCallback?: () => void) => {
-  let dragged: HTMLElement | null = null;
+// グローバルスコープでdragged変数を管理（複数コンポーネント間で共有しないように注意）
+let globalDragged: HTMLElement | null = null;
 
+export const useDragDrop = (onDropCallback?: () => void) => {
   // ドラッグ開始の操作
   function dragStart(e: DragEvent) {
     const target = e.target as HTMLElement;
-    console.log("Drag start:", {
-      targetClass: target.className,
-      draggable: target.draggable,
-      tagName: target.tagName
-    });
+    console.log("dragStart called:", target, "draggable:", target.draggable);
     if (target.draggable === true) {
-      dragged = target;
-      console.log("Dragged element set:", dragged);
+      globalDragged = target;
+      console.log("globalDragged set:", globalDragged);
     }
   }
 
@@ -27,19 +24,13 @@ export const useDragDrop = (onDropCallback?: () => void) => {
     e.preventDefault();
     const target = e.target as HTMLElement;
 
-    // デバッグ用ログ
-    console.log("Drop event:", {
-      targetClass: target.className,
-      hasDroppableClass: target.className.match(/droppable-elem/),
-      dragged: dragged,
-      draggedParent: dragged?.parentNode,
-      targetTag: target.tagName
-    });
+    // デバッグ用アラート（ドロップ位置の確認）
+    // alert(`ドロップテスト\nターゲット要素: ${target.tagName}\nクラス: ${target.className}\nglobalDragged存在: ${globalDragged ? 'あり' : 'なし'}\nglobalDragged内容: ${globalDragged?.textContent || 'なし'}`);
 
-    // droppable-elemクラスを持つ要素、またはその親要素を探す
+    // droppable-elemクラスを持つ要素を探す（バブリング対応）
     let dropTarget = target;
     let attempts = 0;
-    while (dropTarget && attempts < 3) {
+    while (dropTarget && attempts < 5) {
       if (dropTarget.className && dropTarget.className.match(/droppable-elem/)) {
         break;
       }
@@ -47,17 +38,43 @@ export const useDragDrop = (onDropCallback?: () => void) => {
       attempts++;
     }
 
-    if (dropTarget && dropTarget.className.match(/droppable-elem/) && dragged && dragged.parentNode) {
-      console.log("Executing drop on:", dropTarget.className);
-      dragged.parentNode.removeChild(dragged);
-      dropTarget.appendChild(dragged);
+    // ドロップ可能な要素が見つかったか確認
+    // const isDroppable = dropTarget && dropTarget.className.match(/droppable-elem/);
+    // alert(`ドロップ可能判定\ndroppable要素: ${isDroppable ? '見つかった' : '見つからない'}\n要素: ${dropTarget?.tagName || 'なし'}\nクラス: ${dropTarget?.className || 'なし'}`);
+
+    // parentNodeの存在確認を詳細に
+    // console.log("globalDragged詳細:", {
+    //   element: globalDragged,
+    //   parentNode: globalDragged?.parentNode,
+    //   parentId: globalDragged?.parentNode && 'id' in globalDragged.parentNode ? globalDragged.parentNode.id : 'なし',
+    //   isConnected: globalDragged?.isConnected
+    // });
+
+    if (dropTarget && dropTarget.className.match(/droppable-elem/) && globalDragged) {
+      // alert('ドロップ実行します！');
+
+      // 親要素が存在する場合のみremoveChild
+      if (globalDragged.parentNode) {
+        globalDragged.parentNode.removeChild(globalDragged);
+      }
+
+      // 要素を複製して新しく追加（元の要素が既に削除されている可能性があるため）
+      const clonedElement = globalDragged.cloneNode(true) as HTMLElement;
+      clonedElement.setAttribute("draggable", "true");
+      clonedElement.className = globalDragged.className;
+
+      dropTarget.appendChild(clonedElement);
       se.pi.play();
+
+      // グローバル変数をクリア
+      globalDragged = null;
+
       // コールバック関数を実行（コンポーネント固有の処理）
       if (onDropCallback) {
         onDropCallback();
       }
     } else {
-      console.log("Drop failed - no valid target found");
+      alert(`ドロップ失敗\n理由:\n- droppable要素: ${dropTarget ? 'あり' : 'なし'}\n- globalDragged: ${globalDragged ? 'あり' : 'なし'}`);
     }
   }
 
@@ -92,6 +109,8 @@ export const useDragDrop = (onDropCallback?: () => void) => {
     if (newParentElem && newParentElem.className.match(/droppable-elem/)) {
       newParentElem.appendChild(droppedElem);
       se.pi.play();
+      // グローバル変数もクリア
+      globalDragged = null;
       // コールバック関数を実行（コンポーネント固有の処理）
       if (onDropCallback) {
         onDropCallback();
