@@ -35,3 +35,4 @@ const MainTitle: React.FC = () => {
 };
 
 export default MainTitle;
+
