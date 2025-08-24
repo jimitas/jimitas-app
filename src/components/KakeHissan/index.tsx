@@ -244,7 +244,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         numPalletElement.appendChild(div);
       }
     }
-  }, [touchStart, touchMove, touchEnd]);
+  }, []);
 
   // 初期化
   useEffect(() => {
@@ -310,8 +310,9 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
       document.removeEventListener("dragstart", dragStart as EventListener, false);
       document.removeEventListener("dragover", dragOver as EventListener, false);
       document.removeEventListener("drop", dropEnd as EventListener, false);
+
     };
-  }, [count, selectIndex, dragStart, dragOver, dropEnd, numberSet]);
+  }, [selectIndex]);
 
   // セレクトボックス変更時
   const handleSelectChange = (value: number) => {
@@ -720,7 +721,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         </div>
       </div>
 
-     
+
 
       {/* スコア表示 */}
       <div className={styles.scoreSection}>
