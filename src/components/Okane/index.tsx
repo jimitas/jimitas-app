@@ -165,7 +165,7 @@ export function Okane(props: { hyaku?: number; goju?: number; ju?: number; go?: 
 
         <BtnUndo handleEvent={resetEvent} />
 
-        <div ref={el_calc_result} className="place w-20"></div>
+        <div ref={el_calc_result} className={`place w-20 ${styles.calcResult}`}></div>
       </section>
     </div>
   );

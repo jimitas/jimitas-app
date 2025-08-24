@@ -11,7 +11,7 @@ export function BtnUndo(props: BtnUndoProps) {
   const { handleEvent } = props;
 
   return (
-    <div className="flex flex-wrap justify-center">
+    <div className="flex flex-wrap justify-center items-center">
       <button className={styles.btnUndo} onClick={handleEvent}>
         <FontAwesomeIcon icon={faUndo} className="w-8 h-8" />
       </button>

@@ -12,7 +12,7 @@ export function BtnCalc(props: BtnCalcProps) {
   const { handleEvent, btnText } = props;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center items-center">
       <button onClick={handleEvent} className={styles.btnCalc}>
         <FontAwesomeIcon icon={faCalculator} />
         {btnText && <span className="ml-1">{btnText}</span>}
