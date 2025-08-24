@@ -652,6 +652,15 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         <button onClick={checkAnswer} className={`${styles.btn} ${styles.btnPrimary}`}>
           答え合わせ
         </button>
+        <button onClick={showAnswer} className={`${styles.btn} ${styles.btnSuccess}`}>
+          答えを見る
+        </button>
+        <button onClick={handleClear} className={`${styles.btn} ${styles.btnSecondary}`}>
+          消す
+        </button>
+        <button onClick={handleHint} className={`${styles.btn} ${styles.btnInfo}`}>
+          ヒント
+        </button>
       </div>
 
       {/* 問題表示 */}
@@ -711,18 +720,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         </div>
       </div>
 
-      {/* 下部ボタン */}
-      <div className={styles.buttonSection}>
-        <button onClick={showAnswer} className={`${styles.btn} ${styles.btnSuccess}`}>
-          答えを見る
-        </button>
-        <button onClick={handleClear} className={`${styles.btn} ${styles.btnSecondary}`}>
-          消す
-        </button>
-        <button onClick={handleHint} className={`${styles.btn} ${styles.btnInfo}`}>
-          ヒント
-        </button>
-      </div>
+     
 
       {/* スコア表示 */}
       <div className={styles.scoreSection}>
