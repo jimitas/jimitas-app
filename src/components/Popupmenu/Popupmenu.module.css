@@ -1,55 +1,50 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup-menu-container {
-  position: relative;
-}
+/* PopupMenu用CSS（jimitas-next14版：レスポンシブ対応改善） */
 
 .popupMenu {
   position: absolute;
-  top:64px;
-  left:100px;
+  top: 32px;
+  left: 50px;
   z-index: 2;
   transform: scale(0);
-  transition: transform 0.2s; 
+  transition: transform 0.2s;
   transform-origin: top left;
   margin-top: 0.5rem;
   padding: 1rem;
-  background: #fff;
   border-radius: 0.5rem;
- 
+  border: 2px blue solid;
   overflow: auto; /* スクロール可能にする */
 }
 
 .popupMenuShown {
   position: absolute;
-  top:64px;
-  left:100px;
+  top: 32px;
+  left: 50px;
   z-index: 1000;
-  transform: scale(0.6);
+  transform: scale(0.8);
   transform-origin: top left;
-  width: 150vw;
+  width: 100vw;
   margin-top: 0.5rem;
   padding: 1rem;
-  background: #333;
+  background-color: antiquewhite;
   border-radius: 0.5rem;
   transition: transform 0.2s;
+  border: 2px orange solid;
   overflow: auto; /* スクロール可能にする */
 }
 
-
-@media screen and (max-width: 959px) {
+@media screen and (max-width: 767px) {
   .popupMenuShown {
-    transform: scale(0.5);
-    width: 150vw;
+    top: 32px;
+    left: 10px;
+    transform: scale(0.7);
+    width: 100vw;
   }
 }
 @media screen and (max-width: 480px) {
   .popupMenuShown {
-    transform: scale(0.3);
-    width: 200vw;
+    top: 32px;
+    left: 10px;
+    transform: scale(0.6);
+    width: 120vw;
   }
 }
