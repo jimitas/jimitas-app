@@ -1,0 +1,401 @@
+/* 九九アレイ図コンポーネント専用スタイル */
+
+/* アプリ全体 */
+.arrayApp {
+  max-width: 900px;
+  margin: 12px auto;
+  padding: 0 16px 24px;
+}
+
+/* 計算式セクション */
+.equationSection {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.equationRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+  padding: 16px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.equationDisplay {
+  font-size: clamp(28px, 8vw, 50px);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #111827;
+  display: inline-block;
+  white-space: nowrap;
+  min-width: 12ch;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* 式の数字の下線スタイル */
+.firstNumber {
+  text-decoration: underline;
+  text-decoration-color: #ec4899;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+
+.secondNumber {
+  text-decoration: underline;
+  text-decoration-color: #2563eb;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+
+/* トグルボタン */
+.toggleButton {
+  appearance: none;
+  border: 1px solid #c9ced6;
+  background: #fff9b2;
+  color: #111827;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 60ms ease;
+}
+
+.toggleButton:hover { 
+  background: #fff048;
+}
+
+.toggleButton:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.toggleButton:active { 
+  transform: translateY(1px); 
+}
+
+.toggleButtonPressed {
+  background: #f8decc;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) inset;
+}
+
+/* アレイ図セクション */
+.arraySection {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 50px 1fr; /* cell-size */
+  grid-template-rows: 37px auto; /* button-height相当 */
+  grid-template-areas:
+    "corner top"
+    "left grid";
+  gap: 0;
+  align-items: start;
+  background-color: #f8f9fa;
+  padding: 16px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.corner {
+  grid-area: corner;
+  display: grid;
+  place-items: end center;
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 24px;
+  user-select: none;
+}
+
+/* コントロールボタン */
+.topControls {
+  grid-area: top;
+  display: grid;
+  grid-template-columns: repeat(9, 50px); /* cell-size */
+  gap: 0px;
+  place-items: end center;
+}
+
+.leftControls {
+  grid-area: left;
+  display: grid;
+  grid-template-rows: repeat(9, 48px); /* row-size */
+  gap: 0px;
+  place-items: center;
+}
+
+/* ボタンの共通スタイル */
+.controlButton {
+  appearance: none;
+  border: 2px solid #c9ced6;
+  border-radius: 6px;
+  width: 50px; /* cell-size */
+  height: 37px; /* button-height */
+  padding: 0;
+  line-height: 37px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.06);
+  transition: background 120ms ease, border-color 120ms ease, transform 60ms ease, box-shadow 120ms ease;
+  margin: 0;
+}
+
+/* 上段ヘッダのボタン */
+.topButton { 
+  width: 48px; /* cell-size - 2px */
+  background: #2563eb;
+  color: white;
+  border-color: #1d4ed8;
+}
+
+/* 左側のボタン */
+.leftButton {
+  background: #ec4899;
+  color: white;
+  border-color: #db2777;
+}
+
+/* ホバー効果 */
+.topButton:hover,
+.leftButton:hover {
+  box-shadow: 0 2px 4px rgba(17, 24, 39, 0.08);
+}
+
+.topButton:hover {
+  background: #1e40af;
+}
+
+.leftButton:hover {
+  background: #be185d;
+}
+
+/* フォーカス表示 */
+.controlButton:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.controlButton:active {
+  transform: translateY(1px);
+}
+
+/* 選択状態 */
+.controlButtonSelected {
+  background: #eff6ff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) inset;
+  color: #111827;
+}
+
+/* グリッド */
+.grid {
+  grid-area: grid;
+  display: grid;
+  grid-template-columns: repeat(9, 50px); /* cell-size */
+  grid-template-rows: repeat(9, 48px); /* row-size */
+  gap: 0px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  place-items: center;
+  width: fit-content;
+  justify-self: start;
+}
+
+/* ドット */
+.dot {
+  width: clamp(18px, 35px, 35px); /* dot-size */
+  height: clamp(18px, 35px, 35px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f0f3f8 40%, #dde3ec 100%);
+  border: 1px solid #c9ced6;
+  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.04), 0 2px 4px rgba(17, 24, 39, 0.08);
+  transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* 点灯状態 */
+.dotLit {
+  background: #ff8a3d;
+  border-color: #e26e00;
+  box-shadow: 0 0 0 2px rgba(255, 138, 61, 0.25) inset, 0 1px 0 rgba(17, 24, 39, 0.06);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 42px 1fr;
+    grid-template-rows: 31px auto; /* button-height調整 */
+    }
+  
+  .topControls {
+    grid-template-columns: repeat(9, 42px);
+  }
+  
+  .leftControls {
+    grid-template-rows: repeat(9, 40px);
+  }
+  
+  .controlButton {
+    width: 42px;
+    height: 31px;
+    line-height: 31px;
+  }
+  
+  .topButton {
+    width: 40px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(9, 42px);
+    grid-template-rows: repeat(9, 40px);
+  }
+}
+
+@media (max-width: 480px) {
+  .layout {
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: 27px auto;
+    }
+  
+  .topControls {
+    grid-template-columns: repeat(9, 36px);
+  }
+  
+  .leftControls {
+    grid-template-rows: repeat(9, 34px);
+  }
+  
+  .controlButton {
+    width: 36px;
+    height: 27px;
+    line-height: 27px;
+  }
+  
+  .topButton {
+    width: 34px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(9, 36px);
+    grid-template-rows: repeat(9, 34px);
+  }
+}
+
+@media (max-width: 360px) {
+  .layout {
+    grid-template-columns: 32px 1fr;
+    grid-template-rows: 24px auto;
+    }
+  
+  .topControls {
+    grid-template-columns: repeat(9, 32px);
+  }
+  
+  .leftControls {
+    grid-template-rows: repeat(9, 30px);
+  }
+  
+  .controlButton {
+    width: 32px;
+    height: 24px;
+    line-height: 24px;
+  }
+  
+  .topButton {
+    width: 30px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(9, 32px);
+    grid-template-rows: repeat(9, 30px);
+  }
+}
+
+@media (max-width: 320px) {
+  .layout {
+    grid-template-columns: 28px 1fr;
+    grid-template-rows: 21px auto;
+    }
+  
+  .topControls {
+    grid-template-columns: repeat(9, 28px);
+  }
+  
+  .leftControls {
+    grid-template-rows: repeat(9, 26px);
+  }
+  
+  .controlButton {
+    width: 28px;
+    height: 21px;
+    line-height: 21px;
+  }
+  
+  .topButton {
+    width: 26px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(9, 28px);
+    grid-template-rows: repeat(9, 26px);
+  }
+}
+
+/* アクセシビリティ対応 */
+@media (prefers-reduced-motion: reduce) {
+  .toggleButton,
+  .controlButton,
+  .dot {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 大画面対応 */
+@media (min-width: 1200px) {
+  .arrayApp {
+    max-width: 1100px;
+  }
+  
+  .layout {
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: 45px auto;
+    }
+  
+  .topControls {
+    grid-template-columns: repeat(9, 60px);
+  }
+  
+  .leftControls {
+    grid-template-rows: repeat(9, 58px);
+  }
+  
+  .controlButton {
+    width: 60px;
+    height: 45px;
+    line-height: 45px;
+  }
+  
+  .topButton {
+    width: 58px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(9, 60px);
+    grid-template-rows: repeat(9, 58px);
+  }
+}

@@ -1,0 +1,512 @@
+/* かけ算のひっ算コンポーネント専用スタイル */
+
+.container {
+  max-width: 900px;
+  margin: 12px auto;
+  padding: 0 16px 24px;
+  font-size: 1.6rem;
+  font-family: "UD デジタル 教科書体 NK-B", sans-serif;
+}
+
+/* 問題選択セクション */
+.questionSection {
+  margin: 16px auto;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.questionLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.selectBox {
+  min-width: 200px;
+  max-width: 300px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  flex: 1;
+}
+
+.selectBox:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ボタンセクション */
+.buttonSection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.btnDanger {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btnDanger:hover {
+  background-color: #b91c1c;
+}
+
+.btnPrimary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btnPrimary:hover {
+  background-color: #1d4ed8;
+}
+
+.btnSuccess {
+  background-color: #059669;
+  color: white;
+}
+
+.btnSuccess:hover {
+  background-color: #047857;
+}
+
+.btnSecondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.btnSecondary:hover {
+  background-color: #4b5563;
+}
+
+.btnInfo {
+  background-color: #0891b2;
+  color: white;
+}
+
+.btnInfo:hover {
+  background-color: #0e7490;
+}
+
+/* 問題表示 */
+.textBox {
+  height: max(50px, 4vw);
+  line-height: max(50px, 4vw);
+  font-size: max(24px, 2.4vw);
+  letter-spacing: 0.2vw;
+  background-color: #fef3c7;
+  text-align: center;
+  margin: 16px auto;
+  border-radius: 8px;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* テーブルコンテナ */
+.tableContainer {
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.calcTable {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.tableCell {
+  width: max(50px, 3vw);
+  height: max(50px, 3vw);
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: dotted gray 1px;
+  border-left: dotted gray 1px;
+  position: relative;
+}
+
+/* テーブル行スタイル */
+.row0 .tableCell:first-child,
+.row1 .tableCell:first-child {
+  border-top: dotted gray 1px;
+}
+
+.row1 .tableCell,
+.row5 .tableCell {
+  border-bottom: solid black 1px;
+}
+
+.tableCell:last-child {
+  border-right: dotted gray 1px;
+}
+
+.row2 .tableCell,
+.row4 .tableCell,
+.row6 .tableCell {
+  height: 20px;
+  font-size: 8px;
+}
+
+/* 特定列の幅調整（小数点用） */
+.tableCell:nth-child(2),
+.tableCell:nth-child(4),
+.tableCell:nth-child(6),
+.tableCell:nth-child(8) {
+  width: 0px;
+  border-left: none;
+  vertical-align: bottom;
+}
+
+/* ドロップ可能エリア */
+.droppableElem {
+  min-height: max(50px, 3vw);
+  background-color: #f9fafb;
+}
+
+.droppableElem:hover {
+  background-color: #e5e7eb;
+}
+
+/* テーブル内の数字 */
+.tableCell .num {
+  width: auto;
+  height: auto;
+  min-width: 20px;
+  min-height: 20px;
+  line-height: 20px;
+  border: solid 1px #6b7280;
+  border-radius: 4px;
+  margin: auto;
+  padding: 2px 4px;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+}
+
+/* 小数点クリック可能 */
+.decimalClickable {
+  cursor: pointer;
+}
+
+.decimalClickable:hover {
+  background-color: #ddd6fe;
+}
+
+/* 数字パレット */
+.paletteSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 16px;
+}
+
+.spacer {
+  flex: 1;
+  max-width: 100px;
+}
+
+.numPallet {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  flex: 2;
+}
+
+.num {
+  width: max(50px, 2.8vw);
+  height: max(50px, 2.8vw);
+  line-height: max(50px, 2.8vw);
+  font-size: max(20px, 1.1vw);
+  border: solid 2px #374151;
+  border-radius: 10%;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: white;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.num:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.draggableElem {
+  draggable: true;
+}
+
+.diagonalToggle {
+  position: relative;
+}
+
+.diagonalToggle.diagonal::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to right top,
+    transparent calc(50% - 0.5px),
+    red 50%,
+    red calc(50% + 0.5px),
+    transparent calc(50% + 1px)
+  );
+  pointer-events: none;
+}
+
+.trashSection {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 100px;
+}
+
+.trashIcon {
+  width: 60px;
+  height: 80px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.trashIcon:hover {
+  transform: scale(1.05);
+}
+
+/* 情報テキスト */
+.infoText {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 12px 0;
+  padding: 8px;
+  background-color: #eff6ff;
+  border-radius: 6px;
+  border-left: 4px solid #3b82f6;
+}
+
+/* スコアセクション */
+.scoreSection {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 20px 0;
+  min-height: 60px;
+  padding: 10px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+}
+
+.scoreIcon {
+  width: 3vw;
+  height: 3vw;
+  min-width: 30px;
+  min-height: 30px;
+  max-width: 50px;
+  max-height: 50px;
+  margin: 2px;
+  animation: coinAppear 0.5s ease-out;
+}
+
+@keyframes coinAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+/* レスポンシブ対応 */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 0 8px 16px;
+  }
+
+  .questionSection {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .questionLabel {
+    font-size: 0.9rem;
+  }
+
+  .selectBox {
+    min-width: 180px;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    min-width: 90px;
+  }
+
+  .numPallet {
+    gap: 6px;
+  }
+
+  .num {
+    width: max(40px, 8vw);
+    height: max(40px, 8vw);
+    line-height: max(40px, 8vw);
+    font-size: max(16px, 3.2vw);
+  }
+
+  .tableCell {
+    width: max(40px, 6vw);
+    height: max(40px, 6vw);
+    font-size: 14px;
+  }
+
+  .textBox {
+    font-size: max(18px, 4vw);
+    height: max(40px, 8vw);
+    line-height: max(40px, 8vw);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .questionSection {
+    padding: 10px;
+    margin: 12px auto;
+  }
+
+  .questionLabel {
+    font-size: 0.85rem;
+  }
+
+  .selectBox {
+    font-size: 0.8rem;
+    min-width: 160px;
+    padding: 5px 8px;
+  }
+
+  .btn {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    min-width: 75px;
+  }
+
+  .paletteSection {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .spacer {
+    display: none;
+  }
+
+  .trashSection {
+    max-width: none;
+  }
+
+  .scoreIcon {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* 小数点関連のボーダー調整 */
+.tableCell:nth-child(4),
+.tableCell:nth-child(6),
+.tableCell:nth-child(8) {
+  border-left: dotted gray 1px;
+  width: 10px;
+}
+
+/* 整数問題の場合は小数点列を非表示 */
+.integerMode .tableCell:nth-child(4),
+.integerMode .tableCell:nth-child(6),
+.integerMode .tableCell:nth-child(8) {
+  border-left: none;
+  width: 0px;
+}
+
+/* 乗数が1桁の場合の行調整 */
+.singleDigitMultiplier .row2 .tableCell,
+.singleDigitMultiplier .row3 .tableCell,
+.singleDigitMultiplier .row4 .tableCell,
+.singleDigitMultiplier .row5 .tableCell {
+  height: 0px !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+  line-height: 0;
+  font-size: 0;
+}
+
+/* 小数問題の場合の列調整 */
+.integerMode .tableCell:nth-child(4),
+.integerMode .tableCell:nth-child(6),
+.integerMode .tableCell:nth-child(8) {
+  border-left: none !important;
+  width: 0px !important;
+}
+
+/* アクセシビリティ対応 */
+@media (prefers-reduced-motion: reduce) {
+  .scoreIcon {
+    animation: none;
+  }
+  
+  .num:hover {
+    transform: none;
+  }
+  
+  .trashIcon:hover {
+    transform: none;
+  }
+}
+
+/* フォーカス表示の改善 */
+.btn:focus,
+.selectBox:focus {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.num:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

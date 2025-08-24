@@ -6,8 +6,14 @@ export const useDragDrop = (onDropCallback?: () => void) => {
   // ドラッグ開始の操作
   function dragStart(e: DragEvent) {
     const target = e.target as HTMLElement;
+    console.log("Drag start:", {
+      targetClass: target.className,
+      draggable: target.draggable,
+      tagName: target.tagName
+    });
     if (target.draggable === true) {
       dragged = target;
+      console.log("Dragged element set:", dragged);
     }
   }
 
@@ -20,14 +26,38 @@ export const useDragDrop = (onDropCallback?: () => void) => {
   function dropEnd(e: DragEvent) {
     e.preventDefault();
     const target = e.target as HTMLElement;
-    if (target.className.match(/droppable-elem/) && dragged && dragged.parentNode) {
+
+    // デバッグ用ログ
+    console.log("Drop event:", {
+      targetClass: target.className,
+      hasDroppableClass: target.className.match(/droppable-elem/),
+      dragged: dragged,
+      draggedParent: dragged?.parentNode,
+      targetTag: target.tagName
+    });
+
+    // droppable-elemクラスを持つ要素、またはその親要素を探す
+    let dropTarget = target;
+    let attempts = 0;
+    while (dropTarget && attempts < 3) {
+      if (dropTarget.className && dropTarget.className.match(/droppable-elem/)) {
+        break;
+      }
+      dropTarget = dropTarget.parentElement as HTMLElement;
+      attempts++;
+    }
+
+    if (dropTarget && dropTarget.className.match(/droppable-elem/) && dragged && dragged.parentNode) {
+      console.log("Executing drop on:", dropTarget.className);
       dragged.parentNode.removeChild(dragged);
-      target.appendChild(dragged);
-      se.kako.play();
+      dropTarget.appendChild(dragged);
+      se.pi.play();
       // コールバック関数を実行（コンポーネント固有の処理）
       if (onDropCallback) {
         onDropCallback();
       }
+    } else {
+      console.log("Drop failed - no valid target found");
     }
   }
 
@@ -61,7 +91,7 @@ export const useDragDrop = (onDropCallback?: () => void) => {
 
     if (newParentElem && newParentElem.className.match(/droppable-elem/)) {
       newParentElem.appendChild(droppedElem);
-      se.kako.play();
+      se.pi.play();
       // コールバック関数を実行（コンポーネント固有の処理）
       if (onDropCallback) {
         onDropCallback();
