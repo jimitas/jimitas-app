@@ -244,6 +244,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         numPalletElement.appendChild(div);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 初期化
@@ -312,6 +313,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
       document.removeEventListener("drop", dropEnd as EventListener, false);
 
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectIndex]);
 
   // セレクトボックス変更時
