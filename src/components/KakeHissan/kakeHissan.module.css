@@ -152,8 +152,8 @@
 }
 
 /* テーブル行スタイル */
-.row0 .tableCell:first-child,
-.row1 .tableCell:first-child {
+.row0 .tableCell,
+.row1 .tableCell {
   border-top: dotted gray 1px;
 }
 
@@ -210,8 +210,10 @@
   font-size: 1.6rem;
   background-color: #ffffff;
   display: flex;
-  align-items: center;   /* 縦中央 */
-  justify-content: center; /* 横中央 */
+  align-items: center;
+  /* 縦中央 */
+  justify-content: center;
+  /* 横中央 */
 }
 
 .row2 .tableCell .num,
@@ -304,13 +306,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    to right top,
-    transparent calc(50% - 0.5px),
-    red 50%,
-    red calc(50% + 0.5px),
-    transparent calc(50% + 1px)
-  );
+  background: linear-gradient(to right top,
+      transparent calc(50% - 0.5px),
+      red 50%,
+      red calc(50% + 0.5px),
+      transparent calc(50% + 1px));
   pointer-events: none;
 }
 
@@ -374,10 +374,12 @@
     opacity: 0;
     transform: scale(0) rotate(0deg);
   }
+
   50% {
     opacity: 1;
     transform: scale(1.2) rotate(180deg);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) rotate(360deg);
@@ -421,7 +423,7 @@
     line-height: max(40px, 6vw);
     font-size: max(16px, 3.2vw);
   }
-  
+
   .num.small {
     width: 16px;
     height: 16px;
@@ -526,11 +528,11 @@
   .scoreIcon {
     animation: none;
   }
-  
+
   .num:hover {
     transform: none;
   }
-  
+
   .trashIcon:hover {
     transform: none;
   }
