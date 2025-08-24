@@ -1,3 +1,94 @@
+/* Kenban専用スタイル - globals.cssから移植 */
+.WH {
+  user-select: none;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  width: 1.5rem;
+  height: 10rem;
+  color: black;
+  background-color: white;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-bottom: 2rem;
+  border: 1px solid rgb(75 85 99);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.WH:hover {
+  background-color: rgb(252 165 165);
+}
+
+.BK {
+  user-select: none;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  width: 1.25rem;
+  height: 6rem;
+  color: white;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin-left: 0.125rem;
+  margin-right: 0.125rem;
+  padding-bottom: 2rem;
+  border: 1px solid rgb(75 85 99);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.BK:hover {
+  background-color: rgb(252 165 165);
+}
+
+.None {
+  user-select: none;
+  width: 1.25rem;
+  height: 6rem;
+  color: white;
+  background: none;
+  display: flex;
+  align-items: center;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin-left: 0.125rem;
+  margin-right: 0.125rem;
+  padding-bottom: 2rem;
+  z-index: 0;
+}
+
+.keyPlace {
+  margin-left: calc(max(5px, (100vw - 50rem) / 2));
+  margin-bottom: 10px;
+}
+
+/* レスポンシブ対応 - Medium以上の画面 */
+@media (min-width: 768px) {
+  .WH {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    width: 2.5rem;
+    height: 20rem;
+  }
+  
+  .BK {
+    width: 2.25rem;
+    height: 12rem;
+  }
+  
+  .None {
+    width: 2.25rem;
+    height: 12rem;
+  }
+}
+
+/* 既存のスタイル */
 .WH:active,
 .BK:active {
   /*ボタンを押したとき*/
