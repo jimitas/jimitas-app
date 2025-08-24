@@ -29,4 +29,31 @@
     margin-left: calc(max(5px, (100vw - 50rem) / 2));
     margin-bottom: 10px;
   }
+
+  /* 共通ボタンスタイル - 基本ボタン（ページで直接使用） */
+  .btn {
+    @apply flex items-center justify-center cursor-pointer;
+    text-align: center;
+    margin: 10px;
+    background-color: white;
+    border-radius: 10%;
+    box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+    color: orangered;
+    font-size: 24px;
+    border: orangered 2px solid;
+  }
+
+  .btn:hover {
+    color: white;
+    background-color: orangered;
+  }
+
+  .btn:active {
+    transform: translateY(4px);
+    border-bottom: none;
+  }
+
+
+
+
 }

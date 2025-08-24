@@ -1,5 +1,6 @@
 import React from "react";
-import styles from "src/components/PutButton/button.module.scss";
+import styles from "./button.module.css";
+
 
 export function BtnSpace() {
   return <button className={styles.btnSpace}></button>;

@@ -59,7 +59,7 @@ export function Header() {
   };
 
   return (
-    <header className="flex flex-start w-screen ps-2 h-8 md:h-10 lg:h-12 xl:h-14 border-b items-center absolute top-0 z-50">
+    <header className="flex flex-start w-screen ps-2 h-8 md:h-10 lg:h-12 xl:h-14 border-b items-center fixed top-0 z-50 bg-white">
       <Link href="./">
         <FontAwesomeIcon
           icon={faHome}

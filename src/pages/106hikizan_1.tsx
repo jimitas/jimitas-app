@@ -1,5 +1,4 @@
 import * as se from "src/components/se";
-import styles from "src/styles/Home.module.css";
 import { Block } from "src/components/Block";
 import { Hide } from "src/components/Hide";
 import { useState, useRef, useEffect } from "react";
@@ -152,19 +151,19 @@ export default function Hikizan1() {
       <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
 
-        <button className={styles.btn} onClick={giveQuestion}>
+        <button className="btn" onClick={giveQuestion}>
           <div style={{ display: "flex" }}>
             <FontAwesomeIcon icon={faQuestion} className="w-8 h-8" />
             {"もんだい"}
           </div>
         </button>
-        <button className={styles.btn} onClick={setQuest}>
+        <button className="btn" onClick={setQuest}>
           <div style={{ display: "flex" }}>
             <FontAwesomeIcon icon={faUserEdit} className="w-8 h-8" />
             {"セット"}
           </div>
         </button>
-        <button className={styles.btn} onClick={showAnswer}>
+        <button className="btn" onClick={showAnswer}>
           <div style={{ display: "flex" }}>
             <FontAwesomeIcon icon={faEye} className="w-8 h-8" />
             {"こたえをみる"}
@@ -184,7 +183,7 @@ export default function Hikizan1() {
         <BtnCheck handleEvent={checkAnswerEvent} />
       </div>
 
-      <div className={styles.place}>
+      <div className="place">
         <Block leftCount={left_value} rightCount={0} />
       </div>
 

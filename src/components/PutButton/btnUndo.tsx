@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "src/components/PutButton/button.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUndo } from "@fortawesome/free-solid-svg-icons";
+import styles from "./button.module.css";
 
 interface BtnUndoProps {
   handleEvent: () => void;

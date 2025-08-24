@@ -1,85 +1,149 @@
-@charset "UTF-8";
-.btn,
-.btnCheck,
-.btnNext,
-.btnNum,
-.btnQuest,
-.btnShuffle,
-.btnUndo {
+/* PutButton専用ボタンスタイル集約 */
+
+/* 共通ボタンスタイル - 数字ボタン */
+.btnNum {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   margin: 10px;
   background-color: white;
-  cursor: pointer;
   border-radius: 10%;
   box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
-}
-.btn:active, .btn:active,
-.btnCheck:active,
-.btnCheck:active,
-.btnNext:active,
-.btnNext:active,
-.btnNum:active,
-.btnNum:active,
-.btnQuest:active,
-.btnQuest:active,
-.btnShuffle:active,
-.btnShuffle:active,
-.btnUndo:active,
-.btnUndo:active {
-  /*ボタンを押したとき*/
-  transform: translateY(4px);
-  /*下に動く*/
-  border-bottom: none;
-  /*線を消す*/
-}
-
-.btn,
-.btnNum {
+  cursor: pointer;
   color: blue;
   font-size: 24px;
   width: 50px;
   border: blue 2px solid;
 }
-.btn:hover,
+
 .btnNum:hover {
   color: white;
   background-color: blue;
 }
 
+.btnNum:active {
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+/* 共通ボタンスタイル - 次へボタン */
 .btnNext {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 10px;
+  background-color: white;
+  border-radius: 10%;
+  box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+  cursor: pointer;
   color: orangered;
   border: orangered 2px solid;
 }
+
 .btnNext:hover {
   color: white;
   background-color: orangered;
 }
 
+.btnNext:active {
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+/* 共通ボタンスタイル - チェック・質問・シャッフルボタン */
 .btnCheck,
 .btnQuest,
-.btnShuffle,
-.btnUndo {
+.btnShuffle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 10px;
   padding: 5px;
+  background-color: white;
+  border-radius: 10%;
+  box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+  cursor: pointer;
   color: red;
   border: red 2px solid;
 }
+
 .btnCheck:hover,
 .btnQuest:hover,
-.btnShuffle:hover,
-.btnUndo:hover {
+.btnShuffle:hover {
   color: white;
   background-color: red;
 }
 
-.btnUndo {
-  color: #ff4b00;
-  border: orangered 2px solid;
+.btnCheck:active,
+.btnQuest:active,
+.btnShuffle:active {
+  transform: translateY(4px);
+  border-bottom: none;
 }
 
+/* 共通ボタンスタイル - スペースボタン */
 .btnSpace {
   width: max(4vw, 40px);
   height: max(3vw, 30px);
-}/*# sourceMappingURL=button.module.css.map */
+}
+
+/* 共通ボタンスタイル - 戻るボタン（統一版） */
+.btnUndo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 4rem;
+  height: 5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: 2px solid #ff4b00;
+  border-radius: 20%;
+  color: #ff4b00;
+  background-color: white;
+  box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+}
+
+.btnUndo:hover {
+  color: white;
+  background-color: #ff4b00;
+}
+
+.btnUndo:active {
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+/* 共通ボタンスタイル - 計算ボタン */
+.btnCalc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 4rem;
+  height: 5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: 2px solid #ff4b00;
+  border-radius: 20%;
+  color: #ff4b00;
+  background-color: white;
+  box-shadow: 2px 2px 2px 0 rgba(128, 128, 128, 0.8);
+}
+
+.btnCalc:hover {
+  color: white;
+  background-color: #ff4b00;
+}
+
+.btnCalc:active {
+  transform: translateY(4px);
+  border-bottom: none;
+}

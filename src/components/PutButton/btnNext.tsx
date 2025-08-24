@@ -1,7 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import styles from "src/components/PutButton/button.module.scss";
+import styles from "./button.module.css";
+
 
 interface BtnNextProps {
   handleEvent: () => void;

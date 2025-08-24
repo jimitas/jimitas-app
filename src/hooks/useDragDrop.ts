@@ -1,6 +1,6 @@
 import * as se from "src/components/se";
 
-export const useDragDrop = () => {
+export const useDragDrop = (onDropCallback?: () => void) => {
   let dragged: HTMLElement | null = null;
 
   // ドラッグ開始の操作
@@ -24,6 +24,10 @@ export const useDragDrop = () => {
       dragged.parentNode.removeChild(dragged);
       target.appendChild(dragged);
       se.kako.play();
+      // コールバック関数を実行（コンポーネント固有の処理）
+      if (onDropCallback) {
+        onDropCallback();
+      }
     }
   }
 
@@ -58,6 +62,10 @@ export const useDragDrop = () => {
     if (newParentElem && newParentElem.className.match(/droppable-elem/)) {
       newParentElem.appendChild(droppedElem);
       se.kako.play();
+      // コールバック関数を実行（コンポーネント固有の処理）
+      if (onDropCallback) {
+        onDropCallback();
+      }
     }
   }
 

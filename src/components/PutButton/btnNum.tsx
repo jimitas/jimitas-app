@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "src/components/PutButton/button.module.css";
+import styles from "./button.module.css";
 
 interface BtnNumProps {
   ITEM: number[]; // ITEMはnumber型の配列として指定します

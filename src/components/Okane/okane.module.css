@@ -1,0 +1,23 @@
+.table td {
+  border: solid 1px;
+  width: 26vw;
+  height: 29vw;
+  display: inline-flex;
+  align-content : flex-start;
+  flex-wrap: wrap;
+}
+
+.table img {
+  cursor: pointer;
+}
+
+.setPlace{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 26vw;
+}
+
+.setPlace img{
+  cursor: pointer;
+}

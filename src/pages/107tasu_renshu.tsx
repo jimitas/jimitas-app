@@ -1,6 +1,5 @@
 // たしざん練習ページのメインロジック
 import * as se from "src/components/se"; // 効果音管理
-import styles from "src/styles/Home.module.css"; // スタイル
 import { useState, useRef, useEffect, useCallback } from "react"; // Reactフック
 import { BtnNum } from "src/components/PutButton/btnNum"; // 数字ボタン
 import { useCheckAnswer } from "src/hooks/useCheckAnswer"; // 正誤判定用フック
@@ -163,8 +162,8 @@ export default function Tashizan1() {
       {/* 難易度セレクト・スタート/ストップボタン */}
       <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
-        <button className={styles.btn} onClick={gameStartEvent}>スタート</button>
-        <button className={styles.btn} onClick={gameStopEvent}>ストップ</button>
+        <button className="btn" onClick={gameStartEvent}>スタート</button>
+        <button className="btn" onClick={gameStopEvent}>ストップ</button>
       </div>
       {/* 残り時間・スコア表示 */}
       <div className="flex flex-wrap justify-center items-center m-5">
