@@ -4,7 +4,7 @@ import styles from "./kakeHissan.module.css";
 import * as se from "src/components/se";
 import { useDragDrop } from "src/hooks/useDragDrop";
 
-interface KakeHissanProps {}
+interface KakeHissanProps { }
 
 // 問題モードの定義
 const QUESTION_MODES = [
@@ -70,7 +70,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
 
     let newMyAnswer = 0;
     let ratio = 1;
-    
+
     // テーブルから直接値を読み取り（DOM操作）
     const row7 = table.rows[7];
     if (!row7) return;
@@ -82,7 +82,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         ratio = 10 ** (3 - j);
       }
     }
-    
+
     // 答えの行から数字を読み取り
     for (let j = 0; j < 5; j++) {
       const cell = row7.cells[j * 2];
@@ -96,9 +96,25 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
 
   // テーブル書き換え
   const rewriteTable = useCallback(() => {
+    // まずDOM上の既存の数字要素を完全にクリア
+    const table = tableRef.current;
+    if (table) {
+      // すべての行のセルから.num要素を削除
+      for (let row = 0; row < 8; row++) {
+        if (table.rows[row]) {
+          const cells = table.rows[row].querySelectorAll('td');
+          cells.forEach((cell) => {
+            // ドロップされた数字要素（.num）を削除
+            const numElements = cell.querySelectorAll('.num');
+            numElements.forEach(num => num.remove());
+          });
+        }
+      }
+    }
+
     // テーブルをクリア
     const newTableData = Array(8).fill(null).map(() => Array(9).fill(""));
-    
+
     // 被乗数の挿入
     if (multiplicandNumberArray.length > 0) {
       let addCol = multiplicandDigit[selectIndex] === 2 ? 5 : 3;
@@ -114,8 +130,8 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
 
     // 乗数の挿入
     if (multiplierNumberArray.length > 0) {
-      let addCol = multiplierDigit[selectIndex] === 1 ? 7 : 
-                   multiplierDigit[selectIndex] === 2 ? 5 : 3;
+      let addCol = multiplierDigit[selectIndex] === 1 ? 7 :
+        multiplierDigit[selectIndex] === 2 ? 5 : 3;
       for (let j = 0; j < multiplierNumberArray.length; j++) {
         if (multiplierNumberArray[j] === ".") {
           newTableData[1][j * 2 + addCol] = multiplierNumberArray[j];
@@ -142,7 +158,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
     if (!table) return;
 
     const rows = table.querySelectorAll('tr');
-    
+
     // 小数点部分の罫線レイアウト調整
     for (let i = 0; i < 8; i++) {
       if (rows[i]) {
@@ -179,7 +195,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
       // 2桁の場合：中間計算行を表示
       const styleHeight = ["20px", "max(50px, 4vw)", "20px", "max(50px, 4vw)"];
       const styleBorder = ["dotted gray 1px", "dotted gray 1px", "dotted gray 1px", "solid black 1px"];
-      
+
       for (let i = 2; i < 6; i++) {
         if (rows[i]) {
           const cells = rows[i].querySelectorAll('td');
@@ -205,16 +221,16 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
       for (let i = 0; i < 10; i++) {
         const div = document.createElement("div");
         div.innerHTML = String(i);
-        
+
         // CSS Modulesのクラス名を確実に適用
         div.className = `${styles.num} draggable-elem`;
         div.setAttribute("draggable", "true");
-        
+
         // タッチイベントのみdiv要素に追加（マウスイベントはdocumentレベルで処理）
         div.addEventListener("touchstart", touchStart, false);
         div.addEventListener("touchmove", touchMove, false);
         div.addEventListener("touchend", touchEnd, false);
-        
+
         if (i === 0) {
           div.addEventListener("click", () => {
             if (div.classList.contains("diagonal")) {
@@ -224,7 +240,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
             }
           });
         }
-        
+
         numPalletElement.appendChild(div);
       }
     }
@@ -264,7 +280,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
   // DOM操作とイベントリスナーの設定
   useEffect(() => {
     const currentTable = tableRef.current;
-    
+
     const setupTableEvents = () => {
       if (!currentTable) return;
 
@@ -272,7 +288,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
       const cells = currentTable.querySelectorAll('td');
       cells.forEach((cell, index) => {
         const row = Math.floor(index / 9);
-        
+
         if (row > 1) {
           cell.classList.add('droppable-elem');
         }
@@ -301,7 +317,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
   const handleSelectChange = (value: number) => {
     se.move2.play();
     setSelectIndex(value);
-    
+
     // セレクト変更時に状態をリセット
     setMondaiFlag(false);
     setHintFlag(false);
@@ -314,11 +330,11 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
     setCollectAnswerArray([]);
     setMyAnswer(0);
     setCount(0);
-    
+
     // テーブルをクリア
     const clearedTableData = Array(8).fill(null).map(() => Array(9).fill(""));
     setTableData(clearedTableData);
-    
+
     // DOM上の答えとヒントもクリア（次の問題選択時）
     setTimeout(() => {
       clearAnswerAndHint();
@@ -343,8 +359,8 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
     // 被乗数の決定
     let newMultiplicandNumber = 0;
     for (let i = 0; i < multiplicandDigit[selectIndex]; i++) {
-      if ((selectIndex < 4 && i === multiplicandDigit[selectIndex] - 1) || 
-          (selectIndex >= 4 && i === 0)) {
+      if ((selectIndex < 4 && i === multiplicandDigit[selectIndex] - 1) ||
+        (selectIndex >= 4 && i === 0)) {
         newMultiplicandNumber += Math.floor(Math.random() * 9 + 1) * 10 ** i;
       } else {
         newMultiplicandNumber += Math.floor(Math.random() * 10) * 10 ** i;
@@ -358,8 +374,8 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
     // 乗数の決定
     let newMultiplierNumber = 0;
     for (let i = 0; i < multiplierDigit[selectIndex]; i++) {
-      if ((selectIndex < 8 && i === multiplierDigit[selectIndex] - 1) || 
-          (selectIndex >= 8 && i === 0)) {
+      if ((selectIndex < 8 && i === multiplierDigit[selectIndex] - 1) ||
+        (selectIndex >= 8 && i === 0)) {
         newMultiplierNumber += Math.floor(Math.random() * 9 + 1) * 10 ** i;
       } else {
         newMultiplierNumber += Math.floor(Math.random() * 10) * 10 ** i;
@@ -378,20 +394,20 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
     const newCollectAnswerArray = String(adjustedAnswer).split("");
     setCollectAnswerArray(newCollectAnswerArray);
 
-    // テーブルを更新
-    rewriteTable();
-    
     // DOM上の答えとヒントをクリア（問題作成時）
     setTimeout(() => {
       clearAnswerAndHint();
     }, 50);
+
+    // テーブルを更新
+    rewriteTable();
   };
 
   // 小数点クリック
   const handleDecimalClick = (col: number) => {
     se.move1.play();
     const newTableData = [...tableData];
-    
+
     if (!pointFlag) {
       newTableData[7][col] = ".";
       setPointFlag(true);
@@ -423,6 +439,9 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
           if (cell.textContent && cell.textContent !== "×") {
             cell.textContent = "";
           }
+          // ドロップされた数字要素も削除
+          const numElements = cell.querySelectorAll('.num');
+          numElements.forEach(num => num.remove());
         });
       }
     }
@@ -434,6 +453,11 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
         // 小数点以外をクリア
         if (cell.textContent && cell.textContent !== "." && index !== 3 && index !== 5 && index !== 7) {
           cell.textContent = "";
+        }
+        // ドロップされた数字要素も削除（小数点以外の列）
+        if (index !== 3 && index !== 5 && index !== 7) {
+          const numElements = cell.querySelectorAll('.num');
+          numElements.forEach(num => num.remove());
         }
       });
     }
@@ -474,6 +498,9 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
           if (cell.textContent && cell.textContent !== "×") {
             cell.textContent = "";
           }
+          // ドロップされた数字要素も削除
+          const numElements = cell.querySelectorAll('.num');
+          numElements.forEach(num => num.remove());
         });
       }
     }
@@ -492,7 +519,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
       return;
     }
     se.seikai1.play();
-    
+
     if (!hintFlag) {
       // ヒントを表示
       hintWrite();
@@ -508,7 +535,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
   const hintWrite = () => {
     const table = tableRef.current;
     if (!table || multiplierDigit[selectIndex] === 1) return;
-      
+
     // 筆算のため、レートをかけて整数化
     const numA = multiplicandNumber * multiplicandDigitRatio[selectIndex];
     const numB = multiplierNumber * multiplierDigitRatio[selectIndex];
@@ -543,7 +570,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
 
     // ヒントも表示する
     hintWrite();
-    
+
     const answerLength = collectAnswerArray.length;
     const DecimalPointCol = [9, 9, 9, 9, 7, 5, 7, 5, 5, 3];
 
@@ -633,11 +660,9 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
       </div>
 
       {/* 筆算テーブル */}
-      <div className={`${styles.tableContainer} ${
-        multiplierDigit[selectIndex] === 1 ? styles.singleDigitMultiplier : ""
-      } ${
-        selectIndex < 4 ? styles.integerMode : ""
-      }`}>
+      <div className={`${styles.tableContainer} ${multiplierDigit[selectIndex] === 1 ? styles.singleDigitMultiplier : ""
+        } ${selectIndex < 4 ? styles.integerMode : ""
+        }`}>
         <table ref={tableRef} className={styles.calcTable}>
           <tbody>
             {tableData.map((row, rowIndex) => (
@@ -645,13 +670,11 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
                 {row.map((cell, colIndex) => (
                   <td
                     key={colIndex}
-                    className={`${styles.tableCell} ${
-                      rowIndex === 7 && (colIndex === 3 || colIndex === 5 || colIndex === 7)
-                        ? styles.decimalClickable
-                        : ""
-                    } ${
-                      rowIndex > 1 ? "droppable-elem" : ""
-                    }`}
+                    className={`${styles.tableCell} ${rowIndex === 7 && (colIndex === 3 || colIndex === 5 || colIndex === 7)
+                      ? styles.decimalClickable
+                      : ""
+                      } ${rowIndex > 1 ? "droppable-elem" : ""
+                      }`}
                     onClick={
                       rowIndex === 7 && (colIndex === 3 || colIndex === 5 || colIndex === 7)
                         ? () => handleDecimalClick(colIndex)
@@ -683,7 +706,7 @@ const KakeHissan: React.FC<KakeHissanProps> = () => {
             width={60}
             height={80}
             className={`${styles.trashIcon} droppable-elem`}
-            style={{cursor: 'pointer'}}
+            style={{ cursor: 'pointer' }}
           />
         </div>
       </div>

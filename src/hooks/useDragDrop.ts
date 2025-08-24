@@ -74,7 +74,7 @@ export const useDragDrop = (onDropCallback?: () => void) => {
         onDropCallback();
       }
     } else {
-      alert(`ドロップ失敗\n理由:\n- droppable要素: ${dropTarget ? 'あり' : 'なし'}\n- globalDragged: ${globalDragged ? 'あり' : 'なし'}`);
+      // alert(`ドロップ失敗\n理由:\n- droppable要素: ${dropTarget ? 'あり' : 'なし'}\n- globalDragged: ${globalDragged ? 'あり' : 'なし'}`);
     }
   }
 
