@@ -64,7 +64,7 @@
 }
 
 .keyPlace {
-  margin-left: calc(max(5px, (100vw - 50rem) / 2));
+  margin-left: calc(max(5px, (100vw - 75rem) / 2));
   margin-bottom: 10px;
 }
 
