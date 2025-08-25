@@ -167,29 +167,39 @@ export function Kenban(props: KenbanProps) {
   // ✅ Reactのstateでキーボード入力状態を管理
   const [isKeyboardEnabled, setIsKeyboardEnabled] = useState(false);
   const [keyDownFlags, setKeyDownFlags] = useState<boolean[]>([]);
-  
-  let gakki = "ke-";
+  const [se, setSe] = useState<Howl[]>([]);
 
-  switch (props.gakki) {
-    case "けんばんハーモニカ":
-      gakki = "ke-";
-      break;
-    case "リコーダー":
-      gakki = "re_";
-      break;
-    case "もっきん":
-      gakki = "mo_";
-      break;
-    case "てっきん":
-      gakki = "te_";
-      break;
-  }
+  // 音色の決定
+  const getGakki = (gakkiType: string) => {
+    switch (gakkiType) {
+      case "けんばんハーモニカ":
+        return "ke-";
+      case "リコーダー":
+        return "re_";
+      case "もっきん":
+        return "mo_";
+      case "てっきん":
+        return "te_";
+      default:
+        return "ke-";
+    }
+  };
 
-  // ✅ 音声インスタンスをstateで管理
-  const [se] = useState<Howl[]>(() => {
-    const sounds: Howl[] = ["" as unknown as Howl];
+  // props.gakkiが変更されたら音声インスタンスを再作成
+  useEffect(() => {
+    const gakki = getGakki(props.gakki);
+
+    // 既存の音声インスタンスを停止・破棄
+    se.forEach(sound => {
+      if (sound && typeof sound.stop === 'function') {
+        sound.stop();
+      }
+    });
+
+    // 新しい音声インスタンスを作成
+    const newSounds: Howl[] = ["" as unknown as Howl];
     for (let i = 1; i <= 34; i++) {
-      sounds[i] = new Howl({
+      newSounds[i] = new Howl({
         src: [`Sounds/${gakki}${i}.mp3`],
         preload: true,
         volume: 1.0,
@@ -197,8 +207,10 @@ export function Kenban(props: KenbanProps) {
         autoplay: false,
       });
     }
-    return sounds;
-  });
+
+    setSe(newSounds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.gakki]);
 
   // ✅ キーダウンフラグを初期化
   useEffect(() => {
@@ -258,13 +270,13 @@ export function Kenban(props: KenbanProps) {
   // ✅ キーボードイベントハンドラーを改善
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!isKeyboardEnabled) return;
-    
+
     const keyDownResult = check_code(e.code);
     if (keyDownResult > 0 && !keyDownFlags[keyDownResult]) {
       const newFlags = [...keyDownFlags];
       newFlags[keyDownResult] = true;
       setKeyDownFlags(newFlags);
-      
+
       se[keyDownResult].play();
       const elem = document.getElementById(String(keyDownResult));
       if (elem) elem.style.backgroundColor = "rgba(252, 165, 165)";
@@ -273,13 +285,13 @@ export function Kenban(props: KenbanProps) {
 
   const handleKeyUp = useCallback((e: KeyboardEvent) => {
     if (!isKeyboardEnabled) return;
-    
+
     const keyDownResult = check_code(e.code);
     if (keyDownResult > 0 && keyDownFlags[keyDownResult]) {
       const newFlags = [...keyDownFlags];
       newFlags[keyDownResult] = false;
       setKeyDownFlags(newFlags);
-      
+
       se[keyDownResult].pause();
       se[keyDownResult].seek(0);
       const elem = document.getElementById(String(keyDownResult));
@@ -308,7 +320,7 @@ export function Kenban(props: KenbanProps) {
     setIsKeyboardEnabled((prev) => {
       const newState = !prev;
       sound.set.play();
-      
+
       // キーボードOFFにする時、全てのキーの状態をリセット
       if (!newState) {
         const newFlags = new Array(35).fill(false);
@@ -319,7 +331,7 @@ export function Kenban(props: KenbanProps) {
           if (elem) elem.style.backgroundColor = "";
         }
       }
-      
+
       return newState;
     });
   };
@@ -330,15 +342,14 @@ export function Kenban(props: KenbanProps) {
       <div className="flex justify-center mb-4">
         <button
           type="button"
-          className={`${styles.btn} flex items-center gap-2 ${
-            isKeyboardEnabled 
-              ? "bg-green-500 text-white border-green-500" 
-              : "bg-gray-500 text-white border-gray-500"
-          }`}
+          className={`${styles.btn} flex items-center gap-2 ${isKeyboardEnabled
+            ? "bg-green-500 text-white border-green-500"
+            : "bg-gray-500 text-white border-gray-500"
+            }`}
           onClick={toggleKeyboard}
         >
-          <FontAwesomeIcon 
-            icon={isKeyboardEnabled ? faKeyboard : faBan} 
+          <FontAwesomeIcon
+            icon={isKeyboardEnabled ? faKeyboard : faBan}
             className="w-5 h-5"
           />
           キーボード入力{isKeyboardEnabled ? "ON" : "OFF"}
@@ -347,11 +358,10 @@ export function Kenban(props: KenbanProps) {
 
       {/* ✅ キーボード状態の視覚的インジケーター */}
       <div className="flex justify-center mb-4">
-        <div className={`px-4 py-2 rounded-lg text-sm font-semibold ${
-          isKeyboardEnabled 
-            ? "bg-green-100 text-green-800 border border-green-300" 
-            : "bg-gray-100 text-gray-600 border border-gray-300"
-        }`}>
+        <div className={`px-4 py-2 rounded-lg text-sm font-semibold ${isKeyboardEnabled
+          ? "bg-green-100 text-green-800 border border-green-300"
+          : "bg-gray-100 text-gray-600 border border-gray-300"
+          }`}>
           {isKeyboardEnabled ? "⌨️ キーボードで演奏できます" : "🚫 マウス/タッチのみ"}
         </div>
       </div>
