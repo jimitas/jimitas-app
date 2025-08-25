@@ -9,10 +9,10 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   return (
-    <div className="body">
+    <div className="body flex flex-col min-h-screen">
       <Header />
-      <main className={styles.main}>
-        <div className={styles.mainTitle}>{title}</div>
+      <main className="container mx-auto flex-grow mt-8 md:mt-10 lg:mt-12">
+        <div id="content-title" className="mt-5 text-2xl md:text-3xl lg:text-4xl text-center font-bold">{title}</div>
         <div>{children}</div>
       </main>
     </div>
