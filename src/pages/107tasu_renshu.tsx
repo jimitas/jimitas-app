@@ -6,6 +6,8 @@ import { useCheckAnswer } from "src/hooks/useCheckAnswer"; // 正誤判定用フ
 import { PutSelect } from "src/components/PutSelect"; // 難易度セレクト
 import { PutText } from "src/components/PutText"; // 問題・メッセージ表示
 import Layout from "src/components/Layout"; // レイアウト共通
+import { BtnStart } from "@/components/PutButton/btnStart";
+import { BtnStop } from "@/components/PutButton/btnStop";
 
 // 数字ボタンの配列
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -162,8 +164,8 @@ export default function Tashizan1() {
       {/* 難易度セレクト・スタート/ストップボタン */}
       <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
-        <button className="btn" onClick={gameStartEvent}>スタート</button>
-        <button className="btn" onClick={gameStopEvent}>ストップ</button>
+        <BtnStart handleEvent={gameStartEvent} />
+        <BtnStop handleEvent={gameStopEvent} />
       </div>
       {/* 残り時間・スコア表示 */}
       <div className="flex flex-wrap justify-center items-center m-5">
