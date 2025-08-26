@@ -152,6 +152,8 @@
 .moneyCell {
   width: 150px;
   height: 60px;
+  /* display: flex; */
+  flex-wrap: wrap;
   padding: 0;
   text-align: center;
   vertical-align: middle;
@@ -163,6 +165,7 @@
 .moneyCell:first-child {
   width: 60px;
 }
+
 
 .paletteSection {
   display: flex;
@@ -226,6 +229,8 @@
   background-color: #4dc4ff;
 }
 
+
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
   .tableCell {
@@ -233,16 +238,16 @@
     height: 40px;
     font-size: 20px;
   }
-  
+
   .moneyCell {
     width: 100px;
     height: 40px;
   }
-  
+
   .moneyCell:first-child {
     width: 40px;
   }
-  
+
   .num {
     width: 40px;
     height: 40px;
