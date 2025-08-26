@@ -6,8 +6,9 @@ import { useCheckAnswer } from "src/hooks/useCheckAnswer";
 import { PutSelect } from "src/components/PutSelect";
 import { PutShiki } from "src/components/PutShiki";
 import { PutText } from "src/components/PutText";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faQuestion, faUserEdit, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { BtnQuestion } from "src/components/PutButton/btnQuestion";
+import { BtnSet } from "src/components/PutButton/btnSet";
+import { BtnShowAnswer } from "src/components/PutButton/btnShowAnswer";
 import { BtnCheck } from "src/components/PutButton/btnCheck";
 import Layout from "src/components/Layout";
 
@@ -166,24 +167,9 @@ export default function Tashizan1() {
       <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
 
-        <button className="btn" onClick={giveQuestion}>
-          <div style={{ display: "flex" }}>
-            <FontAwesomeIcon icon={faQuestion} className="w-8 h-8" />
-            {"もんだい"}
-          </div>
-        </button>
-        <button className="btn" onClick={setQuest}>
-          <div style={{ display: "flex" }}>
-            <FontAwesomeIcon icon={faUserEdit} className="w-8 h-8" />
-            {"セット"}
-          </div>
-        </button>
-        <button className="btn" onClick={showAnswer}>
-          <div style={{ display: "flex" }}>
-            <FontAwesomeIcon icon={faEye} className="w-8 h-8" />
-            {"こたえをみる"}
-          </div>
-        </button>
+        <BtnQuestion handleEvent={giveQuestion} />
+        <BtnSet handleEvent={setQuest} />
+        <BtnShowAnswer handleEvent={showAnswer} />
       </div>
 
       <PutText el_text={el_text}></PutText>

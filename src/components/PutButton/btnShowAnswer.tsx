@@ -14,7 +14,7 @@ export function BtnShowAnswer(props: BtnCheckProps) {
     <div className="flex flex-wrap justify-center">
       <button
         className="flex justify-center item-center font-bold m-2 p-2 
-                   w-28 md:w-32 text-sm md:text-base
+                   w-32 md:w-36 text-sm md:text-base
                    border-red-300 bg-white border-2 text-red-400  hover:bg-red-500 hover:text-white active:translate-y-1 rounded-lg shadow-lg"
         onClick={handleEvent}
       >

@@ -11,6 +11,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faQuestion, faUserEdit, faCheck } from "@fortawesome/free-solid-svg-icons";
 import Layout from "src/components/Layout";
 import { BtnCheck } from "src/components/PutButton/btnCheck";
+import { BtnQuestion } from "@/components/PutButton/btnQuestion";
+import { BtnSet } from "@/components/PutButton/btnSet";
+import { BtnShowAnswer } from "@/components/PutButton/btnShowAnswer";
 
 const NUM_1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const NUM_2 = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
@@ -112,7 +115,7 @@ export default function Hikizan1() {
     setCount((count) => count + 1);
   };
 
-    //正解をみる
+  //正解をみる
   const showAnswer = () => {
     if (!flag) return;
     se.seikai1.play();
@@ -151,26 +154,11 @@ export default function Hikizan1() {
       <div className="flex flex-wrap justify-center items-center">
         <PutSelect ITEM={ITEM} handleEvent={changeSelect}></PutSelect>
 
-        <button className="btn" onClick={giveQuestion}>
-          <div style={{ display: "flex" }}>
-            <FontAwesomeIcon icon={faQuestion} className="w-8 h-8" />
-            {"もんだい"}
-          </div>
-        </button>
-        <button className="btn" onClick={setQuest}>
-          <div style={{ display: "flex" }}>
-            <FontAwesomeIcon icon={faUserEdit} className="w-8 h-8" />
-            {"セット"}
-          </div>
-        </button>
-        <button className="btn" onClick={showAnswer}>
-          <div style={{ display: "flex" }}>
-            <FontAwesomeIcon icon={faEye} className="w-8 h-8" />
-            {"こたえをみる"}
-          </div>
-        </button>
+        <BtnQuestion handleEvent={giveQuestion} />
+        <BtnSet handleEvent={setQuest} />
+        <BtnShowAnswer handleEvent={showAnswer} />
       </div>
-
+      
       <PutText el_text={el_text}></PutText>
 
       <div className="flex justify-center items-center">
