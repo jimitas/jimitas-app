@@ -1,490 +1,559 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import * as se from "src/components/se";
 import { useDragDrop } from "src/hooks/useDragDrop";
-import styles from "./tasuHissan.module.css";
 
-const TasuHissan: React.FC = () => {
-  // 状態管理
-  const [selectIndex, setSelectIndex] = useState<number>(0);
-  const [leftNumber, setLeftNumber] = useState<number>(0);
-  const [rightNumber, setRightNumber] = useState<number>(0);
-  const [answer, setAnswer] = useState<number>(0);
-  const [leftNumberArray, setLeftNumberArray] = useState<number[]>([]);
-  const [rightNumberArray, setRightNumberArray] = useState<number[]>([]);
-  const [answerArray, setAnswerArray] = useState<number[]>([]);
-  const [myAnswer, setMyAnswer] = useState<number>(0);
-  const [count, setCount] = useState<number>(0);
-  const [mondaiFlag, setMondaiFlag] = useState<boolean>(false);
+export function TasuHissan() {
+  // 初期設定 - 14tahi.jsの通り
+  const [hikasu, setHikasu] = useState<number>(123);
+  const [kasu, setKasu] = useState<number>(456);
+  const [wa, setWa] = useState<number>(0);
+  const [maxKeta] = useState<number>(4);
+  const [kuriagari, setKuriagari] = useState<number>(0);
+  const [hikasuArr, setHikasuArr] = useState<number[]>([]);
+  const [kasuArr, setKasuArr] = useState<number[]>([]);
+  const [waArr, setWaArr] = useState<number[]>([]);
+  const [hikasuKeta, setHikasuKeta] = useState<number>(0);
+  const [kasuKeta, setKasuKeta] = useState<number>(0);
+  const [waKeta, setWaKeta] = useState<number>(0);
+  const [problemType, setProblemType] = useState<number>(1);
 
-  // テーブルデータ
-  const [tableData, setTableData] = useState<string[][]>(Array(4).fill(null).map(() => Array(4).fill("")));
-  const [moneyTableData, setMoneyTableData] = useState<string[][]>(Array(4).fill(null).map(() => Array(4).fill("")));
+  // 筆算テーブルの状態
+  const [hissanTable, setHissanTable] = useState<string[][]>([
+    ['', '', '', ''], // くり上がり行
+    ['', '', '', ''], // 被加数行
+    ['', '', '', ''], // 加数行
+    ['', '', '', '']  // 答え行
+  ]);
 
-  // リファレンス
-  const tableRef = useRef<HTMLTableElement>(null);
-  const moneyTableRef = useRef<HTMLTableElement>(null);
+  // お金テーブルの状態
+  const [moneyTable, setMoneyTable] = useState<JSX.Element[][]>([
+    [<></>, <></>, <></>, <></>],
+    [<></>, <></>, <></>, <></>],
+    [<></>, <></>, <></>, <></>],
+    [<></>, <></>, <></>, <></>]
+  ]);
 
-  // ドラッグ&ドロップ
-  const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } = useDragDrop();
+  // 数字パレット
+  const [numberPalette, setNumberPalette] = useState<JSX.Element[]>([]);
+  const [scoreCoins, setScoreCoins] = useState<JSX.Element[]>([]);
 
-  // セレクトボックスのオプション
-  const selectOptions = [
-    "(２けた)+(２けた)",
-    "(３けた)+(２けた)",
-    "(２けた)+(３けた)",
-    "(３けた)+(３けた)"
-  ];
+  // 問題タイプのデータ
+  const typeData = ["(２けた)+(２けた)", "(３けた)+(２けた)", "(２けた)+(３けた)", "(３けた)+(３けた)"];
 
-  // 筆算テーブル書き換え
-  const rewriteTable = useCallback(() => {
-    const newTableData = Array(4).fill(null).map(() => Array(4).fill(""));
+  // refs
+  const box1Ref = useRef<HTMLInputElement>(null);
+  const box3Ref = useRef<HTMLInputElement>(null);
+  const box5Ref = useRef<HTMLInputElement>(null);
 
-    // 左の数を配置
-    for (let col = 0; col < leftNumberArray.length; col++) {
-      newTableData[1][4 - leftNumberArray.length + col] = leftNumberArray[col].toString();
-    }
+  // ドラッグ&ドロップ - カスタムドロップコールバック
+  const handleCustomDropCallback = () => {
+    regenerateNumberPalette();
+    kotaeInput();
+  };
 
-    // 右の数を配置
-    for (let col = 0; col < rightNumberArray.length; col++) {
-      newTableData[2][4 - rightNumberArray.length + col] = rightNumberArray[col].toString();
-    }
-
-    // +の位置の挿入
-    if (leftNumber < 100 && rightNumber < 100) {
-      newTableData[2][1] = "+";
-    } else {
-      newTableData[2][0] = "+";
-    }
-
-    setTableData(newTableData);
-  }, [leftNumberArray, rightNumberArray, leftNumber, rightNumber]);
-
-  // お金テーブル書き換え（3桁対応）
-  const rewriteMoneyTable = useCallback(() => {
-    const newMoneyTableData = Array(4).fill(null).map(() => Array(4).fill(""));
-
-    // 3桁対応の画像配列
-    const img_arr = ["senen", "hyakuen", "juuen", "ichien"];
-    // const img_arr = ["ichien", "juuen", "hyakuen", "senen"];
-
-    // 左の数のお金を配置
-    for (let col = 0; col < leftNumberArray.length; col++) {
-      for (let i = 0; i < leftNumberArray[col]; i++) {
-        const coinType = img_arr[4 - leftNumberArray.length + col];
-        newMoneyTableData[1][4 - leftNumberArray.length + col] += coinType + ",";
-      }
-    }
-
-    // 右の数のお金を配置
-    for (let col = 0; col < rightNumberArray.length; col++) {
-      for (let i = 0; i < rightNumberArray[col]; i++) {
-        const coinType = img_arr[4 - rightNumberArray.length + col];
-        newMoneyTableData[2][4 - rightNumberArray.length + col] += coinType + ",";
-      }
-    }
-
-    // +の位置の挿入
-    if (leftNumber < 100 && rightNumber < 100) {
-      newMoneyTableData[2][1] = "+";
-    } else {
-      newMoneyTableData[2][0] = "+";
-    }
-
-    setMoneyTableData(newMoneyTableData);
-  }, [leftNumberArray, rightNumberArray, leftNumber, rightNumber]);
-
-  // くり上がり処理（お金の移動時）
-  const handleMoneyCarry = useCallback(() => {
-    const img_arr = ["ichien", "juuen", "hyakuen", "senen"];
-
-    // 各桁で10個以上のコインがあるかチェック
-    for (let j = 0; j < 3; j++) {
-      const cell = moneyTableRef.current?.rows[3]?.cells[3 - j];
-      if (cell) {
-        const coins = cell.getElementsByClassName(img_arr[j]);
-        if (coins.length > 9) {
-          // 10個のコインを削除
-          for (let i = 0; i < 10; i++) {
-            if (coins[0]) {
-              coins[0].remove();
-            }
-          }
-          // 上位の桁に1個追加
-          const newCoin = document.createElement("img");
-          newCoin.src = `/images/${img_arr[j + 1]}.png`;
-          newCoin.className = img_arr[j + 1];
-          newCoin.style.width = j === 2 ? "60px" : "25px";
-          newCoin.style.height = "25px";
-          newCoin.draggable = true;
-          newCoin.addEventListener("touchstart", touchStart, false);
-          newCoin.addEventListener("touchmove", touchMove, false);
-          newCoin.addEventListener("touchend", touchEnd, false);
-
-          const targetCell = moneyTableRef.current?.rows[0]?.cells[2 - j];
-          if (targetCell) {
-            targetCell.appendChild(newCoin);
-          }
-        }
-      }
-    }
-  }, [touchStart, touchMove, touchEnd]);
-
-  // 数字パレットの作成
-  const numberSet = useCallback(() => {
-    const numPalletElement = document.getElementById("num-pallet");
-    if (numPalletElement) {
-      while (numPalletElement.firstChild) {
-        numPalletElement.removeChild(numPalletElement.firstChild);
-      }
-
-      for (let i = 0; i < 10; i++) {
-        const div = document.createElement("div");
-        div.innerHTML = String(i);
-        div.className = `${styles.num} draggable-elem`;
-        div.setAttribute("draggable", "true");
-
-        div.addEventListener("touchstart", touchStart, false);
-        div.addEventListener("touchmove", touchMove, false);
-        div.addEventListener("touchend", touchEnd, false);
-
-        numPalletElement.appendChild(div);
-      }
-    }
-  }, [touchStart, touchMove, touchEnd]);
+  const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } = useDragDrop(handleCustomDropCallback);
 
   // 数字パレットの再生成
-  const regenerateNumberPalette = useCallback(() => {
-    const numPalletElement = document.getElementById("num-pallet");
-    if (numPalletElement) {
-      while (numPalletElement.firstChild) {
-        numPalletElement.removeChild(numPalletElement.firstChild);
-      }
-      numberSet();
-    }
-  }, [numberSet]);
-
-  // 答えの計算
-  const calculateAnswer = useCallback(() => {
-    if (!tableRef.current) return;
-
-    let calculatedAnswer = 0;
-    for (let col = 0; col < 4; col++) {
-      const cellValue = tableRef.current.rows[3].cells[col].innerText;
-      if (cellValue) {
-        calculatedAnswer += Number(cellValue) * Math.pow(10, 3 - col);
-      }
-    }
-    setMyAnswer(calculatedAnswer);
-
-    if (calculatedAnswer === answer) {
-      se.seikai1.play();
-    }
-  }, [answer]);
-
-  // セレクトボックス変更時
-  const handleSelectChange = (value: number) => {
-    se.move2.play();
-    setSelectIndex(value);
-    setMondaiFlag(false);
-    setLeftNumber(0);
-    setRightNumber(0);
-    setLeftNumberArray([]);
-    setRightNumberArray([]);
-    setAnswerArray([]);
-    setMyAnswer(0);
-    setCount(0);
-
-    const clearedTableData = Array(4).fill(null).map(() => Array(4).fill(""));
-    setTableData(clearedTableData);
-    setMoneyTableData(clearedTableData);
+  const regenerateNumberPalette = () => {
+    numSet();
   };
 
-  // 問題作成
-  const questionCreate = () => {
-    setMondaiFlag(true);
-    se.set.play();
-
-    let newLeftNumber = 0;
-    let newRightNumber = 0;
-
-    switch (selectIndex) {
-      case 0: // 2桁+2桁
-        newLeftNumber = Math.floor(Math.random() * 90 + 10);
-        newRightNumber = Math.floor(Math.random() * 90 + 10);
-        break;
-      case 1: // 3桁+2桁
-        newLeftNumber = Math.floor(Math.random() * 900 + 100);
-        newRightNumber = Math.floor(Math.random() * 90 + 10);
-        break;
-      case 2: // 2桁+3桁
-        newLeftNumber = Math.floor(Math.random() * 90 + 10);
-        newRightNumber = Math.floor(Math.random() * 900 + 100);
-        break;
-      case 3: // 3桁+3桁
-        newLeftNumber = Math.floor(Math.random() * 900 + 100);
-        newRightNumber = Math.floor(Math.random() * 900 + 100);
-        break;
-    }
-
-    setLeftNumber(newLeftNumber);
-    setRightNumber(newRightNumber);
-    const newAnswer = newLeftNumber + newRightNumber;
-    setAnswer(newAnswer);
-
-    // 配列に変換
-    const leftArray = String(newLeftNumber).split("").map(Number);
-    const rightArray = String(newRightNumber).split("").map(Number);
-    const answerArray = String(newAnswer).split("").map(Number);
-
-    setLeftNumberArray(leftArray);
-    setRightNumberArray(rightArray);
-    setAnswerArray(answerArray);
-
-    rewriteTable();
-    rewriteMoneyTable();
+  // くり上がりの操作
+  const imgKuriagari = () => {
+    const imgArr = ["ichien", "juuen", "hyakuen", "senen"];
+    // ここでお金のくり上がり処理を実装
+    // 10個以上のコインがある場合、上位の桁に変換
   };
-
-  // 消すボタン
-  const handleClear = () => {
-    const clearedTableData = Array(4).fill(null).map(() => Array(4).fill(""));
-    setTableData(clearedTableData);
-    setMoneyTableData(clearedTableData);
-    setMondaiFlag(false);
-    setLeftNumber(0);
-    setRightNumber(0);
-    setLeftNumberArray([]);
-    setRightNumberArray([]);
-    setAnswerArray([]);
-    setMyAnswer(0);
-    se.reset.play();
-  };
-
-  // 答えを見る
-  const showAnswer = () => {
-    if (!mondaiFlag) return;
-
-    se.seikai2.play();
-
-    // くり上がりの表示
-    let carry = 0;
-    for (let col = 0; col < Math.min(leftNumberArray.length, rightNumberArray.length); col++) {
-      const sum = leftNumberArray[col] + rightNumberArray[col] + carry;
-      if (sum > 9) {
-        // くり上がりを表示
-        const carryCell = tableRef.current?.rows[0]?.cells[4 - col - 2];
-        if (carryCell) {
-          carryCell.innerHTML = "1";
-          carryCell.style.fontSize = "20px";
-          carryCell.style.color = "red";
-          carryCell.style.verticalAlign = "bottom";
-        }
-        carry = 1;
-      } else {
-        carry = 0;
-      }
-    }
-
-    // 答えを表示
-    for (let col = 0; col < answerArray.length; col++) {
-      const answerCell = tableRef.current?.rows[3]?.cells[4 - answerArray.length + col];
-      if (answerCell) {
-        answerCell.innerHTML = answerArray[col].toString();
-      }
-    }
-  };
-
-  // 答え合わせ
-  const checkAnswer = () => {
-    calculateAnswer();
-  };
-
-  // カスタムドロップ処理
-  const handleCustomDrop = useCallback((e: DragEvent) => {
-    e.preventDefault();
-    const target = e.target as HTMLElement;
-    const dragged = e.dataTransfer?.getData("text/html");
-
-    if (!dragged) return;
-
-    if (target.className.includes("droppable-elem")) {
-      // 数字のドロップ
-      regenerateNumberPalette();
-      calculateAnswer();
-      se.pi.play();
-    } else if (target.className.includes("droppable-elem-2")) {
-      // お金のドロップ
-      handleMoneyCarry();
-      se.pi.play();
-    }
-  }, [regenerateNumberPalette, calculateAnswer, handleMoneyCarry]);
 
   // 初期化
   useEffect(() => {
-    if (leftNumberArray.length === 0 && rightNumberArray.length === 0) {
-      const clearedTableData = Array(4).fill(null).map(() => Array(4).fill(""));
-      setTableData(clearedTableData);
-      setMoneyTableData(clearedTableData);
-    } else {
-      rewriteTable();
-      rewriteMoneyTable();
-    }
-    numberSet();
-  }, [leftNumberArray, rightNumberArray, rewriteTable, rewriteMoneyTable, numberSet]);
+    hissanSet(hikasu, kasu);
+    numSet();
 
-  // DOM操作とイベントリスナーの設定
-  useEffect(() => {
-    const currentTable = tableRef.current;
-    const currentMoneyTable = moneyTableRef.current;
-
-    const setupTableEvents = () => {
-      if (!currentTable) return;
-
-      const cells = currentTable.querySelectorAll('td');
-      cells.forEach((cell, index) => {
-        const row = Math.floor(index / 4);
-        if (row === 0 || row === 3) {
-          cell.classList.add('droppable-elem');
-        }
-      });
-    };
-
-    const setupMoneyTableEvents = () => {
-      if (!currentMoneyTable) return;
-
-      const cells = currentMoneyTable.querySelectorAll('td');
-      cells.forEach((cell) => {
-        cell.classList.add('droppable-elem-2');
-      });
-    };
-
-    setupTableEvents();
-    setupMoneyTableEvents();
-    numberSet();
-
-    // カスタムドロップイベントを追加
-    document.addEventListener("drop", handleCustomDrop as EventListener, false);
+    // ドラッグ&ドロップイベントリスナーを設定
+    document.addEventListener("dragstart", dragStart as EventListener, false);
+    document.addEventListener("dragover", dragOver as EventListener, false);
+    document.addEventListener("drop", dropEnd as EventListener, false);
 
     return () => {
-      document.removeEventListener("drop", handleCustomDrop as EventListener, false);
+      document.removeEventListener("dragstart", dragStart as EventListener, false);
+      document.removeEventListener("dragover", dragOver as EventListener, false);
+      document.removeEventListener("drop", dropEnd as EventListener, false);
     };
-  }, [selectIndex, handleCustomDrop, numberSet]);
+  }, [dragStart, dragOver, dropEnd]);
+
+  // 関数　マス内の数字をクリア
+  const masuClear = () => {
+    // se.reset効果音をここで再生
+    setHissanTable([
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', '']
+    ]);
+    setMoneyTable([
+      [<></>, <></>, <></>, <></>],
+      [<></>, <></>, <></>, <></>],
+      [<></>, <></>, <></>, <></>],
+      [<></>, <></>, <></>, <></>]
+    ]);
+    if (box1Ref.current) box1Ref.current.value = "";
+    if (box3Ref.current) box3Ref.current.value = "";
+    if (box5Ref.current) box5Ref.current.value = "";
+    setScoreCoins([]);
+  };
+
+  // 関数　問題をランダムに出す
+  const shutudai = () => {
+    let newHikasu: number;
+    let newKasu: number;
+
+    switch (problemType) {
+      case 1: // (２けた)+(２けた)
+        newHikasu = Math.floor(Math.random() * 90 + 10);
+        newKasu = Math.floor(Math.random() * 90 + 10);
+        break;
+      case 2: // (３けた)+(２けた)
+        newHikasu = Math.floor(Math.random() * 900 + 100);
+        newKasu = Math.floor(Math.random() * 90 + 10);
+        break;
+      case 3: // (２けた)+(３けた)
+        newHikasu = Math.floor(Math.random() * 90 + 10);
+        newKasu = Math.floor(Math.random() * 900 + 100);
+        break;
+      case 4: // (３けた)+(３けた)
+        newHikasu = Math.floor(Math.random() * 900 + 100);
+        newKasu = Math.floor(Math.random() * 900 + 100);
+        break;
+      default:
+        newHikasu = 123;
+        newKasu = 456;
+    }
+
+    setHikasu(newHikasu);
+    setKasu(newKasu);
+    if (box1Ref.current) box1Ref.current.value = newHikasu.toString();
+    if (box3Ref.current) box3Ref.current.value = newKasu.toString();
+    hissanSet(newHikasu, newKasu);
+    // se.set効果音をここで再生
+  };
+
+  // 関数　問題をセットする
+  const mondaiSet = () => {
+    const newHikasu = box1Ref.current ? parseInt(box1Ref.current.value) : hikasu;
+    const newKasu = box3Ref.current ? parseInt(box3Ref.current.value) : kasu;
+    setHikasu(newHikasu);
+    setKasu(newKasu);
+    hissanSet(newHikasu, newKasu);
+    // se.set効果音をここで再生
+  };
+
+  // 関数　答えの表示
+  const showAnswer = () => {
+    if (box5Ref.current) {
+      box5Ref.current.value = wa.toString();
+      box5Ref.current.style.color = "blue";
+    }
+    // se.seikai2効果音をここで再生
+
+    // くり上がりの表示
+    const newHissanTable = [...hissanTable];
+    let tempKuriagari = 0;
+
+    for (let col = 0; col < Math.min(hikasuKeta, kasuKeta); col++) {
+      if (Math.floor(hikasuArr[col] + kasuArr[col] + tempKuriagari) > 9) {
+        newHissanTable[0][maxKeta - col - 2] = "1";
+        tempKuriagari = 1;
+      } else {
+        tempKuriagari = 0;
+      }
+    }
+
+    // 筆算の答え表示
+    for (let col = 0; col < waKeta; col++) {
+      newHissanTable[3][maxKeta - col - 1] = waArr[col].toString();
+    }
+
+    setHissanTable(newHissanTable);
+  };
+
+  // 関数　答えの入力
+  const kotaeInput = () => {
+    const newHikasu = Math.floor(box1Ref.current ? parseInt(box1Ref.current.value) : 0);
+    const newKasu = Math.floor(box3Ref.current ? parseInt(box3Ref.current.value) : 0);
+    const newWa = Math.floor(newHikasu + newKasu);
+
+    // 筆算マスからの値を計算
+    const calculatedAnswer =
+      parseInt(hissanTable[3][0] || '0') * 1000 +
+      parseInt(hissanTable[3][1] || '0') * 100 +
+      parseInt(hissanTable[3][2] || '0') * 10 +
+      parseInt(hissanTable[3][3] || '0') * 1;
+
+    if (box5Ref.current) {
+      box5Ref.current.value = calculatedAnswer.toString();
+
+      if (calculatedAnswer === newWa) {
+        box5Ref.current.style.color = "red";
+        // se.seikai1効果音をここで再生
+        scoreWrite();
+      } else {
+        box5Ref.current.style.color = "black";
+      }
+    }
+  };
+
+  // スコアの描画
+  const scoreWrite = () => {
+    const newCoin = (
+      <Image
+        key={scoreCoins.length}
+        src="/images/coin.png"
+        alt="coin"
+        width={32}
+        height={32}
+        className="w-8 h-8"
+      />
+    );
+    setScoreCoins(prev => [...prev, newCoin]);
+  };
+
+  // 関数　筆算の描画
+  const hissanSet = (newHikasu: number, newKasu: number) => {
+    if (newHikasu > 999 || newKasu > 999 || newHikasu < 0 || newKasu < 0) {
+      // se.alert効果音をここで再生
+      alert("数字は1～999までにしてください。");
+      if (box1Ref.current) box1Ref.current.value = "";
+      if (box3Ref.current) box3Ref.current.value = "";
+      return;
+    }
+
+    if (box5Ref.current) {
+      box5Ref.current.style.color = "black";
+    }
+
+    const flooredHikasu = Math.floor(newHikasu);
+    const flooredKasu = Math.floor(newKasu);
+    const flooredWa = Math.floor(flooredHikasu + flooredKasu);
+
+    setHikasu(flooredHikasu);
+    setKasu(flooredKasu);
+    setWa(flooredWa);
+
+    if (box1Ref.current) box1Ref.current.value = flooredHikasu.toString();
+    if (box3Ref.current) box3Ref.current.value = flooredKasu.toString();
+    if (box5Ref.current) box5Ref.current.value = "";
+
+    // 数字を配列として代入
+    const newHikasuKeta = String(flooredHikasu).length;
+    const newKasuKeta = String(flooredKasu).length;
+    const newWaKeta = String(flooredWa).length;
+
+    setHikasuKeta(newHikasuKeta);
+    setKasuKeta(newKasuKeta);
+    setWaKeta(newWaKeta);
+
+    const newHikasuArr: number[] = [];
+    const newKasuArr: number[] = [];
+    const newWaArr: number[] = [];
+
+    for (let i = 0; i < newHikasuKeta; i++) {
+      newHikasuArr[i] = Number(String(flooredHikasu).charAt(newHikasuKeta - i - 1));
+    }
+    for (let i = 0; i < newKasuKeta; i++) {
+      newKasuArr[i] = Number(String(flooredKasu).charAt(newKasuKeta - i - 1));
+    }
+    for (let i = 0; i < newWaKeta; i++) {
+      newWaArr[i] = Number(String(flooredWa).charAt(newWaKeta - i - 1));
+    }
+
+    setHikasuArr(newHikasuArr);
+    setKasuArr(newKasuArr);
+    setWaArr(newWaArr);
+
+    suujiSet(newHikasuArr, newKasuArr, newHikasuKeta, newKasuKeta, flooredHikasu, flooredKasu);
+    okaneSet(newHikasuArr, newKasuArr, newHikasuKeta, newKasuKeta, flooredHikasu, flooredKasu);
+  };
+
+  // マス内に数字を書き込む
+  const suujiSet = (hikasuArray: number[], kasuArray: number[], hikasuKetaCount: number, kasuKetaCount: number, currentHikasu: number, currentKasu: number) => {
+    const newHissanTable = [
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', '']
+    ];
+
+    // 被加数を代入
+    for (let col = 0; col < hikasuKetaCount; col++) {
+      newHissanTable[1][maxKeta - col - 1] = hikasuArray[col].toString();
+    }
+
+    // 加数を代入
+    for (let col = 0; col < kasuKetaCount; col++) {
+      newHissanTable[2][maxKeta - col - 1] = kasuArray[col].toString();
+    }
+
+    // +記号を設定
+    if (currentHikasu < 100 && currentKasu < 100) {
+      newHissanTable[2][1] = "+";
+    } else {
+      newHissanTable[2][0] = "+";
+    }
+
+    setHissanTable(newHissanTable);
+  };
+
+  // マス内にお金を並べる
+  const okaneSet = (hikasuArray: number[], kasuArray: number[], hikasuKetaCount: number, kasuKetaCount: number, currentHikasu: number, currentKasu: number) => {
+    const newMoneyTable = [
+      [<></>, <></>, <></>, <></>],
+      [<></>, <></>, <></>, <></>],
+      [<></>, <></>, <></>, <></>],
+      [<></>, <></>, <></>, <></>]
+    ];
+
+    const imgArr = ["ichien", "juuen", "hyakuen"];
+
+    // 被加数のお金を配置
+    for (let col = 0; col < hikasuKetaCount; col++) {
+      const coinCount = hikasuArray[col];
+      const coins = [];
+      for (let i = 0; i < coinCount; i++) {
+        coins.push(
+          <Image
+            key={`h-${col}-${i}`}
+            src={`/images/${imgArr[col]}.png`}
+            alt={`${imgArr[col]} coin`}
+            width={24}
+            height={24}
+            className={`${imgArr[col]} w-6 h-6 cursor-pointer`}
+            draggable="true"
+            onTouchStart={touchStart as any}
+            onTouchMove={touchMove as any}
+            onTouchEnd={touchEnd as any}
+          />
+        );
+      }
+      newMoneyTable[1][maxKeta - col - 1] = <>{coins}</>;
+    }
+
+    // 加数のお金を配置
+    for (let col = 0; col < kasuKetaCount; col++) {
+      const coinCount = kasuArray[col];
+      const coins = [];
+      for (let i = 0; i < coinCount; i++) {
+        coins.push(
+          <Image
+            key={`k-${col}-${i}`}
+            src={`/images/${imgArr[col]}.png`}
+            alt={`${imgArr[col]} coin`}
+            width={24}
+            height={24}
+            className={`${imgArr[col]} w-6 h-6 cursor-pointer`}
+            draggable="true"
+            onTouchStart={touchStart as any}
+            onTouchMove={touchMove as any}
+            onTouchEnd={touchEnd as any}
+          />
+        );
+      }
+      newMoneyTable[2][maxKeta - col - 1] = <>{coins}</>;
+    }
+
+    // +記号を設定
+    if (currentHikasu < 100 && currentKasu < 100) {
+      newMoneyTable[2][1] = <>+</>;
+    } else {
+      newMoneyTable[2][0] = <>+</>;
+    }
+
+    setMoneyTable(newMoneyTable);
+  };
+
+  // 関数　数字のセット
+  const numSet = () => {
+    const numbers = [];
+    for (let i = 0; i < 10; i++) {
+      numbers.push(
+        <div
+          key={i}
+          className="draggable-elem inline-block w-12 h-12 leading-12 bg-white text-3xl text-center rounded-sm border border-gray-800 cursor-pointer m-0.5"
+          draggable="true"
+          onTouchStart={touchStart as any}
+          onTouchMove={touchMove as any}
+          onTouchEnd={touchEnd as any}
+        >
+          {i}
+        </div>
+      );
+    }
+    setNumberPalette(numbers);
+  };
+
+  // box5の値変更時のハンドラー
+  const handleBox5Change = () => {
+    if (box5Ref.current) {
+      if (parseInt(box5Ref.current.value) === wa) {
+        box5Ref.current.style.color = "red";
+        // se.seikai1効果音をここで再生
+      } else {
+        box5Ref.current.style.color = "black";
+      }
+    }
+  };
 
   return (
-    <div className={styles.container}>
-      {/* 問題選択セクション */}
-      <div className={styles.questionSection}>
-        <label className={styles.questionLabel}>問題の種類を選んでください：</label>
-        <select
-          className={styles.selectBox}
-          value={selectIndex}
-          onChange={(e) => handleSelectChange(Number(e.target.value))}
+    <div className="p-5">
+      {/* タイトル */}
+      <h2 className="text-2xl font-bold mb-4">たし算のひっ算(タッチのみ対応)</h2>
+
+      {/* ボタンセクション */}
+      <section className="mb-3">
+        <button
+          className="mx-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 border-0"
+          onClick={masuClear}
         >
-          {selectOptions.map((option, index) => (
-            <option key={index} value={index}>
-              {option}
+          クリア
+        </button>
+
+        <select
+          value={problemType}
+          onChange={(e) => setProblemType(parseInt(e.target.value))}
+          className="text-base mx-1 px-1 py-1 border border-gray-300 rounded"
+        >
+          {typeData.map((type, index) => (
+            <option key={index + 1} value={index + 1}>
+              {type}
             </option>
           ))}
         </select>
-      </div>
 
-      {/* ボタンセクション */}
-      <div className={styles.buttonSection}>
-        <button onClick={questionCreate} className={`${styles.btn} ${styles.btnDanger}`}>
-          問題
+        <button
+          className="mx-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 border-0"
+          onClick={shutudai}
+        >
+          もんだい
         </button>
-        <button onClick={checkAnswer} className={`${styles.btn} ${styles.btnPrimary}`}>
-          答え合わせ
-        </button>
-        <button onClick={showAnswer} className={`${styles.btn} ${styles.btnSuccess}`}>
-          答えを見る
-        </button>
-        <button onClick={handleClear} className={`${styles.btn} ${styles.btnSecondary}`}>
-          消す
-        </button>
-      </div>
 
-      {/* 問題表示 */}
-      <div className={styles.textBox}>
-        {mondaiFlag && `${leftNumber}+${rightNumber}=`}
-      </div>
+        <button
+          className="mx-1 px-3 py-1 bg-cyan-600 text-white rounded hover:bg-cyan-700 border-0"
+          onClick={mondaiSet}
+        >
+          セット
+        </button>
 
-      {/* 筆算テーブルとお金テーブルを横並びに */}
-      <div className="flex justify-center items-start gap-5 my-5 flex-wrap">
-        {/* 筆算テーブル */}
-        <div className={styles.tableContainer}>
-          <table ref={tableRef} className={styles.calcTable}>
-            <tbody>
-              {tableData.map((row, rowIndex) => (
-                <tr key={rowIndex} className={styles[`row${rowIndex}`]}>
-                  {row.map((cell, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={`${styles.tableCell} ${rowIndex === 0 || rowIndex === 3 ? "droppable-elem" : ""}`}
-                    >
+        <button
+          className="mx-1 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 border-0"
+          onClick={showAnswer}
+        >
+          こたえ
+        </button>
+      </section>
+
+      {/* 式ボックス */}
+      <section className="flex mb-3 items-center">
+        <input
+          ref={box1Ref}
+          type="number"
+          max={999}
+          min={10}
+          defaultValue={hikasu}
+          className="keisan_shiki mx-1 px-1 py-1 text-2xl w-20 border border-gray-300 rounded"
+        />
+        <div className="kigo mx-1 text-2xl">+</div>
+        <input
+          ref={box3Ref}
+          type="number"
+          max={999}
+          min={10}
+          defaultValue={kasu}
+          className="keisan_shiki mx-1 px-1 py-1 text-2xl w-20 border border-gray-300 rounded"
+        />
+        <div className="kigo mx-1 text-lg">=</div>
+        <input
+          ref={box5Ref}
+          type="number"
+          className="keisan_shiki mx-1 px-1 py-1 text-lg w-20 border border-gray-300 rounded"
+          onChange={handleBox5Change}
+        />
+      </section>
+
+      {/* フィールド */}
+      <div className="flex mb-3">
+        {/* 筆算マス */}
+        <table className="h-60 mr-3">
+          <tbody>
+            {hissanTable.map((row, rowIndex) => (
+              <tr key={rowIndex} className="max-h-15">
+                {row.map((cell, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className={`
+                      border border-gray-800 w-14 max-w-14 h-14 max-h-14 text-center
+                      ${rowIndex === 0 ? 'text-xl bg-yellow-100 text-red-500 align-bottom' : 'text-3xl bg-white text-black align-middle'}
+                      ${rowIndex === 3 ? 'bg-yellow-100' : ''}
+                      ${rowIndex === 0 || rowIndex === 3 ? 'droppable-elem' : ''}
+                    `}
+                  >
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* ゴミ箱 */}
+        <Image
+          className="droppable-elem w-16 h-16 relative left-3 top-36"
+          src="/images/gomibako.png"
+          alt="ゴミ箱"
+          width={64}
+          height={64}
+        />
+
+        {/* お金パレット */}
+        <table className="h-60 ml-3">
+          <tbody>
+            {moneyTable.map((row, rowIndex) => (
+              <tr key={rowIndex} className="max-h-15">
+                {row.map((cell, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className={`
+                      droppable-elem-2 border border-gray-800 w-40 max-w-40 h-14 max-h-14 p-0.5
+                      flex-col content-start items-start
+                      ${rowIndex === 0 || rowIndex === 3 ? 'bg-yellow-100' : 'bg-white'}
+                    `}
+                  >
+                    <div className="flex flex-wrap content-start items-start">
                       {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* お金テーブル */}
-        <div className={styles.moneyTableContainer}>
-          <table ref={moneyTableRef} className={styles.moneyTable}>
-            <tbody>
-              {moneyTableData.map((row, rowIndex) => (
-                <tr key={rowIndex} className={styles[`moneyRow${rowIndex}`]}>
-                  {row.map((cell, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={`${styles.moneyCell} ${rowIndex === 0 || rowIndex === 3 ? "droppable-elem-2" : ""}`}
-                    >
-                      <div className="flex flex-wrap justify-start">
-                        {cell && cell !== "+" && cell.split(",").map((coinType, index) => {
-                          if (!coinType) return null;
-                          return (
-                            <Image
-                              key={index}
-                              src={`/images/${coinType}.png`}
-                              alt={coinType}
-                              width={25}
-                              height={25}
-                              className={`${styles.coin} draggable-elem w-[25px] h-[25px]`}
-                              draggable={true}
-                            />
-                          );
-                        })}
-                        {cell === "+" && <span className={styles.plusSign}>+</span>}
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* 数字パレットとゴミ箱 */}
-      <div className={styles.paletteSection}>
-        <div className={styles.spacer}></div>
-        <div id="num-pallet" className={`${styles.numPallet} droppable-elem`}></div>
-        <div className={styles.trashSection}>
-          <Image
-            src="/images/gomibako.png"
-            alt="ゴミ箱"
-            width={60}
-            height={80}
-            className={`${styles.trashIcon} droppable-elem`}
-            style={{ cursor: 'pointer' }}
-          />
+      {/* 数字パレット */}
+      <div
+        id="num_pallet"
+        className="droppable-elem mb-3 border border-gray-300 p-3"
+      >
+        <h4 className="text-lg font-semibold mb-2">数字パレット</h4>
+        {numberPalette}
+      </div>
+
+      {/* スコアパレット */}
+      <div id="score_pallet">
+        <h4 className="text-lg font-semibold mb-2">スコア</h4>
+        <div className="flex flex-wrap">
+          {scoreCoins}
         </div>
       </div>
     </div>
   );
-};
-
-export default TasuHissan;
+}
