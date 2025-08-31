@@ -117,7 +117,6 @@ export function ResultDisplay({
       </div>
       <BtnQuestion
         handleEvent={onNext}
-        btnText="つぎのもんだい"
       />
     </div>
   );
@@ -256,11 +255,6 @@ export function KukuRenshu_2() {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      {/* 統計表示 */}
-      <StatsDisplay
-        correctCount={correctCount}
-        totalCount={totalCount}
-      />
 
       {/* 問題表示 */}
       <section className="bg-gray-50 rounded-lg p-5 mb-5 border-2 border-gray-200">
@@ -300,6 +294,13 @@ export function KukuRenshu_2() {
           />
         </section>
       )}
+
+      {/* 統計表示 */}
+      <StatsDisplay
+        correctCount={correctCount}
+        totalCount={totalCount}
+      />
+
 
       {/* リセットボタン */}
       <div className="text-center">
