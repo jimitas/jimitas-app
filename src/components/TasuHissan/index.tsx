@@ -7,7 +7,6 @@ export function TasuHissan() {
   const [kasu, setKasu] = useState<number>(456);
   const [wa, setWa] = useState<number>(0);
   const [maxKeta] = useState<number>(4);
-  const [kuriagari, setKuriagari] = useState<number>(0);
   const [hikasuArr, setHikasuArr] = useState<number[]>([]);
   const [kasuArr, setKasuArr] = useState<number[]>([]);
   const [waArr, setWaArr] = useState<number[]>([]);
@@ -16,24 +15,7 @@ export function TasuHissan() {
   const [waKeta, setWaKeta] = useState<number>(0);
   const [problemType, setProblemType] = useState<number>(1);
 
-  // 筆算テーブルの状態
-  const [hissanTable, setHissanTable] = useState<string[][]>([
-    ['', '', '', ''], // くり上がり行
-    ['', '', '', ''], // 被加数行
-    ['', '', '', ''], // 加数行
-    ['', '', '', '']  // 答え行
-  ]);
-
-  // お金テーブルの状態
-  const [moneyTable, setMoneyTable] = useState<JSX.Element[][]>([
-    [<></>, <></>, <></>, <></>],
-    [<></>, <></>, <></>, <></>],
-    [<></>, <></>, <></>, <></>],
-    [<></>, <></>, <></>, <></>]
-  ]);
-
-  // 数字パレット
-  // const [numberPalette, setNumberPalette] = useState<JSX.Element[]>([]);
+  // スコアコインのみ保持
   const [scoreCoins, setScoreCoins] = useState<JSX.Element[]>([]);
 
   // 問題タイプのデータ
@@ -44,14 +26,13 @@ export function TasuHissan() {
   const box3Ref = useRef<HTMLInputElement>(null);
   const box5Ref = useRef<HTMLInputElement>(null);
 
-  // 改良版のドラッグ&ドロップ処理
+  // ドラッグ&ドロップ処理（14tahi.js準拠）
   let globalDragged: HTMLElement | null = null;
 
   const dragStart = (e: DragEvent) => {
     const target = e.target as HTMLElement;
     if (target.draggable === true) {
       globalDragged = target;
-      console.log("ドラッグ開始:", target.className); // デバッグ用
     }
   };
 
@@ -63,72 +44,36 @@ export function TasuHissan() {
     e.preventDefault();
     const target = e.target as HTMLElement;
 
-    // droppable-elemクラスを持つ要素を探す
-    let dropTarget = target;
-    let attempts = 0;
-    while (dropTarget && attempts < 5) {
-      if (dropTarget.className && (
-        dropTarget.className.includes('droppable-elem-2') ||
-        dropTarget.className.includes('droppable-elem')
-      )) {
-        break;
+    if (target.className.includes("droppable-elem") && !target.className.includes("droppable-elem-2") && globalDragged) {
+      // 数字のドロップ処理
+      if (globalDragged.parentNode) {
+        globalDragged.parentNode.removeChild(globalDragged);
       }
-      dropTarget = dropTarget.parentElement as HTMLElement;
-      attempts++;
-    }
-
-    if (dropTarget && globalDragged) {
-      console.log("ドロップ処理開始:", {
-        draggedElement: globalDragged.className,
-        dropTarget: dropTarget.className
-      });
-
-      // 数字は筆算マスにのみドロップ可能
-      const isDraggingNumber = globalDragged.className.includes('draggable-elem');
-      const isHissanTarget = dropTarget.className.includes('droppable-elem') && !dropTarget.className.includes('droppable-elem-2');
-
-      // お金はお金パレット内でのみ移動可能
-      const isDraggingMoney = globalDragged.className.includes('ichien') ||
-        globalDragged.className.includes('juuen') ||
-        globalDragged.className.includes('hyakuen');
-      const isMoneyTarget = dropTarget.className.includes('droppable-elem-2');
-
-      console.log("判定結果:", {
-        isDraggingNumber,
-        isHissanTarget,
-        isDraggingMoney,
-        isMoneyTarget
-      });
-
-      if ((isDraggingNumber && isHissanTarget) || (isDraggingMoney && isMoneyTarget)) {
-        // 安全な要素削除
-        try {
-          if (globalDragged.parentNode && globalDragged.parentNode.contains(globalDragged)) {
-            globalDragged.parentNode.removeChild(globalDragged);
-          }
-        } catch (error) {
-          console.warn("要素の削除に失敗しました:", error);
+      target.appendChild(globalDragged);
+      
+      // 数パレット内の数字を一旦消去
+      const numPalletElement = document.getElementById("num_pallet");
+      if (numPalletElement) {
+        while (numPalletElement.firstChild) {
+          numPalletElement.removeChild(numPalletElement.firstChild);
         }
-
-        // 要素を複製して新しく追加
-        const clonedElement = globalDragged.cloneNode(true) as HTMLElement;
-        clonedElement.setAttribute("draggable", "true");
-
-        dropTarget.appendChild(clonedElement);
-
-        // 数字をドロップした場合のみ数字パレットを再作成
-        if (isDraggingNumber) {
-          console.log("数字パレット再作成を実行");
-          regenerateNumberPalette();
-        }
-
-        // 答え入力チェック
-        kotaeInput();
       }
+      numSet();
+      kotaeInput();
+      
+    } else if (target.className.includes("droppable-elem-2") && globalDragged && globalDragged.tagName === "IMG") {
+      // お金のドロップ処理
+      if (globalDragged.parentNode) {
+        globalDragged.parentNode.removeChild(globalDragged);
+      }
+      target.appendChild(globalDragged);
+      imgKuriagari();
     }
+    
+    globalDragged = null;
   };
 
-  // タッチ操作（簡易版）
+  // タッチ操作（14tahi.js準拠）
   const touchStart = (e: TouchEvent) => {
     e.preventDefault();
   };
@@ -148,55 +93,45 @@ export function TasuHissan() {
     droppedElem.style.position = "";
     droppedElem.style.top = "";
     droppedElem.style.left = "";
-
+    
     const touch = e.changedTouches[0];
     const newParentElem = document.elementFromPoint(
       touch.pageX - window.pageXOffset,
       touch.pageY - window.pageYOffset
     ) as HTMLElement | null;
 
-    if (newParentElem) {
-      console.log("タッチドロップ処理:", {
-        droppedElement: droppedElem.className,
-        newParent: newParentElem.className
-      });
-
-      // 同じ制約を適用
-      const isDraggingNumber = droppedElem.className.includes('draggable-elem');
-      const isHissanTarget = newParentElem.className.includes('droppable-elem') && !newParentElem.className.includes('droppable-elem-2');
-
-      const isDraggingMoney = droppedElem.className.includes('ichien') ||
-        droppedElem.className.includes('juuen') ||
-        droppedElem.className.includes('hyakuen');
-      const isMoneyTarget = newParentElem.className.includes('droppable-elem-2');
-
-      if ((isDraggingNumber && isHissanTarget) || (isDraggingMoney && isMoneyTarget)) {
-        newParentElem.appendChild(droppedElem);
-
-        // 数字をドロップした場合のみ数字パレットを再作成
-        if (isDraggingNumber) {
-          console.log("タッチ操作で数字パレット再作成を実行");
-          regenerateNumberPalette();
+    if (newParentElem?.className.includes("droppable-elem") && !newParentElem?.className.includes("droppable-elem-2")) {
+      newParentElem.appendChild(droppedElem);
+      
+      // 数パレット内の数字を一旦消去
+      const numPalletElement = document.getElementById("num_pallet");
+      if (numPalletElement) {
+        while (numPalletElement.firstChild) {
+          numPalletElement.removeChild(numPalletElement.firstChild);
         }
-
-        // 答え入力チェック
-        kotaeInput();
       }
+      numSet();
+      kotaeInput();
     }
   };
 
+  const touchEndMoney = (e: TouchEvent) => {
+    e.preventDefault();
+    const droppedElem = e.target as HTMLElement;
+    droppedElem.style.position = "";
+    droppedElem.style.top = "";
+    droppedElem.style.left = "";
+    
+    const touch = e.changedTouches[0];
+    const newParentElem = document.elementFromPoint(
+      touch.pageX - window.pageXOffset,
+      touch.pageY - window.pageYOffset
+    ) as HTMLElement | null;
 
-  // 数字パレットの再生成（DOM操作版）
-  const regenerateNumberPalette = () => {
-    console.log("regenerateNumberPaletteが実行されました");
-    numSet();
-  };
-
-  // くり上がりの操作
-  const imgKuriagari = () => {
-    const imgArr = ["ichien", "juuen", "hyakuen", "senen"];
-    // ここでお金のくり上がり処理を実装
-    // 10個以上のコインがある場合、上位の桁に変換
+    if (newParentElem?.className.includes("droppable-elem-2")) {
+      newParentElem.appendChild(droppedElem);
+      imgKuriagari();
+    }
   };
 
   // 初期化
@@ -220,21 +155,34 @@ export function TasuHissan() {
     };
   }, [hikasu, kasu]);
 
-  // 関数　マス内の数字をクリア
+  // 関数　マス内の数字をクリア（DOM直接操作）
   const masuClear = () => {
-    // se.reset効果音をここで再生
-    setHissanTable([
-      ['', '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', '']
-    ]);
-    setMoneyTable([
-      [<></>, <></>, <></>, <></>],
-      [<></>, <></>, <></>, <></>],
-      [<></>, <></>, <></>, <></>],
-      [<></>, <></>, <></>, <></>]
-    ]);
+    // 筆算テーブルをクリア
+    const hissanTableElement = document.querySelector('#hissan-table');
+    if (hissanTableElement) {
+      for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+          const cell = hissanTableElement.querySelector(`tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
+          if (cell) {
+            cell.innerHTML = "";
+          }
+        }
+      }
+    }
+
+    // お金テーブルをクリア
+    const moneyTableElement = document.querySelector('#money-table');
+    if (moneyTableElement) {
+      for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+          const cell = moneyTableElement.querySelector(`tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
+          if (cell) {
+            cell.innerHTML = "";
+          }
+        }
+      }
+    }
+
     if (box1Ref.current) box1Ref.current.value = "";
     if (box3Ref.current) box3Ref.current.value = "";
     if (box5Ref.current) box5Ref.current.value = "";
@@ -273,7 +221,6 @@ export function TasuHissan() {
     if (box1Ref.current) box1Ref.current.value = newHikasu.toString();
     if (box3Ref.current) box3Ref.current.value = newKasu.toString();
     hissanSet(newHikasu, newKasu);
-    // se.set効果音をここで再生
   };
 
   // 関数　問題をセットする
@@ -283,7 +230,6 @@ export function TasuHissan() {
     setHikasu(newHikasu);
     setKasu(newKasu);
     hissanSet(newHikasu, newKasu);
-    // se.set効果音をここで再生
   };
 
   // 関数　答えの表示
@@ -292,27 +238,32 @@ export function TasuHissan() {
       box5Ref.current.value = wa.toString();
       box5Ref.current.style.color = "blue";
     }
-    // se.seikai2効果音をここで再生
 
     // くり上がりの表示
-    const newHissanTable = [...hissanTable];
-    let tempKuriagari = 0;
+    const hissanTableElement = document.querySelector('#hissan-table');
+    if (hissanTableElement) {
+      let tempKuriagari = 0;
 
-    for (let col = 0; col < Math.min(hikasuKeta, kasuKeta); col++) {
-      if (Math.floor(hikasuArr[col] + kasuArr[col] + tempKuriagari) > 9) {
-        newHissanTable[0][maxKeta - col - 2] = "1";
-        tempKuriagari = 1;
-      } else {
-        tempKuriagari = 0;
+      for (let col = 0; col < Math.min(hikasuKeta, kasuKeta); col++) {
+        if (Math.floor(hikasuArr[col] + kasuArr[col] + tempKuriagari) > 9) {
+          const cell = hissanTableElement.querySelector(`tr:nth-child(1) td:nth-child(${maxKeta - col - 1})`);
+          if (cell) {
+            cell.innerHTML = "1";
+          }
+          tempKuriagari = 1;
+        } else {
+          tempKuriagari = 0;
+        }
+      }
+
+      // 筆算の答え表示
+      for (let col = 0; col < waKeta; col++) {
+        const cell = hissanTableElement.querySelector(`tr:nth-child(4) td:nth-child(${maxKeta - col})`);
+        if (cell) {
+          cell.innerHTML = waArr[col].toString();
+        }
       }
     }
-
-    // 筆算の答え表示
-    for (let col = 0; col < waKeta; col++) {
-      newHissanTable[3][maxKeta - col - 1] = waArr[col].toString();
-    }
-
-    setHissanTable(newHissanTable);
   };
 
   // 関数　答えの入力
@@ -321,19 +272,25 @@ export function TasuHissan() {
     const newKasu = Math.floor(box3Ref.current ? parseInt(box3Ref.current.value) : 0);
     const newWa = Math.floor(newHikasu + newKasu);
 
-    // 筆算マスからの値を計算
-    const calculatedAnswer =
-      parseInt(hissanTable[3][0] || '0') * 1000 +
-      parseInt(hissanTable[3][1] || '0') * 100 +
-      parseInt(hissanTable[3][2] || '0') * 10 +
-      parseInt(hissanTable[3][3] || '0') * 1;
+    // 筆算マスからの値を計算（DOM操作版）
+    const hissanTableElement = document.querySelector('#hissan-table');
+    let calculatedAnswer = 0;
+    
+    if (hissanTableElement) {
+      for (let col = 0; col < 4; col++) {
+        const cell = hissanTableElement.querySelector(`tr:nth-child(4) td:nth-child(${col + 1})`);
+        if (cell && cell.innerHTML) {
+          const digit = parseInt(cell.innerHTML) || 0;
+          calculatedAnswer += digit * Math.pow(10, 3 - col);
+        }
+      }
+    }
 
     if (box5Ref.current) {
       box5Ref.current.value = calculatedAnswer.toString();
 
       if (calculatedAnswer === newWa) {
         box5Ref.current.style.color = "red";
-        // se.seikai1効果音をここで再生
         scoreWrite();
       } else {
         box5Ref.current.style.color = "black";
@@ -359,7 +316,6 @@ export function TasuHissan() {
   // 関数　筆算の描画
   const hissanSet = (newHikasu: number, newKasu: number) => {
     if (newHikasu > 999 || newKasu > 999 || newHikasu < 0 || newKasu < 0) {
-      // se.alert効果音をここで再生
       alert("数字は1～999までにしてください。");
       if (box1Ref.current) box1Ref.current.value = "";
       if (box3Ref.current) box3Ref.current.value = "";
@@ -413,112 +369,138 @@ export function TasuHissan() {
     okaneSet(newHikasuArr, newKasuArr, newHikasuKeta, newKasuKeta, flooredHikasu, flooredKasu);
   };
 
-  // マス内に数字を書き込む
+  // マス内に数字を書き込む（DOM直接操作版）
   const suujiSet = (hikasuArray: number[], kasuArray: number[], hikasuKetaCount: number, kasuKetaCount: number, currentHikasu: number, currentKasu: number) => {
-    const newHissanTable = [
-      ['', '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', '']
-    ];
+    // 一度　マス内の数字をクリア
+    const hissanTableElement = document.querySelector('#hissan-table');
+    if (hissanTableElement) {
+      for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+          const cell = hissanTableElement.querySelector(`tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
+          if (cell) {
+            cell.innerHTML = "";
+          }
+        }
+      }
 
-    // 被加数を代入
-    for (let col = 0; col < hikasuKetaCount; col++) {
-      newHissanTable[1][maxKeta - col - 1] = hikasuArray[col].toString();
+      // 被加数を代入
+      for (let col = 0; col < hikasuKetaCount; col++) {
+        const cell = hissanTableElement.querySelector(`tr:nth-child(2) td:nth-child(${maxKeta - col})`);
+        if (cell) {
+          cell.innerHTML = hikasuArray[col].toString();
+        }
+      }
+
+      // 加数を代入
+      for (let col = 0; col < kasuKetaCount; col++) {
+        const cell = hissanTableElement.querySelector(`tr:nth-child(3) td:nth-child(${maxKeta - col})`);
+        if (cell) {
+          cell.innerHTML = kasuArray[col].toString();
+        }
+      }
+
+      // +記号を設定
+      if (currentHikasu < 100 && currentKasu < 100) {
+        const cell = hissanTableElement.querySelector('tr:nth-child(3) td:nth-child(2)');
+        if (cell) {
+          cell.innerHTML = "+";
+        }
+      } else {
+        const cell = hissanTableElement.querySelector('tr:nth-child(3) td:nth-child(1)');
+        if (cell) {
+          cell.innerHTML = "+";
+        }
+      }
     }
-
-    // 加数を代入
-    for (let col = 0; col < kasuKetaCount; col++) {
-      newHissanTable[2][maxKeta - col - 1] = kasuArray[col].toString();
-    }
-
-    // +記号を設定
-    if (currentHikasu < 100 && currentKasu < 100) {
-      newHissanTable[2][1] = "+";
-    } else {
-      newHissanTable[2][0] = "+";
-    }
-
-    setHissanTable(newHissanTable);
   };
 
-  // マス内にお金を並べる
+  // マス内にお金を並べる（DOM直接操作版 - 14tahi.js準拠）
   const okaneSet = (hikasuArray: number[], kasuArray: number[], hikasuKetaCount: number, kasuKetaCount: number, currentHikasu: number, currentKasu: number) => {
-    const newMoneyTable = [
-      [<></>, <></>, <></>, <></>],
-      [<></>, <></>, <></>, <></>],
-      [<></>, <></>, <></>, <></>],
-      [<></>, <></>, <></>, <></>]
-    ];
-
-    const imgArr = ["ichien", "juuen", "hyakuen"];
-
-    // 被加数のお金を配置
-    for (let col = 0; col < hikasuKetaCount; col++) {
-      const coinCount = hikasuArray[col];
-      const coins = [];
-      for (let i = 0; i < coinCount; i++) {
-        coins.push(
-          <Image
-            key={`h-${col}-${i}`}
-            src={`/images/${imgArr[col]}.png`}
-            alt={`${imgArr[col]} coin`}
-            width={24}
-            height={24}
-            className={`${imgArr[col]} w-6 h-6 cursor-pointer`}
-            draggable="true"
-            onTouchStart={touchStart as any}
-            onTouchMove={touchMove as any}
-            onTouchEnd={touchEnd as any}
-          />
-        );
+    // 一度　マス内のお金をクリア
+    const moneyTableElement = document.querySelector('#money-table');
+    if (moneyTableElement) {
+      for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+          const cell = moneyTableElement.querySelector(`tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
+          if (cell) {
+            cell.innerHTML = "";
+          }
+        }
       }
-      newMoneyTable[1][maxKeta - col - 1] = <>{coins}</>;
-    }
 
-    // 加数のお金を配置
-    for (let col = 0; col < kasuKetaCount; col++) {
-      const coinCount = kasuArray[col];
-      const coins = [];
-      for (let i = 0; i < coinCount; i++) {
-        coins.push(
-          <Image
-            key={`k-${col}-${i}`}
-            src={`/images/${imgArr[col]}.png`}
-            alt={`${imgArr[col]} coin`}
-            width={24}
-            height={24}
-            className={`${imgArr[col]} w-6 h-6 cursor-pointer`}
-            draggable="true"
-            onTouchStart={touchStart as any}
-            onTouchMove={touchMove as any}
-            onTouchEnd={touchEnd as any}
-          />
-        );
+      const imgArr = ["ichien", "juuen", "hyakuen"];
+      
+      // 被加数のお金を配置
+      for (let col = 0; col < hikasuKetaCount; col++) {
+        for (let i = 0; i < hikasuArray[col]; i++) {
+          const img = document.createElement("img");
+          img.setAttribute("src", `/images/${imgArr[col]}.png`);
+          img.setAttribute("class", imgArr[col]);
+          img.setAttribute("draggable", "true");
+          img.style.width = "25px";
+          img.style.height = "25px";
+          img.style.cursor = "pointer";
+          img.className = `${imgArr[col]} w-6 h-6 cursor-pointer`;
+          img.addEventListener("touchstart", touchStart as any, false);
+          img.addEventListener("touchmove", touchMove as any, false);
+          img.addEventListener("touchend", touchEndMoney as any, false);
+          
+          const cell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${maxKeta - col})`);
+          if (cell) {
+            cell.appendChild(img);
+          }
+        }
       }
-      newMoneyTable[2][maxKeta - col - 1] = <>{coins}</>;
+      
+      // 加数のお金を配置
+      for (let col = 0; col < kasuKetaCount; col++) {
+        for (let i = 0; i < kasuArray[col]; i++) {
+          const img = document.createElement("img");
+          img.setAttribute("src", `/images/${imgArr[col]}.png`);
+          img.setAttribute("class", imgArr[col]);
+          img.setAttribute("draggable", "true");
+          img.style.width = "25px";
+          img.style.height = "25px";
+          img.style.cursor = "pointer";
+          img.className = `${imgArr[col]} w-6 h-6 cursor-pointer`;
+          img.addEventListener("touchstart", touchStart as any, false);
+          img.addEventListener("touchmove", touchMove as any, false);
+          img.addEventListener("touchend", touchEndMoney as any, false);
+          
+          const cell = moneyTableElement.querySelector(`tr:nth-child(3) td:nth-child(${maxKeta - col})`);
+          if (cell) {
+            cell.appendChild(img);
+          }
+        }
+      }
+      
+      // +記号を設定
+      if (currentHikasu < 100 && currentKasu < 100) {
+        const cell = moneyTableElement.querySelector('tr:nth-child(3) td:nth-child(2)');
+        if (cell) {
+          cell.innerHTML = "+";
+        }
+      } else {
+        const cell = moneyTableElement.querySelector('tr:nth-child(3) td:nth-child(1)');
+        if (cell) {
+          cell.innerHTML = "+";
+        }
+      }
     }
-
-    // +記号を設定
-    if (currentHikasu < 100 && currentKasu < 100) {
-      newMoneyTable[2][1] = <>+</>;
-    } else {
-      newMoneyTable[2][0] = <>+</>;
-    }
-
-    setMoneyTable(newMoneyTable);
   };
 
-  // 関数　数字のセット
+  // 関数　数字のセット（DOM直接操作版）
   const numSet = () => {
-    // 既存の数字パレットをクリア
-
-    // DOM要素を直接操作して数字を追加
-    const numPalletElement = document.getElementById('num_pallet');
+    // 数字パレット内の数字を一旦消去
+    const numPalletElement = document.getElementById("num_pallet");
     if (numPalletElement) {
-      // 既存の数字要素をクリア（h4タイトルは保持）
-      const existingNumbers = numPalletElement.querySelectorAll('.draggable-elem');
-      existingNumbers.forEach(num => num.remove());
+      // タイトルを保持するため、h4以外を削除
+      const children = Array.from(numPalletElement.children);
+      children.forEach(child => {
+        if (child.tagName !== 'H4') {
+          child.remove();
+        }
+      });
 
       // 新しい数字要素を追加
       for (let i = 0; i < 10; i++) {
@@ -526,14 +508,118 @@ export function TasuHissan() {
         numberDiv.className = 'draggable-elem inline-block w-12 h-12 leading-12 bg-white text-3xl text-center rounded-sm border border-gray-800 cursor-pointer m-0.5';
         numberDiv.setAttribute('draggable', 'true');
         numberDiv.textContent = i.toString();
-
+        
         // タッチイベントを追加
         numberDiv.addEventListener('touchstart', touchStart as any);
         numberDiv.addEventListener('touchmove', touchMove as any);
         numberDiv.addEventListener('touchend', touchEnd as any);
-
-        // 数字パレットに追加
+        
         numPalletElement.appendChild(numberDiv);
+      }
+    }
+  };
+
+  // くり上がりの操作（DOM直接操作版）
+  const imgKuriagari = () => {
+    const moneyTableElement = document.querySelector('#money-table');
+    if (!moneyTableElement) return;
+    
+    // 1円列から順番にチェック（右から左）
+    for (let col = 3; col >= 0; col--) {
+      const currentCell = moneyTableElement.querySelector(`tr:nth-child(4) td:nth-child(${col + 1})`);
+      const currentCell2 = moneyTableElement.querySelector(`tr:nth-child(4) td:nth-child(${col + 1})`);
+      
+      if (currentCell && currentCell2) {
+        // 1円列（col=3）の場合
+        if (col === 3) {
+          const ichienCount = currentCell2.querySelectorAll('.ichien').length;
+          console.log("ichienCount", ichienCount);
+          if (ichienCount >= 10) {
+            // 10個以上の1円がある場合、10円に変換
+            const newJuuenCount = Math.floor(ichienCount / 10);
+            const remainingIchienCount = ichienCount % 10;
+            
+            // 既存の1円を削除
+            currentCell.querySelectorAll('.ichien').forEach(coin => coin.remove());
+            currentCell2.querySelectorAll('.ichien').forEach(coin => coin.remove());
+            
+            // 残りの1円を追加
+            for (let i = 0; i < remainingIchienCount; i++) {
+              const img = document.createElement("img");
+              img.setAttribute("src", "/images/ichien.png");
+              img.setAttribute("class", "ichien");
+              img.setAttribute("draggable", "true");
+              img.className = "ichien w-6 h-6 cursor-pointer";
+              img.addEventListener("touchstart", touchStart as any, false);
+              img.addEventListener("touchmove", touchMove as any, false);
+              img.addEventListener("touchend", touchEndMoney as any, false);
+              currentCell.appendChild(img);
+            }
+            
+            // 10円列に追加
+            if (col > 0) {
+              const targetCell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${col})`);
+              if (targetCell) {
+                for (let i = 0; i < newJuuenCount; i++) {
+                  const img = document.createElement("img");
+                  img.setAttribute("src", "/images/juuen.png");
+                  img.setAttribute("class", "juuen");
+                  img.setAttribute("draggable", "true");
+                  img.className = "juuen w-6 h-6 cursor-pointer";
+                  img.addEventListener("touchstart", touchStart as any, false);
+                  img.addEventListener("touchmove", touchMove as any, false);
+                  img.addEventListener("touchend", touchEndMoney as any, false);
+                  targetCell.appendChild(img);
+                }
+              }
+            }
+          }
+        }
+        
+        // 10円列（col=1）の場合
+        else if (col === 1) {
+          const juuenCount = currentCell.querySelectorAll('.juuen').length + currentCell2.querySelectorAll('.juuen').length;
+          if (juuenCount >= 10) {
+            // 10個以上の10円がある場合、100円に変換
+            const newHyakuenCount = Math.floor(juuenCount / 10);
+            const remainingJuuenCount = juuenCount % 10;
+            
+            // 既存の10円を削除
+            currentCell.querySelectorAll('.juuen').forEach(coin => coin.remove());
+            currentCell2.querySelectorAll('.juuen').forEach(coin => coin.remove());
+            
+            // 残りの10円を追加
+            for (let i = 0; i < remainingJuuenCount; i++) {
+              const img = document.createElement("img");
+              img.setAttribute("src", "/images/juuen.png");
+              img.setAttribute("class", "juuen");
+              img.setAttribute("draggable", "true");
+              img.className = "juuen w-6 h-6 cursor-pointer";
+              img.addEventListener("touchstart", touchStart as any, false);
+              img.addEventListener("touchmove", touchMove as any, false);
+              img.addEventListener("touchend", touchEndMoney as any, false);
+              currentCell.appendChild(img);
+            }
+            
+            // 100円列に追加
+            if (col > 0) {
+              const targetCell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${col})`);
+              if (targetCell) {
+                for (let i = 0; i < newHyakuenCount; i++) {
+                  const img = document.createElement("img");
+                  img.setAttribute("src", "/images/hyakuen.png");
+                  img.setAttribute("class", "hyakuen");
+                  img.setAttribute("draggable", "true");
+                  img.className = "hyakuen w-6 h-6 cursor-pointer";
+                  img.addEventListener("touchstart", touchStart as any, false);
+                  img.addEventListener("touchmove", touchMove as any, false);
+                  img.addEventListener("touchend", touchEndMoney as any, false);
+                  targetCell.appendChild(img);
+                }
+              }
+            }
+          }
+        }
       }
     }
   };
@@ -543,7 +629,6 @@ export function TasuHissan() {
     if (box5Ref.current) {
       if (parseInt(box5Ref.current.value) === wa) {
         box5Ref.current.style.color = "red";
-        // se.seikai1効果音をここで再生
       } else {
         box5Ref.current.style.color = "black";
       }
@@ -629,11 +714,11 @@ export function TasuHissan() {
       {/* フィールド */}
       <div className="flex mb-3">
         {/* 筆算マス */}
-        <table className="h-60 mr-3">
+        <table id="hissan-table" className="h-60 mr-3">
           <tbody>
-            {hissanTable.map((row, rowIndex) => (
+            {[0, 1, 2, 3].map(rowIndex => (
               <tr key={rowIndex} className="max-h-15">
-                {row.map((cell, colIndex) => (
+                {[0, 1, 2, 3].map(colIndex => (
                   <td
                     key={colIndex}
                     className={`
@@ -643,7 +728,6 @@ export function TasuHissan() {
                       ${rowIndex === 0 || rowIndex === 3 ? 'droppable-elem' : ''}
                     `}
                   >
-                    {cell}
                   </td>
                 ))}
               </tr>
@@ -661,22 +745,19 @@ export function TasuHissan() {
         />
 
         {/* お金パレット */}
-        <table className="h-60 ml-3">
+        <table id="money-table" className="h-60 ml-3">
           <tbody>
-            {moneyTable.map((row, rowIndex) => (
+            {[0, 1, 2, 3].map(rowIndex => (
               <tr key={rowIndex} className="max-h-15">
-                {row.map((cell, colIndex) => (
+                {[0, 1, 2, 3].map(colIndex => (
                   <td
                     key={colIndex}
                     className={`
                       droppable-elem-2 border border-gray-800 w-40 max-w-40 h-14 max-h-14 p-0.5
-                      flex-col content-start items-start
+                      flex-wrap content-start items-start
                       ${rowIndex === 0 || rowIndex === 3 ? 'bg-yellow-100' : 'bg-white'}
                     `}
                   >
-                    <div className="flex flex-wrap content-start items-start">
-                      {cell}
-                    </div>
                   </td>
                 ))}
               </tr>
@@ -688,7 +769,7 @@ export function TasuHissan() {
       {/* 数字パレット */}
       <div
         id="num_pallet"
-        className="droppable-elem mb-3 border border-gray-300 p-3"
+        className="mb-3 border border-gray-300 p-3"
       >
         <h4 className="text-lg font-semibold mb-2">数字パレット</h4>
       </div>
