@@ -230,7 +230,11 @@ export function Tokei() {
       const answerHours = parseInt(inputHours) || 0;
       const answerMinutes = parseInt(inputMinutes) || 0;
 
-      if (currentHours === answerHours && currentMinutes === answerMinutes) {
+      // 12時と0時を同じとして扱う
+      const normalizedCurrentHours = currentHours === 12 ? 12 : currentHours;
+      const normalizedAnswerHours = answerHours === 0 ? 12 : answerHours;
+
+      if (normalizedCurrentHours === normalizedAnswerHours && currentMinutes === answerMinutes) {
         try {
           se.seikai1.play();
         } catch (error) {
@@ -262,7 +266,11 @@ export function Tokei() {
       const answerHours = Math.floor(rangeValue / 60);
       const answerMinutes = Math.floor(rangeValue % 60);
 
-      if (hariHours === answerHours && hariMinutes === answerMinutes) {
+      // 12時と0時を同じとして扱う
+      const normalizedHariHours = hariHours === 0 ? 12 : hariHours;
+      const normalizedAnswerHours = answerHours === 0 ? 12 : answerHours;
+
+      if (normalizedHariHours === normalizedAnswerHours && hariMinutes === answerMinutes) {
         try {
           se.seikai1.play();
         } catch (error) {
