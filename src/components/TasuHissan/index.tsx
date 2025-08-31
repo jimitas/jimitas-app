@@ -50,7 +50,7 @@ export function TasuHissan() {
         globalDragged.parentNode.removeChild(globalDragged);
       }
       target.appendChild(globalDragged);
-      
+
       // 数パレット内の数字を一旦消去
       const numPalletElement = document.getElementById("num_pallet");
       if (numPalletElement) {
@@ -60,7 +60,7 @@ export function TasuHissan() {
       }
       numSet();
       kotaeInput();
-      
+
     } else if (target.className.includes("droppable-elem-2") && globalDragged && globalDragged.tagName === "IMG") {
       // お金のドロップ処理
       if (globalDragged.parentNode) {
@@ -69,7 +69,7 @@ export function TasuHissan() {
       target.appendChild(globalDragged);
       imgKuriagari();
     }
-    
+
     globalDragged = null;
   };
 
@@ -93,7 +93,7 @@ export function TasuHissan() {
     droppedElem.style.position = "";
     droppedElem.style.top = "";
     droppedElem.style.left = "";
-    
+
     const touch = e.changedTouches[0];
     const newParentElem = document.elementFromPoint(
       touch.pageX - window.pageXOffset,
@@ -102,7 +102,7 @@ export function TasuHissan() {
 
     if (newParentElem?.className.includes("droppable-elem") && !newParentElem?.className.includes("droppable-elem-2")) {
       newParentElem.appendChild(droppedElem);
-      
+
       // 数パレット内の数字を一旦消去
       const numPalletElement = document.getElementById("num_pallet");
       if (numPalletElement) {
@@ -121,7 +121,7 @@ export function TasuHissan() {
     droppedElem.style.position = "";
     droppedElem.style.top = "";
     droppedElem.style.left = "";
-    
+
     const touch = e.changedTouches[0];
     const newParentElem = document.elementFromPoint(
       touch.pageX - window.pageXOffset,
@@ -275,7 +275,7 @@ export function TasuHissan() {
     // 筆算マスからの値を計算（DOM操作版）
     const hissanTableElement = document.querySelector('#hissan-table');
     let calculatedAnswer = 0;
-    
+
     if (hissanTableElement) {
       for (let col = 0; col < 4; col++) {
         const cell = hissanTableElement.querySelector(`tr:nth-child(4) td:nth-child(${col + 1})`);
@@ -429,7 +429,7 @@ export function TasuHissan() {
       }
 
       const imgArr = ["ichien", "juuen", "hyakuen"];
-      
+
       // 被加数のお金を配置
       for (let col = 0; col < hikasuKetaCount; col++) {
         for (let i = 0; i < hikasuArray[col]; i++) {
@@ -444,14 +444,14 @@ export function TasuHissan() {
           img.addEventListener("touchstart", touchStart as any, false);
           img.addEventListener("touchmove", touchMove as any, false);
           img.addEventListener("touchend", touchEndMoney as any, false);
-          
+
           const cell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${maxKeta - col})`);
           if (cell) {
             cell.appendChild(img);
           }
         }
       }
-      
+
       // 加数のお金を配置
       for (let col = 0; col < kasuKetaCount; col++) {
         for (let i = 0; i < kasuArray[col]; i++) {
@@ -466,14 +466,14 @@ export function TasuHissan() {
           img.addEventListener("touchstart", touchStart as any, false);
           img.addEventListener("touchmove", touchMove as any, false);
           img.addEventListener("touchend", touchEndMoney as any, false);
-          
+
           const cell = moneyTableElement.querySelector(`tr:nth-child(3) td:nth-child(${maxKeta - col})`);
           if (cell) {
             cell.appendChild(img);
           }
         }
       }
-      
+
       // +記号を設定
       if (currentHikasu < 100 && currentKasu < 100) {
         const cell = moneyTableElement.querySelector('tr:nth-child(3) td:nth-child(2)');
@@ -508,12 +508,12 @@ export function TasuHissan() {
         numberDiv.className = 'draggable-elem inline-block w-12 h-12 leading-12 bg-white text-3xl text-center rounded-sm border border-gray-800 cursor-pointer m-0.5';
         numberDiv.setAttribute('draggable', 'true');
         numberDiv.textContent = i.toString();
-        
+
         // タッチイベントを追加
         numberDiv.addEventListener('touchstart', touchStart as any);
         numberDiv.addEventListener('touchmove', touchMove as any);
         numberDiv.addEventListener('touchend', touchEnd as any);
-        
+
         numPalletElement.appendChild(numberDiv);
       }
     }
@@ -523,42 +523,26 @@ export function TasuHissan() {
   const imgKuriagari = () => {
     const moneyTableElement = document.querySelector('#money-table');
     if (!moneyTableElement) return;
-    
+
     // 1円列から順番にチェック（右から左）
     for (let col = 3; col >= 0; col--) {
       const currentCell = moneyTableElement.querySelector(`tr:nth-child(4) td:nth-child(${col + 1})`);
-      const currentCell2 = moneyTableElement.querySelector(`tr:nth-child(4) td:nth-child(${col + 1})`);
-      
-      if (currentCell && currentCell2) {
+
+      if (currentCell) {
         // 1円列（col=3）の場合
         if (col === 3) {
-          const ichienCount = currentCell2.querySelectorAll('.ichien').length;
-          console.log("ichienCount", ichienCount);
+          const ichienCount = currentCell.querySelectorAll('.ichien').length;
+
           if (ichienCount >= 10) {
             // 10個以上の1円がある場合、10円に変換
             const newJuuenCount = Math.floor(ichienCount / 10);
-            const remainingIchienCount = ichienCount % 10;
-            
+
             // 既存の1円を削除
             currentCell.querySelectorAll('.ichien').forEach(coin => coin.remove());
-            currentCell2.querySelectorAll('.ichien').forEach(coin => coin.remove());
-            
-            // 残りの1円を追加
-            for (let i = 0; i < remainingIchienCount; i++) {
-              const img = document.createElement("img");
-              img.setAttribute("src", "/images/ichien.png");
-              img.setAttribute("class", "ichien");
-              img.setAttribute("draggable", "true");
-              img.className = "ichien w-6 h-6 cursor-pointer";
-              img.addEventListener("touchstart", touchStart as any, false);
-              img.addEventListener("touchmove", touchMove as any, false);
-              img.addEventListener("touchend", touchEndMoney as any, false);
-              currentCell.appendChild(img);
-            }
-            
+
             // 10円列に追加
             if (col > 0) {
-              const targetCell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${col})`);
+              const targetCell = moneyTableElement.querySelector(`tr:nth-child(1) td:nth-child(${col})`);
               if (targetCell) {
                 for (let i = 0; i < newJuuenCount; i++) {
                   const img = document.createElement("img");
@@ -575,19 +559,19 @@ export function TasuHissan() {
             }
           }
         }
-        
-        // 10円列（col=1）の場合
-        else if (col === 1) {
-          const juuenCount = currentCell.querySelectorAll('.juuen').length + currentCell2.querySelectorAll('.juuen').length;
+
+        // 10円列（col=2）の場合
+        else if (col === 2) {
+          const juuenCount = currentCell.querySelectorAll('.juuen').length;
+          console.log("juuenCount", juuenCount);
           if (juuenCount >= 10) {
             // 10個以上の10円がある場合、100円に変換
             const newHyakuenCount = Math.floor(juuenCount / 10);
             const remainingJuuenCount = juuenCount % 10;
-            
+
             // 既存の10円を削除
             currentCell.querySelectorAll('.juuen').forEach(coin => coin.remove());
-            currentCell2.querySelectorAll('.juuen').forEach(coin => coin.remove());
-            
+
             // 残りの10円を追加
             for (let i = 0; i < remainingJuuenCount; i++) {
               const img = document.createElement("img");
@@ -600,10 +584,10 @@ export function TasuHissan() {
               img.addEventListener("touchend", touchEndMoney as any, false);
               currentCell.appendChild(img);
             }
-            
+
             // 100円列に追加
             if (col > 0) {
-              const targetCell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${col})`);
+              const targetCell = moneyTableElement.querySelector(`tr:nth-child(1) td:nth-child(${col})`);
               if (targetCell) {
                 for (let i = 0; i < newHyakuenCount; i++) {
                   const img = document.createElement("img");
@@ -611,6 +595,50 @@ export function TasuHissan() {
                   img.setAttribute("class", "hyakuen");
                   img.setAttribute("draggable", "true");
                   img.className = "hyakuen w-6 h-6 cursor-pointer";
+                  img.addEventListener("touchstart", touchStart as any, false);
+                  img.addEventListener("touchmove", touchMove as any, false);
+                  img.addEventListener("touchend", touchEndMoney as any, false);
+                  targetCell.appendChild(img);
+                }
+              }
+            }
+          }
+        }
+        // 100円列（col=1）の場合
+        else if (col === 1) {
+          const hyakuenCount = currentCell.querySelectorAll('.hyakuen').length;
+          console.log("hyakuenCount", hyakuenCount);
+          if (hyakuenCount >= 10) {
+            // 10個以上の100円がある場合、1000円に変換
+            const newSenenCount = Math.floor(hyakuenCount / 10);
+            const remainingHyakuenCount = hyakuenCount % 10;
+
+            // 既存の100円を削除
+            currentCell.querySelectorAll('.hyakuen').forEach(coin => coin.remove());
+
+            // 残りの100円を追加
+            for (let i = 0; i < remainingHyakuenCount; i++) {
+              const img = document.createElement("img");
+              img.setAttribute("src", "/images/hyakuen.png");
+              img.setAttribute("class", "hyakuen");
+              img.setAttribute("draggable", "true");
+              img.className = "hyakuen w-6 h-6 cursor-pointer";
+              img.addEventListener("touchstart", touchStart as any, false);
+              img.addEventListener("touchmove", touchMove as any, false);
+              img.addEventListener("touchend", touchEndMoney as any, false);
+              currentCell.appendChild(img);
+            }
+
+            // 1000円列に追加
+            if (col > 0) {
+              const targetCell = moneyTableElement.querySelector(`tr:nth-child(1) td:nth-child(${col})`);
+              if (targetCell) {
+                for (let i = 0; i < newSenenCount; i++) {
+                  const img = document.createElement("img");
+                  img.setAttribute("src", "/images/senen.png");
+                  img.setAttribute("class", "senen");
+                  img.setAttribute("draggable", "true");
+                  img.className = "senen w-12 h-6 cursor-pointer";
                   img.addEventListener("touchstart", touchStart as any, false);
                   img.addEventListener("touchmove", touchMove as any, false);
                   img.addEventListener("touchend", touchEndMoney as any, false);
