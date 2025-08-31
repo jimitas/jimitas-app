@@ -3,13 +3,11 @@ import Layout from "src/components/Layout";
 import { Hide } from "src/components/Hide";
 import { Block } from "src/components/Block";
 
-const Home: React.FC = () => {
+export default function Home() {
   return (
     <Layout title="ぶろっく">
       <Block leftCount={10} rightCount={10} />
       <Hide />
     </Layout>
   );
-};
-
-export default Home;
+}

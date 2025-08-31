@@ -99,8 +99,8 @@ export function ResultDisplay({
 }) {
   return (
     <div className={`text-center p-4 rounded-lg mb-4 ${isCorrect
-        ? 'bg-blue-50 border-2 border-blue-600'
-        : 'bg-red-50 border-2 border-red-600'
+      ? 'bg-blue-50 border-2 border-blue-600'
+      : 'bg-red-50 border-2 border-red-600'
       }`}>
       <div className="mb-4">
         {isCorrect ? (
