@@ -444,16 +444,16 @@ export function Tokei() {
             </div>
 
             {/* 2行目: ヒント１、ヒント２ */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 ml-2">
               <button
-                className="px-6 py-2 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors duration-200"
+                className="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors duration-200"
                 id="hint1"
                 onClick={handleHint1}
               >
                 ヒント１
               </button>
               <button
-                className="px-6 py-2 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors duration-200"
+                className="px-6 py-2 bg-yellow-600 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors duration-200"
                 id="hint2"
                 onClick={handleHint2}
               >
