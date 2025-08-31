@@ -432,6 +432,13 @@ export function TasuHissan() {
 
       // 被加数のお金を配置
       for (let col = 0; col < hikasuKetaCount; col++) {
+        const cell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${maxKeta - col})`);
+        const div = document.createElement("div");
+        if (cell) {
+          cell.appendChild(div);
+          div.classList.add('flex', 'flex-wrap', 'content-start', 'items-start');
+        }
+
         for (let i = 0; i < hikasuArray[col]; i++) {
           const img = document.createElement("img");
           img.setAttribute("src", `/images/${imgArr[col]}.png`);
@@ -445,9 +452,8 @@ export function TasuHissan() {
           img.addEventListener("touchmove", touchMove as any, false);
           img.addEventListener("touchend", touchEndMoney as any, false);
 
-          const cell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${maxKeta - col})`);
           if (cell) {
-            cell.appendChild(img);
+            div.appendChild(img);
           }
         }
       }
