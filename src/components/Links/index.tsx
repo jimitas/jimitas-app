@@ -26,8 +26,9 @@ const ITEMS = [
       { href: "202tasu_hissan", title: "たし算のひっ算" },
       { href: "203hiku_hissan", title: "ひき算のひっ算" },
       { href: "204kazu_1000", title: "1000までの数" },
-      { href: "205kuku", title: "九九のれんしゅう" },
-      { href: "206kake_array", title: "かけ算アレイ図" },
+      { href: "205kuku_renshu_1", title: "九九のれんしゅう1" },
+      { href: "206kuku_renshu_2", title: "九九のれんしゅう2" },
+      { href: "207kake_array", title: "かけ算アレイ図" },
     ],
   },
   {

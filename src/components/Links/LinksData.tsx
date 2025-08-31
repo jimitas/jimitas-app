@@ -22,11 +22,12 @@ export const ITEMS = [
     title: "２年生",
     links: [
       { href: "201tokei", title: "とけい" },
-      { href: "203tasu_hissan", title: "たし算のひっ算" },
-      { href: "204hiku_hissan", title: "ひき算のひっ算" },
-      { href: "205kazu_1000", title: "1000までの数" },
-      { href: "206kuku", title: "九九のれんしゅう" },
-      { href: "202kuku_array", title: "かけ算アレイ図" },
+      { href: "202tasu_hissan", title: "たし算のひっ算" },
+      { href: "203hiku_hissan", title: "ひき算のひっ算" },
+      { href: "204kazu_1000", title: "1000までの数" },
+      { href: "205kuku_renshu_1", title: "九九のれんしゅう1" },
+      { href: "206kuku_renshu_2", title: "九九のれんしゅう2" },
+      { href: "207kuku_array", title: "かけ算アレイ図" },
     ],
   },
   {
