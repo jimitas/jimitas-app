@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { useDragDrop } from "src/hooks/useDragDrop";
 
 export function TasuHissan() {
   // 初期設定 - 14tahi.jsの通り
@@ -34,7 +33,7 @@ export function TasuHissan() {
   ]);
 
   // 数字パレット
-  const [numberPalette, setNumberPalette] = useState<JSX.Element[]>([]);
+  // const [numberPalette, setNumberPalette] = useState<JSX.Element[]>([]);
   const [scoreCoins, setScoreCoins] = useState<JSX.Element[]>([]);
 
   // 問題タイプのデータ
@@ -45,16 +44,151 @@ export function TasuHissan() {
   const box3Ref = useRef<HTMLInputElement>(null);
   const box5Ref = useRef<HTMLInputElement>(null);
 
-  // ドラッグ&ドロップ - カスタムドロップコールバック
-  const handleCustomDropCallback = () => {
-    regenerateNumberPalette();
-    kotaeInput();
+  // 改良版のドラッグ&ドロップ処理
+  let globalDragged: HTMLElement | null = null;
+
+  const dragStart = (e: DragEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.draggable === true) {
+      globalDragged = target;
+      console.log("ドラッグ開始:", target.className); // デバッグ用
+    }
   };
 
-  const { dragStart, dragOver, dropEnd, touchStart, touchMove, touchEnd } = useDragDrop(handleCustomDropCallback);
+  const dragOver = (e: DragEvent) => {
+    e.preventDefault();
+  };
 
-  // 数字パレットの再生成
+  const dropEnd = (e: DragEvent) => {
+    e.preventDefault();
+    const target = e.target as HTMLElement;
+
+    // droppable-elemクラスを持つ要素を探す
+    let dropTarget = target;
+    let attempts = 0;
+    while (dropTarget && attempts < 5) {
+      if (dropTarget.className && (
+        dropTarget.className.includes('droppable-elem-2') ||
+        dropTarget.className.includes('droppable-elem')
+      )) {
+        break;
+      }
+      dropTarget = dropTarget.parentElement as HTMLElement;
+      attempts++;
+    }
+
+    if (dropTarget && globalDragged) {
+      console.log("ドロップ処理開始:", {
+        draggedElement: globalDragged.className,
+        dropTarget: dropTarget.className
+      });
+
+      // 数字は筆算マスにのみドロップ可能
+      const isDraggingNumber = globalDragged.className.includes('draggable-elem');
+      const isHissanTarget = dropTarget.className.includes('droppable-elem') && !dropTarget.className.includes('droppable-elem-2');
+
+      // お金はお金パレット内でのみ移動可能
+      const isDraggingMoney = globalDragged.className.includes('ichien') ||
+        globalDragged.className.includes('juuen') ||
+        globalDragged.className.includes('hyakuen');
+      const isMoneyTarget = dropTarget.className.includes('droppable-elem-2');
+
+      console.log("判定結果:", {
+        isDraggingNumber,
+        isHissanTarget,
+        isDraggingMoney,
+        isMoneyTarget
+      });
+
+      if ((isDraggingNumber && isHissanTarget) || (isDraggingMoney && isMoneyTarget)) {
+        // 安全な要素削除
+        try {
+          if (globalDragged.parentNode && globalDragged.parentNode.contains(globalDragged)) {
+            globalDragged.parentNode.removeChild(globalDragged);
+          }
+        } catch (error) {
+          console.warn("要素の削除に失敗しました:", error);
+        }
+
+        // 要素を複製して新しく追加
+        const clonedElement = globalDragged.cloneNode(true) as HTMLElement;
+        clonedElement.setAttribute("draggable", "true");
+
+        dropTarget.appendChild(clonedElement);
+
+        // 数字をドロップした場合のみ数字パレットを再作成
+        if (isDraggingNumber) {
+          console.log("数字パレット再作成を実行");
+          regenerateNumberPalette();
+        }
+
+        // 答え入力チェック
+        kotaeInput();
+      }
+    }
+  };
+
+  // タッチ操作（簡易版）
+  const touchStart = (e: TouchEvent) => {
+    e.preventDefault();
+  };
+
+  const touchMove = (e: TouchEvent) => {
+    e.preventDefault();
+    const draggedElem = e.target as HTMLElement;
+    const touch = e.changedTouches[0];
+    draggedElem.style.position = "fixed";
+    draggedElem.style.top = touch.pageY - window.pageYOffset - draggedElem.offsetHeight / 2 + "px";
+    draggedElem.style.left = touch.pageX - window.pageXOffset - draggedElem.offsetWidth / 2 + "px";
+  };
+
+  const touchEnd = (e: TouchEvent) => {
+    e.preventDefault();
+    const droppedElem = e.target as HTMLElement;
+    droppedElem.style.position = "";
+    droppedElem.style.top = "";
+    droppedElem.style.left = "";
+
+    const touch = e.changedTouches[0];
+    const newParentElem = document.elementFromPoint(
+      touch.pageX - window.pageXOffset,
+      touch.pageY - window.pageYOffset
+    ) as HTMLElement | null;
+
+    if (newParentElem) {
+      console.log("タッチドロップ処理:", {
+        droppedElement: droppedElem.className,
+        newParent: newParentElem.className
+      });
+
+      // 同じ制約を適用
+      const isDraggingNumber = droppedElem.className.includes('draggable-elem');
+      const isHissanTarget = newParentElem.className.includes('droppable-elem') && !newParentElem.className.includes('droppable-elem-2');
+
+      const isDraggingMoney = droppedElem.className.includes('ichien') ||
+        droppedElem.className.includes('juuen') ||
+        droppedElem.className.includes('hyakuen');
+      const isMoneyTarget = newParentElem.className.includes('droppable-elem-2');
+
+      if ((isDraggingNumber && isHissanTarget) || (isDraggingMoney && isMoneyTarget)) {
+        newParentElem.appendChild(droppedElem);
+
+        // 数字をドロップした場合のみ数字パレットを再作成
+        if (isDraggingNumber) {
+          console.log("タッチ操作で数字パレット再作成を実行");
+          regenerateNumberPalette();
+        }
+
+        // 答え入力チェック
+        kotaeInput();
+      }
+    }
+  };
+
+
+  // 数字パレットの再生成（DOM操作版）
   const regenerateNumberPalette = () => {
+    console.log("regenerateNumberPaletteが実行されました");
     numSet();
   };
 
@@ -71,16 +205,20 @@ export function TasuHissan() {
     numSet();
 
     // ドラッグ&ドロップイベントリスナーを設定
-    document.addEventListener("dragstart", dragStart as EventListener, false);
-    document.addEventListener("dragover", dragOver as EventListener, false);
-    document.addEventListener("drop", dropEnd as EventListener, false);
+    const handleDragStart = (e: Event) => dragStart(e as DragEvent);
+    const handleDragOver = (e: Event) => dragOver(e as DragEvent);
+    const handleDrop = (e: Event) => dropEnd(e as DragEvent);
+
+    document.addEventListener("dragstart", handleDragStart, false);
+    document.addEventListener("dragover", handleDragOver, false);
+    document.addEventListener("drop", handleDrop, false);
 
     return () => {
-      document.removeEventListener("dragstart", dragStart as EventListener, false);
-      document.removeEventListener("dragover", dragOver as EventListener, false);
-      document.removeEventListener("drop", dropEnd as EventListener, false);
+      document.removeEventListener("dragstart", handleDragStart, false);
+      document.removeEventListener("dragover", handleDragOver, false);
+      document.removeEventListener("drop", handleDrop, false);
     };
-  }, [dragStart, dragOver, dropEnd]);
+  }, [hikasu, kasu]);
 
   // 関数　マス内の数字をクリア
   const masuClear = () => {
@@ -373,22 +511,31 @@ export function TasuHissan() {
 
   // 関数　数字のセット
   const numSet = () => {
-    const numbers = [];
-    for (let i = 0; i < 10; i++) {
-      numbers.push(
-        <div
-          key={i}
-          className="draggable-elem inline-block w-12 h-12 leading-12 bg-white text-3xl text-center rounded-sm border border-gray-800 cursor-pointer m-0.5"
-          draggable="true"
-          onTouchStart={touchStart as any}
-          onTouchMove={touchMove as any}
-          onTouchEnd={touchEnd as any}
-        >
-          {i}
-        </div>
-      );
+    // 既存の数字パレットをクリア
+
+    // DOM要素を直接操作して数字を追加
+    const numPalletElement = document.getElementById('num_pallet');
+    if (numPalletElement) {
+      // 既存の数字要素をクリア（h4タイトルは保持）
+      const existingNumbers = numPalletElement.querySelectorAll('.draggable-elem');
+      existingNumbers.forEach(num => num.remove());
+
+      // 新しい数字要素を追加
+      for (let i = 0; i < 10; i++) {
+        const numberDiv = document.createElement('div');
+        numberDiv.className = 'draggable-elem inline-block w-12 h-12 leading-12 bg-white text-3xl text-center rounded-sm border border-gray-800 cursor-pointer m-0.5';
+        numberDiv.setAttribute('draggable', 'true');
+        numberDiv.textContent = i.toString();
+
+        // タッチイベントを追加
+        numberDiv.addEventListener('touchstart', touchStart as any);
+        numberDiv.addEventListener('touchmove', touchMove as any);
+        numberDiv.addEventListener('touchend', touchEnd as any);
+
+        // 数字パレットに追加
+        numPalletElement.appendChild(numberDiv);
+      }
     }
-    setNumberPalette(numbers);
   };
 
   // box5の値変更時のハンドラー
@@ -544,7 +691,6 @@ export function TasuHissan() {
         className="droppable-elem mb-3 border border-gray-300 p-3"
       >
         <h4 className="text-lg font-semibold mb-2">数字パレット</h4>
-        {numberPalette}
       </div>
 
       {/* スコアパレット */}
