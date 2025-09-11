@@ -134,8 +134,78 @@ export function TasuHissan() {
     }
   };
 
+  // テーブル作成関数
+  const createTables = () => {
+    // 筆算テーブル作成
+    const hissanContainer = document.getElementById('hissan-container');
+    if (hissanContainer) {
+      hissanContainer.innerHTML = '';
+      const hissanTable = document.createElement('table');
+      hissanTable.id = 'hissan-table';
+      hissanTable.className = 'h-60 mr-3';
+
+      const hissanTbody = document.createElement('tbody');
+      for (let row = 0; row < 4; row++) {
+        const tr = document.createElement('tr');
+        tr.className = 'max-h-15';
+
+        for (let col = 0; col < 4; col++) {
+          const td = document.createElement('td');
+          let className = 'border border-gray-800 w-14 max-w-14 h-14 max-h-14 text-center ';
+
+          if (row === 0) {
+            className += 'text-xl bg-yellow-100 text-red-500 align-bottom droppable-elem';
+          } else if (row === 3) {
+            className += 'text-3xl bg-yellow-100 text-black align-middle droppable-elem';
+          } else {
+            className += 'text-3xl bg-white text-black align-middle';
+          }
+
+          td.className = className;
+          tr.appendChild(td);
+        }
+        hissanTbody.appendChild(tr);
+      }
+      hissanTable.appendChild(hissanTbody);
+      hissanContainer.appendChild(hissanTable);
+    }
+
+    // お金テーブル作成
+    const moneyContainer = document.getElementById('money-container');
+    if (moneyContainer) {
+      moneyContainer.innerHTML = '';
+      const moneyTable = document.createElement('table');
+      moneyTable.id = 'money-table';
+      moneyTable.className = 'h-60 ml-3';
+
+      const moneyTbody = document.createElement('tbody');
+      for (let row = 0; row < 4; row++) {
+        const tr = document.createElement('tr');
+        tr.className = 'max-h-15';
+
+        for (let col = 0; col < 4; col++) {
+          const td = document.createElement('td');
+          let className = 'droppable-elem-2 border border-gray-800 w-40 max-w-40 h-14 max-h-14 p-0.5 ';
+
+          if (row === 0 || row === 3) {
+            className += 'bg-yellow-100';
+          } else {
+            className += 'bg-white';
+          }
+
+          td.className = className;
+          tr.appendChild(td);
+        }
+        moneyTbody.appendChild(tr);
+      }
+      moneyTable.appendChild(moneyTbody);
+      moneyContainer.appendChild(moneyTable);
+    }
+  };
+
   // 初期化
   useEffect(() => {
+    createTables();
     hissanSet(hikasu, kasu);
     numSet();
 
@@ -433,48 +503,44 @@ export function TasuHissan() {
       // 被加数のお金を配置
       for (let col = 0; col < hikasuKetaCount; col++) {
         const cell = moneyTableElement.querySelector(`tr:nth-child(2) td:nth-child(${maxKeta - col})`);
-        const div = document.createElement("div");
         if (cell) {
-          cell.appendChild(div);
-          div.classList.add('flex', 'flex-wrap', 'content-start', 'items-start');
-        }
 
-        for (let i = 0; i < hikasuArray[col]; i++) {
-          const img = document.createElement("img");
-          img.setAttribute("src", `/images/${imgArr[col]}.png`);
-          img.setAttribute("class", imgArr[col]);
-          img.setAttribute("draggable", "true");
-          img.style.width = "25px";
-          img.style.height = "25px";
-          img.style.cursor = "pointer";
-          img.className = `${imgArr[col]} w-6 h-6 cursor-pointer`;
-          img.addEventListener("touchstart", touchStart as any, false);
-          img.addEventListener("touchmove", touchMove as any, false);
-          img.addEventListener("touchend", touchEndMoney as any, false);
+          for (let i = 0; i < hikasuArray[col]; i++) {
+            const img = document.createElement("img");
+            img.setAttribute("src", `/images/${imgArr[col]}.png`);
+            img.setAttribute("class", imgArr[col]);
+            img.setAttribute("draggable", "true");
+            img.style.width = "25px";
+            img.style.height = "25px";
+            img.style.cursor = "pointer";
+            img.className = `${imgArr[col]} w-6 h-6 cursor-pointer`;
+            img.addEventListener("touchstart", touchStart as any, false);
+            img.addEventListener("touchmove", touchMove as any, false);
+            img.addEventListener("touchend", touchEndMoney as any, false);
 
-          if (cell) {
-            div.appendChild(img);
+            cell.appendChild(img);
           }
         }
       }
 
       // 加数のお金を配置
       for (let col = 0; col < kasuKetaCount; col++) {
-        for (let i = 0; i < kasuArray[col]; i++) {
-          const img = document.createElement("img");
-          img.setAttribute("src", `/images/${imgArr[col]}.png`);
-          img.setAttribute("class", imgArr[col]);
-          img.setAttribute("draggable", "true");
-          img.style.width = "25px";
-          img.style.height = "25px";
-          img.style.cursor = "pointer";
-          img.className = `${imgArr[col]} w-6 h-6 cursor-pointer`;
-          img.addEventListener("touchstart", touchStart as any, false);
-          img.addEventListener("touchmove", touchMove as any, false);
-          img.addEventListener("touchend", touchEndMoney as any, false);
+        const cell = moneyTableElement.querySelector(`tr:nth-child(3) td:nth-child(${maxKeta - col})`);
+        if (cell) {
 
-          const cell = moneyTableElement.querySelector(`tr:nth-child(3) td:nth-child(${maxKeta - col})`);
-          if (cell) {
+          for (let i = 0; i < kasuArray[col]; i++) {
+            const img = document.createElement("img");
+            img.setAttribute("src", `/images/${imgArr[col]}.png`);
+            img.setAttribute("class", imgArr[col]);
+            img.setAttribute("draggable", "true");
+            img.style.width = "25px";
+            img.style.height = "25px";
+            img.style.cursor = "pointer";
+            img.className = `${imgArr[col]} w-6 h-6 cursor-pointer`;
+            img.addEventListener("touchstart", touchStart as any, false);
+            img.addEventListener("touchmove", touchMove as any, false);
+            img.addEventListener("touchend", touchEndMoney as any, false);
+
             cell.appendChild(img);
           }
         }
@@ -500,13 +566,8 @@ export function TasuHissan() {
     // 数字パレット内の数字を一旦消去
     const numPalletElement = document.getElementById("num_pallet");
     if (numPalletElement) {
-      // タイトルを保持するため、h4以外を削除
-      const children = Array.from(numPalletElement.children);
-      children.forEach(child => {
-        if (child.tagName !== 'H4') {
-          child.remove();
-        }
-      });
+      // h4タイトルを保持するため、再作成
+      numPalletElement.innerHTML = '<h4 class="text-lg font-semibold mb-2">数字パレット</h4>';
 
       // 新しい数字要素を追加
       for (let i = 0; i < 10; i++) {
@@ -535,6 +596,11 @@ export function TasuHissan() {
       const currentCell = moneyTableElement.querySelector(`tr:nth-child(4) td:nth-child(${col + 1})`);
 
       if (currentCell) {
+        // セルにflexクラスを確実に追加
+        if (!currentCell.classList.contains('flex')) {
+          currentCell.classList.add('flex', 'flex-wrap', 'content-start', 'items-start');
+        }
+
         // 1円列（col=3）の場合
         if (col === 3) {
           const ichienCount = currentCell.querySelectorAll('.ichien').length;
@@ -550,6 +616,11 @@ export function TasuHissan() {
             if (col > 0) {
               const targetCell = moneyTableElement.querySelector(`tr:nth-child(1) td:nth-child(${col})`);
               if (targetCell) {
+                // ターゲットセルにもflexクラスを追加
+                if (!targetCell.classList.contains('flex')) {
+                  targetCell.classList.add('flex', 'flex-wrap', 'content-start', 'items-start');
+                }
+
                 for (let i = 0; i < newJuuenCount; i++) {
                   const img = document.createElement("img");
                   img.setAttribute("src", "/images/juuen.png");
@@ -569,7 +640,6 @@ export function TasuHissan() {
         // 10円列（col=2）の場合
         else if (col === 2) {
           const juuenCount = currentCell.querySelectorAll('.juuen').length;
-          console.log("juuenCount", juuenCount);
           if (juuenCount >= 10) {
             // 10個以上の10円がある場合、100円に変換
             const newHyakuenCount = Math.floor(juuenCount / 10);
@@ -595,6 +665,10 @@ export function TasuHissan() {
             if (col > 0) {
               const targetCell = moneyTableElement.querySelector(`tr:nth-child(1) td:nth-child(${col})`);
               if (targetCell) {
+                if (!targetCell.classList.contains('flex')) {
+                  targetCell.classList.add('flex', 'flex-wrap', 'content-start', 'items-start');
+                }
+
                 for (let i = 0; i < newHyakuenCount; i++) {
                   const img = document.createElement("img");
                   img.setAttribute("src", "/images/hyakuen.png");
@@ -610,10 +684,10 @@ export function TasuHissan() {
             }
           }
         }
+
         // 100円列（col=1）の場合
         else if (col === 1) {
           const hyakuenCount = currentCell.querySelectorAll('.hyakuen').length;
-          console.log("hyakuenCount", hyakuenCount);
           if (hyakuenCount >= 10) {
             // 10個以上の100円がある場合、1000円に変換
             const newSenenCount = Math.floor(hyakuenCount / 10);
@@ -639,6 +713,10 @@ export function TasuHissan() {
             if (col > 0) {
               const targetCell = moneyTableElement.querySelector(`tr:nth-child(1) td:nth-child(${col})`);
               if (targetCell) {
+                if (!targetCell.classList.contains('flex')) {
+                  targetCell.classList.add('flex', 'flex-wrap', 'content-start', 'items-start');
+                }
+
                 for (let i = 0; i < newSenenCount; i++) {
                   const img = document.createElement("img");
                   img.setAttribute("src", "/images/senen.png");
@@ -747,27 +825,8 @@ export function TasuHissan() {
 
       {/* フィールド */}
       <div className="flex mb-3">
-        {/* 筆算マス */}
-        <table id="hissan-table" className="h-60 mr-3">
-          <tbody>
-            {[0, 1, 2, 3].map(rowIndex => (
-              <tr key={rowIndex} className="max-h-15">
-                {[0, 1, 2, 3].map(colIndex => (
-                  <td
-                    key={colIndex}
-                    className={`
-                      border border-gray-800 w-14 max-w-14 h-14 max-h-14 text-center
-                      ${rowIndex === 0 ? 'text-xl bg-yellow-100 text-red-500 align-bottom' : 'text-3xl bg-white text-black align-middle'}
-                      ${rowIndex === 3 ? 'bg-yellow-100' : ''}
-                      ${rowIndex === 0 || rowIndex === 3 ? 'droppable-elem' : ''}
-                    `}
-                  >
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* 筆算マス用コンテナ */}
+        <div id="hissan-container"></div>
 
         {/* ゴミ箱 */}
         <Image
@@ -778,26 +837,8 @@ export function TasuHissan() {
           height={64}
         />
 
-        {/* お金パレット */}
-        <table id="money-table" className="h-60 ml-3">
-          <tbody>
-            {[0, 1, 2, 3].map(rowIndex => (
-              <tr key={rowIndex} className="max-h-15">
-                {[0, 1, 2, 3].map(colIndex => (
-                  <td
-                    key={colIndex}
-                    className={`
-                      droppable-elem-2 border border-gray-800 w-40 max-w-40 h-14 max-h-14 p-0.5
-                      flex-wrap content-start items-start
-                      ${rowIndex === 0 || rowIndex === 3 ? 'bg-yellow-100' : 'bg-white'}
-                    `}
-                  >
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* お金パレット用コンテナ */}
+        <div id="money-container"></div>
       </div>
 
       {/* 数字パレット */}
@@ -805,7 +846,6 @@ export function TasuHissan() {
         id="num_pallet"
         className="mb-3 border border-gray-300 p-3"
       >
-        <h4 className="text-lg font-semibold mb-2">数字パレット</h4>
       </div>
 
       {/* スコアパレット */}
