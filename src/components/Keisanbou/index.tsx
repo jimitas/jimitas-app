@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import styles from "src/components/Keisanbou/keisanbou.module.css";
 import * as se from "src/components/se";
 import { BtnCalc } from "src/components/PutButton/btnCalc";
@@ -148,7 +149,7 @@ export function Keisanbou(props: { hyaku?: number; ju?: number; ichi?: number })
             </tr>
           </tbody>
         </table>
-        <img src="images/gomibako.png" style={{ width: "6vw", height: "6vw" }} className="mt-auto droppable-elem" alt="ゴミ箱" />
+        <Image src="/images/gomibako.png" width={96} height={96} style={{ width: "6vw", height: "6vw" }} className="mt-auto droppable-elem" alt="ゴミ箱" />
       </section>
 
       <section className="flex justify-center mt-4">

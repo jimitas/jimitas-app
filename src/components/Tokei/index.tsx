@@ -131,7 +131,7 @@ export function Tokei() {
     try {
       se.kako.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     draw();
@@ -150,7 +150,7 @@ export function Tokei() {
     try {
       se.kako.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     draw();
@@ -169,7 +169,7 @@ export function Tokei() {
     try {
       se.kako.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     draw();
@@ -185,7 +185,7 @@ export function Tokei() {
     try {
       se.set.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     let newHours = Math.floor(Math.random() * 12 + 1);
@@ -238,7 +238,7 @@ export function Tokei() {
         try {
           se.seikai1.play();
         } catch (error) {
-          console.log("Sound playback failed:", error);
+          // Sound playback failed silently
         }
 
         setClockText("せいかい！");
@@ -259,7 +259,7 @@ export function Tokei() {
         try {
           se.alertSound.play();
         } catch (error) {
-          console.log("Sound playback failed:", error);
+          // Sound playback failed silently
         }
       }
     } else if (type === "ugokasu") {
@@ -274,7 +274,7 @@ export function Tokei() {
         try {
           se.seikai1.play();
         } catch (error) {
-          console.log("Sound playback failed:", error);
+          // Sound playback failed silently
         }
 
         setClockText("せいかい！");
@@ -295,7 +295,7 @@ export function Tokei() {
         try {
           se.alertSound.play();
         } catch (error) {
-          console.log("Sound playback failed:", error);
+          // Sound playback failed silently
         }
       }
     }
@@ -306,7 +306,7 @@ export function Tokei() {
     try {
       se.seikai2.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     if (type === "nanji") {
@@ -324,7 +324,7 @@ export function Tokei() {
     try {
       se.set.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     setHint(hint === "hint1" ? "" : "hint1");
@@ -336,7 +336,7 @@ export function Tokei() {
     try {
       se.set.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     setHint(hint === "hint2" ? "" : "hint2");

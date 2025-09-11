@@ -11,10 +11,10 @@ import { BtnUndo } from "src/components/PutButton/btnUndo";
 const NUM: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const checkNumber = (num: number) => {
-  console.log(num);
+  // Handle number input
 };
 const checkAnswer = () => {
-  console.log();
+  // Check answer logic
 };
 const nextQuestion = () => {};
 const setQuestion = () => {};

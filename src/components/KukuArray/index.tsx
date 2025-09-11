@@ -169,7 +169,7 @@ const KukuArray: React.FC<KukuArrayProps> = () => {
     try {
       se.pi.play(); // ボタンクリック音
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
   };
 
@@ -179,7 +179,7 @@ const KukuArray: React.FC<KukuArrayProps> = () => {
     try {
       se.pi.play(); // ボタンクリック音
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
   };
 
@@ -189,7 +189,7 @@ const KukuArray: React.FC<KukuArrayProps> = () => {
     try {
       se.piron.play(); // 答え表示切り替え音
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
     if (!hasInteracted) {
       setHasInteracted(true);

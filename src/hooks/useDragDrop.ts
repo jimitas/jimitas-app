@@ -7,10 +7,8 @@ export const useDragDrop = (onDropCallback?: () => void) => {
   // ドラッグ開始の操作
   function dragStart(e: DragEvent) {
     const target = e.target as HTMLElement;
-    console.log("dragStart called:", target, "draggable:", target.draggable);
     if (target.draggable === true) {
       globalDragged = target;
-      console.log("globalDragged set:", globalDragged);
     }
   }
 
@@ -43,7 +41,6 @@ export const useDragDrop = (onDropCallback?: () => void) => {
     // alert(`ドロップ可能判定\ndroppable要素: ${isDroppable ? '見つかった' : '見つからない'}\n要素: ${dropTarget?.tagName || 'なし'}\nクラス: ${dropTarget?.className || 'なし'}`);
 
     // parentNodeの存在確認を詳細に
-    // console.log("globalDragged詳細:", {
     //   element: globalDragged,
     //   parentNode: globalDragged?.parentNode,
     //   parentId: globalDragged?.parentNode && 'id' in globalDragged.parentNode ? globalDragged.parentNode.id : 'なし',

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import styles from "src/components/Okane/okane.module.css";
 import * as se from "src/components/se";
 import { BtnCalc } from "src/components/PutButton/btnCalc";
@@ -153,7 +154,7 @@ export function Okane(props: { hyaku?: number; goju?: number; ju?: number; go?: 
             </tr>
           </tbody>
         </table>
-        <img src="images/saifu.png" style={{ width: "6vw", height: "6vw" }} className="mt-auto droppable-elem" alt="財布" />
+        <Image src="/images/saifu.png" width={96} height={96} style={{ width: "6vw", height: "6vw" }} className="mt-auto droppable-elem" alt="財布" />
       </section>
 
       <section className="flex justify-center mt-4">

@@ -194,13 +194,13 @@ export function KukuRenshu_2() {
       try {
         se.seikai1.play(); // 正解音
       } catch (error) {
-        console.log("Sound playback failed:", error);
+        // Sound playback failed silently
       }
     } else {
       try {
         se.alertSound.play(); // 不正解音
       } catch (error) {
-        console.log("Sound playback failed:", error);
+        // Sound playback failed silently
       }
     }
 
@@ -218,7 +218,7 @@ export function KukuRenshu_2() {
     try {
       se.set.play(); // 次の問題音
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
   };
 
@@ -228,7 +228,7 @@ export function KukuRenshu_2() {
     try {
       se.piron.play(); // 答え表示切り替え音
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
   };
 
@@ -245,7 +245,7 @@ export function KukuRenshu_2() {
     try {
       se.reset.play(); // リセット音
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
   };
 

@@ -69,7 +69,7 @@ export function KukuRenshu_1() {
     try {
       se.set.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     setCurrentNum(0);
@@ -87,7 +87,7 @@ export function KukuRenshu_1() {
     try {
       se.pi.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
 
     const newNum = currentNum + 1;
@@ -144,7 +144,7 @@ export function KukuRenshu_1() {
     try {
       se.set.play();
     } catch (error) {
-      console.log("Sound playback failed:", error);
+      // Sound playback failed silently
     }
     setYomiHide(!yomiHide);
   };
